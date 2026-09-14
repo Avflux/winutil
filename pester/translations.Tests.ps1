@@ -235,5 +235,50 @@ Describe "Invoke-WinUtilTranslation ToolTip handling" {
         Invoke-WinUtilTranslation -Language "pt-BR"
         $cb.ToolTip | Should -Be "Preset key: WPFTweaksTele"
     }
+
+    It "translates application hover tooltips in visual/items tree" {
+        $border = New-Object Windows.Controls.Border
+        $border.ToolTip = "Betterbird is a fork of Mozilla Thunderbird with additional features and bugfixes.`n`nPreset key: WPFInstallbetterbird"
+        $ptTable = [pscustomobject]@{
+            "Betterbird is a fork of Mozilla Thunderbird with additional features and bugfixes." = "Betterbird $([char]0x00E9) um fork do Mozilla Thunderbird com recursos adicionais e corre$([char]0x00E7)$([char]0x00F5)es de bugs."
+        }
+
+        $global:sync = @{
+            Form = New-Object Windows.Window
+            preferences = @{ language = "en-US" }
+            configs = @{ translations = @{ "pt-BR" = $ptTable; "en-US" = [pscustomobject]@{} } }
+            TextBaselines = [System.Runtime.CompilerServices.ConditionalWeakTable[object, object]]::new()
+        }
+        $global:sync.Form.Content = $border
+
+        Invoke-WinUtilTranslation -Language "pt-BR"
+        $border.ToolTip | Should -Be "Betterbird $([char]0x00E9) um fork do Mozilla Thunderbird com recursos adicionais e corre$([char]0x00E7)$([char]0x00F5)es de bugs.`n`nPreset key: WPFInstallbetterbird"
+
+        Invoke-WinUtilTranslation -Language "en-US"
+        $border.ToolTip | Should -Be "Betterbird is a fork of Mozilla Thunderbird with additional features and bugfixes.`n`nPreset key: WPFInstallbetterbird"
+    }
+
+    It "translates category toggle buttons with prefix" {
+        $lbl = New-Object Windows.Controls.Label
+        $lbl.Tag = "CategoryToggleButton"
+        $lbl.Content = "- Communications"
+        $ptTable = [pscustomobject]@{
+            "Communications" = "Comunica$([char]0x00E7)$([char]0x00E3)o"
+        }
+
+        $global:sync = @{
+            Form = New-Object Windows.Window
+            preferences = @{ language = "en-US" }
+            configs = @{ translations = @{ "pt-BR" = $ptTable; "en-US" = [pscustomobject]@{} } }
+            TextBaselines = [System.Runtime.CompilerServices.ConditionalWeakTable[object, object]]::new()
+        }
+        $global:sync.Form.Content = $lbl
+
+        Invoke-WinUtilTranslation -Language "pt-BR"
+        $lbl.Content | Should -Be "- Comunica$([char]0x00E7)$([char]0x00E3)o"
+
+        Invoke-WinUtilTranslation -Language "en-US"
+        $lbl.Content | Should -Be "- Communications"
+    }
 }
 

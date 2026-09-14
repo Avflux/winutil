@@ -110,6 +110,7 @@ function Invoke-WinUtilTranslation {
         return $null
     }
 
+    $visited = [System.Collections.Generic.HashSet[object]]::new()
     foreach ($root in $targets) {
         if (-not $root) { continue }
 
@@ -118,6 +119,9 @@ function Invoke-WinUtilTranslation {
 
         while ($queue.Count -gt 0) {
             $element = $queue.Dequeue()
+            if (-not $visited.Add($element)) {
+                continue
+            }
 
             # Popups are logical children of their placement button, the rest of the tree is
             # visual; walking both makes one code path cover everything.
@@ -125,14 +129,14 @@ function Invoke-WinUtilTranslation {
                 $visualCount = [Windows.Media.VisualTreeHelper]::GetChildrenCount($element)
                 for ($i = 0; $i -lt $visualCount; $i++) {
                     $child = [Windows.Media.VisualTreeHelper]::GetChild($element, $i)
-                    if ($child) { $queue.Enqueue($child) }
+                    if ($child -and -not $visited.Contains($child)) { $queue.Enqueue($child) }
                 }
             } catch {
                 # Not a visual or unsupported type; fall back to walking Content property.
             }
             try {
                 foreach ($child in @($element.LogicalChildren)) {
-                    if ($child -is [Windows.FrameworkElement]) {
+                    if ($child -is [Windows.FrameworkElement] -and -not $visited.Contains($child)) {
                         $queue.Enqueue($child)
                     }
                 }
@@ -142,12 +146,21 @@ function Invoke-WinUtilTranslation {
             # Fallback: if visual-tree walk found nothing, walk through Content property
             # of ContentControl elements (covers ContentPresenter-based templates).
             if ($element -is [Windows.Controls.ContentControl] -and $element.Content -is [Windows.FrameworkElement]) {
-                $queue.Enqueue($element.Content)
+                if (-not $visited.Contains($element.Content)) {
+                    $queue.Enqueue($element.Content)
+                }
+            }
+            if ($element -is [Windows.Controls.ItemsControl]) {
+                foreach ($item in $element.Items) {
+                    if ($item -is [Windows.FrameworkElement] -and -not $visited.Contains($item)) {
+                        $queue.Enqueue($item)
+                    }
+                }
             }
 
             # ToolTips declared as elements hold their own content subtree and are not
             # reachable through logical or visual children until opened.
-            if ($element.ToolTip -is [Windows.Controls.ToolTip]) {
+            if ($element.ToolTip -is [Windows.Controls.ToolTip] -and -not $visited.Contains($element.ToolTip)) {
                 $queue.Enqueue($element.ToolTip)
             }
 
@@ -247,6 +260,17 @@ function Invoke-WinUtilTranslation {
             # Buttons and labels rendered from config: only exact dictionary keys are
             # translated, so application names and preset-key tooltips pass through.
             if ($element -is [Windows.Controls.ContentControl] -and $element.Content -is [string]) {
+                if ($element.Tag -eq "CategoryToggleButton" -or ($element -is [Windows.Controls.Label] -and $element.Content -match '^[+-]\s+')) {
+                    $prefix = if ($element.Content -match '^([+-]\s*)') { $matches[1] } else { "- " }
+                    $englishFull = Get-WinUtilTextBaseline -Control $element -Kind "Content" -Current $element.Content
+                    $englishCat = $englishFull -replace '^[+-]\s*', ''
+                    $translatedCat = & $resolveValue $englishCat
+                    if ($null -ne $translatedCat) {
+                        $element.Content = "$prefix$translatedCat"
+                        $changed++
+                    }
+                    continue
+                }
                 $english = Get-WinUtilTextBaseline -Control $element -Kind "Content" -Current $element.Content
                 $translated = $table.PSObject.Properties[$english].Value
                 $value = & $resolveValue $english
