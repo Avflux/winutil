@@ -258,12 +258,27 @@ function Invoke-WinUtilTranslation {
 
             # Tooltip as string property, e.g. title-bar buttons and config-rendered entries.
             if ($element.ToolTip -is [string] -and $element.ToolTip) {
-                $english = Get-WinUtilTextBaseline -Control $element -Kind "ToolTip" -Current $element.ToolTip
-                $translated = $table.PSObject.Properties[$english].Value
-                $value = & $resolveValue $english
-                if ($null -ne $value) {
-                    $element.ToolTip = $value
-                    $changed++
+                $toolTipText = $element.ToolTip
+                if ($toolTipText -match '(?s)^(?<Desc>.*?)(?<Suffix>\r?\n\r?\nPreset key:\s*.*)$') {
+                    $desc = $matches['Desc']
+                    $suffix = $matches['Suffix']
+                    $englishDesc = Get-WinUtilTextBaseline -Control $element -Kind "ToolTip" -Current $desc
+                    $value = & $resolveValue $englishDesc
+                    if ($null -ne $value) {
+                        $element.ToolTip = "$value$suffix"
+                        $changed++
+                    }
+                }
+                elseif ($toolTipText -match '^Preset key:\s*.*$') {
+                    # Preset key only, no description text to translate.
+                }
+                else {
+                    $english = Get-WinUtilTextBaseline -Control $element -Kind "ToolTip" -Current $toolTipText
+                    $value = & $resolveValue $english
+                    if ($null -ne $value) {
+                        $element.ToolTip = $value
+                        $changed++
+                    }
                 }
             }
         }

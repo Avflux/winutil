@@ -75,7 +75,8 @@ function Initialize-WPFUI {
                     "Install" {
                         $newButton.Add_MouseEnter({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)
-                            $this.ToolTip = "Install or Upgrade $($appObject.content)"
+                            $template = Get-WinUtilTranslation -Text "Install or Upgrade {0}"
+                            $this.ToolTip = $template -f $appObject.content
                         })
                         $newButton.Add_Click({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)
@@ -85,7 +86,8 @@ function Initialize-WPFUI {
                     "Uninstall" {
                         $newButton.Add_MouseEnter({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)
-                            $this.ToolTip = "Uninstall $($appObject.content)"
+                            $template = Get-WinUtilTranslation -Text "Uninstall {0}"
+                            $this.ToolTip = $template -f $appObject.content
                         })
                         $newButton.Add_Click({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)
@@ -95,7 +97,8 @@ function Initialize-WPFUI {
                     "Info" {
                         $newButton.Add_MouseEnter({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)
-                            $this.ToolTip = "Open the application's website in your default browser`n$($appObject.link)"
+                            $template = Get-WinUtilTranslation -Text "Open the application's website in your default browser`n{0}"
+                            $this.ToolTip = $template -f $appObject.link
                         })
                         $newButton.Add_Click({
                             $appObject = $sync.configs.applicationsHashtable.$($sync.appPopupSelectedApp)

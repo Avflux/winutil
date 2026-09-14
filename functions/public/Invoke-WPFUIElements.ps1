@@ -210,7 +210,7 @@ function Invoke-WPFUIElements {
 
                         $label = New-Object Windows.Controls.Label
                         $label.Content = $entryInfo.Content
-                        $label.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description
+                        $label.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description -Control $label
                         $label.HorizontalAlignment = "Left"
                         $label.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "FontSize")
                         $label.SetResourceReference([Windows.Controls.Control]::ForegroundProperty, "MainForegroundColor")
@@ -244,7 +244,7 @@ function Invoke-WPFUIElements {
                         $toggleButton = New-Object Windows.Controls.Primitives.ToggleButton
                         $toggleButton.Name = $entryInfo.Name
                         $toggleButton.Content = $entryInfo.Content[1]
-                        $toggleButton.ToolTip = Get-WinUtilTranslatedToolTip -Description $entryInfo.Description -Key $entryInfo.Name
+                        $toggleButton.ToolTip = Get-WinUtilTranslatedToolTip -Description $entryInfo.Description -Key $entryInfo.Name -Control $toggleButton
                         $toggleButton.HorizontalAlignment = "Left"
                         $toggleButton.Style = $ToggleButtonStyle
                         [System.Windows.Automation.AutomationProperties]::SetName($toggleButton, $entryInfo.Content[0])
@@ -288,7 +288,7 @@ function Invoke-WPFUIElements {
                         $label = New-Object Windows.Controls.Label
                         $label.Content = $entryInfo.Content
                         $label.HorizontalAlignment = "Left"
-                        $label.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description
+                        $label.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description -Control $label
                         $label.VerticalAlignment = "Center"
                         $label.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "ButtonFontSize")
                         $label.UseLayoutRounding = $true
@@ -325,7 +325,7 @@ function Invoke-WPFUIElements {
                             if ($entryInfo.ComboDescriptions) {
                                 $comboDescription = $entryInfo.ComboDescriptions.PSObject.Properties[$comboitem].Value
                                 if ($comboDescription) {
-                                    $comboBoxItem.ToolTip = $comboDescription
+                                    $comboBoxItem.ToolTip = Get-WinUtilTranslatedDescription -Description $comboDescription -Control $comboBoxItem
                                 }
                             }
                             $comboBoxItem.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "ButtonFontSize")
@@ -418,6 +418,9 @@ function Invoke-WPFUIElements {
                         $button = New-Object Windows.Controls.Button
                         $button.Name = $entryInfo.Name
                         $button.Content = $entryInfo.Content
+                        if ($entryInfo.Description) {
+                            $button.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description -Control $button
+                        }
                         $button.HorizontalAlignment = "Left"
                         $button.SetResourceReference([Windows.Controls.Control]::MarginProperty, "ButtonMargin")
                         $button.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "ButtonFontSize")
@@ -468,7 +471,7 @@ function Invoke-WPFUIElements {
                         $radioButton.HorizontalAlignment = "Left"
                         $radioButton.SetResourceReference([Windows.Controls.Control]::MarginProperty, "CheckBoxMargin")
                         $radioButton.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "ButtonFontSize")
-                        $radioButton.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description
+                        $radioButton.ToolTip = Get-WinUtilTranslatedDescription -Description $entryInfo.Description -Control $radioButton
                         $radioButton.UseLayoutRounding = $true
                         [System.Windows.Automation.AutomationProperties]::SetName($radioButton, $entryInfo.Content)
 
@@ -510,7 +513,7 @@ function Invoke-WPFUIElements {
                         $checkBox.Name = $entryInfo.Name
                         $checkBox.Content = $entryInfo.Content
                         $checkBox.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "FontSize")
-                        $checkBox.ToolTip = Get-WinUtilTranslatedToolTip -Description $entryInfo.Description -Key $entryInfo.Name
+                        $checkBox.ToolTip = Get-WinUtilTranslatedToolTip -Description $entryInfo.Description -Key $entryInfo.Name -Control $checkBox
                         $checkBox.SetResourceReference([Windows.Controls.Control]::MarginProperty, "CheckBoxMargin")
                         $checkBox.UseLayoutRounding = $true
                         [System.Windows.Automation.AutomationProperties]::SetName($checkBox, $entryInfo.Content)

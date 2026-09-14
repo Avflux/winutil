@@ -17,7 +17,7 @@ function Read-WinUtilPreferences {
     if (-not (Test-Path -LiteralPath $prefsFile)) { return }
 
     try {
-        $raw = [System.IO.File]::ReadAllText($prefsFile)
+        $raw = [System.IO.File]::ReadAllText($prefsFile, [System.Text.Encoding]::UTF8)
         $data = $raw | ConvertFrom-Json
 
         if ($data.language)       { $sync.preferences.language = [string]$data.language }

@@ -77,13 +77,26 @@ function Get-WinUtilTextBaseline {
         return [string]$Current
     }
     $baselines = $sync.TextBaselines
-    $entry = $baselines.GetValue($Control)
-    if (-not $entry) {
+    $entry = $null
+    if (-not $baselines.TryGetValue($Control, [ref]$entry) -or -not $entry) {
         $entry = @{}
+        $baselines.Remove($Control) | Out-Null
         $baselines.Add($Control, $entry)
     }
     if (-not $entry.ContainsKey($Kind)) {
-        $entry[$Kind] = [string]$Current
+        $baseline = [string]$Current
+        if ($sync.preferences.language -and $sync.preferences.language -ne "en-US") {
+            $langTable = $sync.configs.translations.($sync.preferences.language)
+            if ($langTable) {
+                foreach ($prop in $langTable.PSObject.Properties) {
+                    if ($prop.Value -eq $Current) {
+                        $baseline = $prop.Name
+                        break
+                    }
+                }
+            }
+        }
+        $entry[$Kind] = $baseline
     }
     return $entry[$Kind]
 }
@@ -115,9 +128,10 @@ function Set-WinUtilTextBaseline {
 
     if (-not $sync.TextBaselines) { return }
     $baselines = $sync.TextBaselines
-    $entry = $baselines.GetValue($Control)
-    if (-not $entry) {
+    $entry = $null
+    if (-not $baselines.TryGetValue($Control, [ref]$entry) -or -not $entry) {
         $entry = @{}
+        $baselines.Remove($Control) | Out-Null
         $baselines.Add($Control, $entry)
     }
     $entry[$Kind] = $English
@@ -223,8 +237,15 @@ function Get-WinUtilTranslatedToolTip {
         [string]$Description,
 
         [Parameter(Mandatory = $true)]
-        [string]$Key
+        [string]$Key,
+
+        [Parameter(Mandatory = $false)]
+        $Control
     )
+
+    if ($Control -and $Description) {
+        Set-WinUtilTextBaseline -Control $Control -Kind "ToolTip" -English $Description
+    }
 
     $translated = Get-WinUtilTranslation -Text $Description
     return Get-WinUtilEntryToolTip -Description $translated -Key $Key
@@ -245,12 +266,22 @@ function Get-WinUtilTranslatedDescription {
     .PARAMETER Description
         The entry's English description from the config JSON.
 
+    .PARAMETER Control
+        Optional control to record the English baseline for so language switches can restore it.
+
     #>
 
     param(
         [Parameter(Mandatory = $false)]
-        [string]$Description
+        [string]$Description,
+
+        [Parameter(Mandatory = $false)]
+        $Control
     )
+
+    if ($Control -and $Description) {
+        Set-WinUtilTextBaseline -Control $Control -Kind "ToolTip" -English $Description
+    }
 
     return Get-WinUtilTranslation -Text $Description
 }
