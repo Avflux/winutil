@@ -1,4 +1,4 @@
-﻿{
+{
     "en-US": {},
     "pt-BR": {
         "Change the WinUtil UI Theme": "Alterar o tema da interface do WinUtil",
@@ -369,7 +369,16 @@
         "Records and trims live audio inputs with simple microphone adjustment controls.": "Grava e edita entradas de audio ao vivo com controles simples de ajuste de microfone.",
         "Serves as a centralized launcher and dashboard for accessing cloud-based Microsoft 365 apps and recent documents.": "Serve como um launcher e painel centralizado para acessar aplicativos baseados em nuvem do Microsoft 365 e documentos recentes.",
         "Serves as the primary gaming library manager, social community interface, and PC Game Pass dashboard.": "Serve como o principal gerenciador de biblioteca de jogos, interface de comunidade social e painel do PC Game Pass.",
-        "Synchronizes text messages, phone notifications, photos, and calls from a mobile device to the desktop.": "Sincroniza mensagens de texto, notificacoes do telefone, fotos e chamadas de um dispositivo movel para o desktop.",
-        "The default video player and storefront for purchasing or renting media.": "O reprodutor de video padrao e loja para compra ou aluguel de midia."
+        "The default video player and storefront for purchasing or renting media.": "O reprodutor de video padrao e loja para compra ou aluguel de midia.",
+        "Hibernation is really meant for laptops as it saves what's in memory before turning the PC off. It really should never be used.": "A hibernação é indicada para notebooks, pois salva o que está na memória antes de desligar o PC. Ela não deve ser usada.",
+        "Blocks ALL Razer Software installations. The hardware works fine without any software.": "Bloqueia a instalação de TODOS os softwares da Razer. O hardware funciona normalmente sem nenhum software.",
+        "Blocks the Logi Download Assistant that Windows Update keeps reinstalling with Logitech device drivers. Logitech hardware keeps working without it.": "Bloqueia o Logi Download Assistant que o Windows Update reinstala com os drivers de dispositivos Logitech. O hardware continua funcionando normalmente sem ele.",
+        "Reduces user interruptions by selectively blocking connections to Adobe's activation and telemetry servers. Credit: Ruddernation-Designs": "Reduz as interrupções ao usuário bloqueando seletivamente as conexões com os servidores de ativação e telemetria da Adobe. Créditos: Ruddernation-Designs",
+        "Uses Windows' default overlay behavior.": "Usa o comportamento de sobreposição padrão do Windows.",
+        "Disables MPO using OverlayTestMode=5, the less aggressive compatibility method.": "Desativa o MPO usando OverlayTestMode=5, o método de compatibilidade menos agressivo.",
+        "Disables MPO using OverlayTestMode=5 and DisableOverlays=1, the more aggressive method.": "Desativa o MPO usando OverlayTestMode=5 e DisableOverlays=1, o método mais agressivo.",
+        "Install or Upgrade {0}": "Instalar ou Atualizar {0}",
+        "Uninstall {0}": "Desinstalar {0}",
+        "Open the application's website in your default browser\n{0}": "Abrir o site do aplicativo no seu navegador padrão\n{0}"
     }
 }

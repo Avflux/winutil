@@ -47,7 +47,7 @@ function New-WinUtilFossBadge {
     $badge.Width = $Size
     $badge.Height = $Size
     $badge.Child = $artwork
-    $badge.ToolTip = "Free and Open Source Software"
+    $badge.ToolTip = Get-WinUtilTranslatedDescription -Description "Free and Open Source Software" -Control $badge
 
     return $badge
 }
