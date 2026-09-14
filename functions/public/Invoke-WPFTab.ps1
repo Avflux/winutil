@@ -63,4 +63,9 @@ function Invoke-WPFTab {
             $sync.SearchBarClearButton.Visibility = "Collapsed"
         }
     }
+
+    # Re-apply translation so controls built lazily or missed by the startup walk are covered.
+    if ($sync.preferences.language -and $sync.preferences.language -ne "en-US") {
+        Invoke-WinUtilTranslation -Language $sync.preferences.language
+    }
 }

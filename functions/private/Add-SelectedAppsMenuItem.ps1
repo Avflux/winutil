@@ -33,7 +33,7 @@ function Add-SelectedAppsMenuItem {
     $selectedAppRemoveButton.Content = [string]([char]0xE711)
     $selectedAppRemoveButton.HorizontalAlignment = "Center"
     $selectedAppRemoveButton.Tag = $key
-    $selectedAppRemoveButton.ToolTip = "Remove the App from Selection"
+    Set-WinUtilTranslatedText -Control $selectedAppRemoveButton -Kind "ToolTip" -English "Remove the App from Selection"
     $selectedAppRemoveButton.SetResourceReference([Windows.Controls.Control]::ForegroundProperty, "MainForegroundColor")
     $selectedAppRemoveButton.SetResourceReference([Windows.Controls.Control]::StyleProperty, "HoverButtonStyle")
 

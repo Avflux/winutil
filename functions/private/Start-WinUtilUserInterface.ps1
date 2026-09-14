@@ -238,7 +238,7 @@ function Start-WinUtilUserInterface {
     })
 
     $sync["Form"].Add_MouseLeftButtonDown({
-        Invoke-WPFPopup -Action "Hide" -Popups @("Settings", "Theme", "FontScaling")
+        Invoke-WPFPopup -Action "Hide" -Popups @("Settings", "Theme", "FontScaling", "Language")
         $sync["Form"].DragMove()
     })
 
@@ -255,7 +255,7 @@ function Start-WinUtilUserInterface {
     })
 
     $sync["Form"].Add_Deactivated({
-        Invoke-WPFPopup -Action "Hide" -Popups @("Settings", "Theme", "FontScaling")
+        Invoke-WPFPopup -Action "Hide" -Popups @("Settings", "Theme", "FontScaling", "Language")
     })
 
     $sync["Form"].Add_ContentRendered({
@@ -285,7 +285,7 @@ function Start-WinUtilUserInterface {
             # Disable the install tab
             $sync.WPFTab1BT.IsEnabled = $false
             $sync.WPFTab1BT.Opacity = 0.5
-            $sync.WPFTab1BT.ToolTip = "Internet connection required for installing applications."
+            Set-WinUtilTranslatedText -Control $sync.WPFTab1BT -Kind "ToolTip" -English "Internet connection required for installing applications."
 
             # The install action buttons are generated with the Install tab, so
             # Initialize-WinUtilInstallTabControls disables them when that tab is built
@@ -387,7 +387,7 @@ function Start-WinUtilUserInterface {
     })
 
     $sync["ThemeButton"].Add_Click({
-        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Hide"; "Theme" = "Toggle"; "FontScaling" = "Hide" }
+        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Hide"; "Theme" = "Toggle"; "FontScaling" = "Hide"; "Language" = "Hide" }
     })
     $sync["AutoThemeMenuItem"].Add_Click({
         Invoke-WPFPopup -Action "Hide" -Popups @("Theme")
@@ -403,7 +403,7 @@ function Start-WinUtilUserInterface {
     })
 
     $sync["SettingsButton"].Add_Click({
-        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Toggle"; "Theme" = "Hide"; "FontScaling" = "Hide" }
+        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Toggle"; "Theme" = "Hide"; "FontScaling" = "Hide"; "Language" = "Hide" }
     })
     $sync["ImportMenuItem"].Add_Click({
         Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
@@ -427,7 +427,7 @@ Runspace : <a href="https://github.com/DeveloperDurp">@DeveloperDurp</a>, <a hre
 GitHub   : <a href="https://github.com/ChrisTitusTech/winutil">ChrisTitusTech/winutil</a>
 Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sync.version)">$($sync.version)</a>
 "@
-        Show-CustomDialog -Title "About" -Message $authorInfo
+        Show-CustomDialog -Title (Get-WinUtilTranslation -Text "About") -Message $authorInfo
     })
     $sync["DocumentationMenuItem"].Add_Click({
         Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
@@ -448,12 +448,12 @@ Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sy
         } catch {
             $authorInfo += "An error occurred while fetching or processing the sponsors: $_`n"
         }
-        Show-CustomDialog -Title "Sponsors" -Message $authorInfo -EnableScroll $true
+        Show-CustomDialog -Title (Get-WinUtilTranslation -Text "Sponsors") -Message $authorInfo -EnableScroll $true
     })
 
     # Font Scaling Event Handlers
     $sync["FontScalingButton"].Add_Click({
-        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Hide"; "Theme" = "Hide"; "FontScaling" = "Toggle" }
+        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Hide"; "Theme" = "Hide"; "FontScaling" = "Toggle"; "Language" = "Hide" }
     })
 
     $sync["FontScalingSlider"].Add_ValueChanged({
@@ -471,6 +471,19 @@ Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sy
         $scaleFactor = $sync.FontScalingSlider.Value
         Invoke-WinUtilFontScaling -ScaleFactor $scaleFactor
         Invoke-WPFPopup -Action "Hide" -Popups @("FontScaling")
+    })
+
+    # Language Event Handlers
+    $sync["LanguageButton"].Add_Click({
+        Invoke-WPFPopup -PopupActionTable @{ "Settings" = "Hide"; "Theme" = "Hide"; "FontScaling" = "Hide"; "Language" = "Toggle" }
+    })
+    $sync["EnglishLanguageMenuItem"].Add_Click({
+        Invoke-WPFPopup -Action "Hide" -Popups @("Language")
+        Invoke-WinUtilTranslation -Language "en-US"
+    })
+    $sync["PortugueseLanguageMenuItem"].Add_Click({
+        Invoke-WPFPopup -Action "Hide" -Popups @("Language")
+        Invoke-WinUtilTranslation -Language "pt-BR"
     })
 
     # Win11ISO Tab button handlers

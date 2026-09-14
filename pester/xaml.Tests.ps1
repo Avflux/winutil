@@ -204,7 +204,11 @@ Describe "XAML document" {
             "WPFClearAppxSelection",
             "WPFBackToTweaks",
             "WPFInstallSelectedAppx",
-            "WPFRemoveSelectedAppx"
+            "WPFRemoveSelectedAppx",
+            "LanguageButton",
+            "LanguagePopup",
+            "EnglishLanguageMenuItem",
+            "PortugueseLanguageMenuItem"
         )
 
         $missingControls = @($requiredControls | Where-Object { -not (Test-WinUtilNameInSet -Name $_ -Set $xamlNames) })
@@ -299,6 +303,7 @@ Describe "XAML document" {
         $topBarButtonNames = @(
             "ThemeButton",
             "FontScalingButton",
+            "LanguageButton",
             "SettingsButton",
             "WPFMinimizeButton",
             "WPFMaximizeButton",
@@ -478,7 +483,8 @@ Describe "XAML and sync wiring" {
             "Win11ISOWorkDir",
             "Win11ISOContentsDir",
             "Win11ISOExistingWorkRetryPending",
-            "Win11ISOUSBDisks"
+            "Win11ISOUSBDisks",
+            "TextBaselines"
         )
         $allowedNames = @($xamlNames + $generatedNames + $dynamicStateNames) | Sort-Object -Unique
         $bracketReferences = @(
