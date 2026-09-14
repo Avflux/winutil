@@ -35,9 +35,9 @@ BeforeAll {
 
     foreach ($clause in $typeSwitch.Clauses) {
         $clauseName = $clause.Item1.Extent.Text.Trim('"')
-        $script:rendererClauses[$clauseName] = [bool]($clause.Item2.Extent.Text -match 'Get-WinUtilEntryToolTip')
+        $script:rendererClauses[$clauseName] = [bool]($clause.Item2.Extent.Text -match 'Get-WinUtil(Entry|Translated)ToolTip')
     }
-    $script:rendererClauses["default"] = [bool]($typeSwitch.Default.Extent.Text -match 'Get-WinUtilEntryToolTip')
+    $script:rendererClauses["default"] = [bool]($typeSwitch.Default.Extent.Text -match 'Get-WinUtil(Entry|Translated)ToolTip')
 
     $appRendererPath = Join-Path $script:repoRoot "functions\private\Initialize-InstallAppEntry.ps1"
     $script:appRenderer = Get-Content $appRendererPath -Raw
@@ -91,7 +91,7 @@ Describe "Preset key tooltips" {
     }
 
     It "labels entries created by the application renderer" {
-        $script:appRenderer | Should -Match '\$border\.ToolTip\s*=\s*Get-WinUtilEntryToolTip\s+-Description\s+\$app\.description\s+-Key\s+\$appKey'
+        $script:appRenderer | Should -Match '\$border\.ToolTip\s*=\s*Get-WinUtil(Entry|Translated)ToolTip\s+-Description\s+\$app\.description\s+-Key\s+\$appKey'
     }
 
     It "labels every entry with a key the preset importer accepts" {
