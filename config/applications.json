@@ -1150,6 +1150,24 @@
         "winget": "OpenRGB.OpenRGB",
         "foss": true
     },
+    "opera": {
+        "category": "Browsers",
+        "choco": "opera",
+        "content": "Opera",
+        "description": "Opera is a fast, feature-rich web browser with a built-in ad blocker, free VPN, battery saver, and a customizable sidebar for quick access to social apps and tools.",
+        "link": "https://www.opera.com/",
+        "winget": "Opera.Opera",
+        "foss": false
+    },
+    "operagx": {
+        "category": "Browsers",
+        "choco": "opera-gx",
+        "content": "Opera GX",
+        "description": "Opera GX is a special version of the Opera browser built specifically for gamers, featuring CPU, RAM and network limiters, GX Corner for gaming news and deals, and deep Twitch integration.",
+        "link": "https://www.opera.com/gx",
+        "winget": "Opera.OperaGX",
+        "foss": false
+    },
     "OpenVPN": {
         "category": "Pro Tools",
         "choco": "openvpn-connect",
