@@ -800,6 +800,13 @@
         "Writing USB drive...": "Escrevendo no drive USB...",
         "Downloading O&O ShutUp10++...": "Baixando O&O ShutUp10++...",
         "see the log": "consulte o log",
-        "!! All data on the selected USB drive will be permanently erased !!": "!! Todos os dados no drive USB selecionado serão PERMANENTEMENTE APAGADOS !!","No USB drives detected.": "Nenhum drive USB detectado."
+        "!! All data on the selected USB drive will be permanently erased !!": "!! Todos os dados no drive USB selecionado serão PERMANENTEMENTE APAGADOS !!",
+        "No USB drives detected.": "Nenhum drive USB detectado.",
+        "IDE": "IDE",
+        "CLI": "CLI",
+        "API": "API",
+        "AI": "IA",
+        "SDK": "SDK",
+        "Tools": "Ferramentas"
     }
 }
