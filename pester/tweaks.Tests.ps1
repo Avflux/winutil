@@ -9,6 +9,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFtweaksbutton.ps1")
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFundoall.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Set-WinUtilService {
         param($Name, $StartupType)
     }

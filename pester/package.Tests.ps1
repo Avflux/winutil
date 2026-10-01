@@ -10,6 +10,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\private\Install-WinUtilProgramWinget.ps1")
     . (Join-Path $script:repoRoot "functions\private\Install-WinUtilProgramChoco.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Invoke-WPFUIThread { }
     function Write-WinUtilJobBanner {
         param([string]$Message, [string]$Level)

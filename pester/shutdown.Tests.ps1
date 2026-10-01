@@ -7,6 +7,10 @@ BeforeAll {
 
     . (Join-Path $script:functionRoot "private\Stop-WinUtilActiveWork.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Test-WinUtilUIAlive { $null -ne $sync.Form -and $null -ne $sync.Form.Dispatcher }
 
     . (Join-Path $script:functionRoot "private\Invoke-WinUtilCloseRequest.ps1")

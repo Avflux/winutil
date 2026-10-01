@@ -22,6 +22,10 @@ BeforeAll {
     . (Join-Path $script:functionRoot "public\Invoke-WPFImpex.ps1")
 
     # Stubs so the mocks below have something to replace; the real ones live in other files
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Write-WinUtilLog { param($Level, $Component, $Message, [switch]$Detail) }
     function Write-WinUtilTimingSummary { param($Scope, $TotalMilliseconds) }
     function Clear-WinUtilActiveJob { param([string]$Token) $sync.ActiveJobToken = $null; $sync.ActiveJob = $null; return $true }

@@ -9,6 +9,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\private\Initialize-WinUtilRunspacePool.ps1")
     . (Join-Path $script:repoRoot "functions\private\Register-WinUtilRunspaceCleanup.ps1")
         . (Join-Path $script:repoRoot "functions\public\Invoke-WPFRunspace.ps1")
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Write-WinUtilLog { }
     function Start-WinUtilJob {
         param([string]$Name, [scriptblock]$ScriptBlock, [hashtable]$Parameters, [string]$Description, [switch]$DisableAppList)

@@ -113,6 +113,10 @@ namespace Windows.Controls
     . (Join-Path $script:repoRoot "functions\private\Find-AppsByNameOrDescription.ps1")
     . (Join-Path $script:repoRoot "functions\private\Find-TweaksByNameOrDescription.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function script:New-WinUtilSearchCollection {
         return ,[System.Collections.ArrayList]::new()
     }

@@ -9,6 +9,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\private\Install-WinUtilProgramChoco.ps1")
     . (Join-Path $script:repoRoot "functions\private\Complete-WinUtilPackageRun.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Step-WinUtilJob { param([string]$Status, [int]$Percent, [string]$State, [string]$Overlay, [switch]$Hide) }
     function Write-WinUtilLog {
         param($Message, $Level, $Component)

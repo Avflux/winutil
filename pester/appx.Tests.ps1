@@ -35,6 +35,10 @@ BeforeAll {
     }, $true)
     $script:appxInstallScriptBlock = $installCommandAssignment.Right.Expression.ScriptBlock.GetScriptBlock()
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Write-WinUtilLog {
         param($Message, $Level, $Component)
     }
