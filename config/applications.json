@@ -53,7 +53,7 @@
         "winget": "AIMP.AIMP",
         "foss": false
     },
-   "angryipscanner": {
+    "angryipscanner": {
         "category": "Pro Tools",
         "choco": "angryip",
         "content": "Angry IP Scanner",
@@ -150,7 +150,8 @@
         "description": "Bruno is a local-first API client that stores collections as plain text files for version control and collaboration.",
         "link": "https://www.usebruno.com/",
         "winget": "Bruno.Bruno",
-        "foss": true
+        "foss": true,
+        "subcategory": "API"
     },
     "bulkcrapuninstaller": {
         "category": "Utilities",
@@ -195,7 +196,8 @@
         "description": "The official ChatGPT desktop app for Windows, distributed through the Microsoft Store.",
         "link": "https://openai.com/chatgpt/download/",
         "winget": "msstore:9NT1R1C2HH7J",
-        "foss": false
+        "foss": false,
+        "subcategory": "AI"
     },
     "chatterino": {
         "category": "Communications",
@@ -240,7 +242,8 @@
         "description": "Anthropic's Claude desktop application for focused AI-assisted work and chat.",
         "link": "https://claude.ai/download",
         "winget": "Anthropic.Claude",
-        "foss": false
+        "foss": false,
+        "subcategory": "AI"
     },
     "claude-code": {
         "category": "Development",
@@ -249,7 +252,8 @@
         "description": "Anthropic's agentic coding tool for terminal and IDE development workflows.",
         "link": "https://code.claude.com/",
         "winget": "Anthropic.ClaudeCode",
-        "foss": false
+        "foss": false,
+        "subcategory": "API"
     },
     "cmake": {
         "category": "Development",
@@ -258,7 +262,8 @@
         "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software.",
         "link": "https://cmake.org/",
         "winget": "Kitware.CMake",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "codex": {
         "category": "Development",
@@ -267,7 +272,8 @@
         "description": "Codex CLI is an OpenAI coding agent that runs locally in your terminal.",
         "link": "https://developers.openai.com/codex/cli",
         "winget": "OpenAI.Codex",
-        "foss": true
+        "foss": true,
+        "subcategory": "API"
     },
     "cpuz": {
         "category": "Pro Tools",
@@ -303,7 +309,8 @@
         "description": "AI-powered code editor (VS Code-based) with agentic coding features and integrated AI assistance for development workflows.",
         "link": "https://cursor.com/",
         "winget": "Anysphere.Cursor",
-        "foss": false
+        "foss": false,
+        "subcategory": "IDE"
     },
     "ddu": {
         "category": "Pro Tools",
@@ -357,7 +364,8 @@
         "description": "Docker Desktop provides a local environment for building, running, and testing containerized applications on Windows.",
         "link": "https://www.docker.com/products/docker-desktop/",
         "winget": "Docker.DockerDesktop",
-        "foss": false
+        "foss": false,
+        "subcategory": "SDK"
     },
     "dotnet6": {
         "category": "Microsoft Tools",
@@ -529,7 +537,8 @@
         "description": "Fast Node Manager (fnm) is a fast, cross-platform tool for installing and switching between Node.js versions.",
         "link": "https://github.com/Schniz/fnm",
         "winget": "Schniz.fnm",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "foxpdfreader": {
         "category": "Document",
@@ -565,7 +574,8 @@
         "description": "Git is a distributed version control system widely used for tracking changes in source code during software development.",
         "link": "https://git-scm.com/",
         "winget": "Git.Git",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "gitextensions": {
         "category": "Development",
@@ -574,7 +584,8 @@
         "description": "Git Extensions is a graphical Git client for Windows with repository, history, and commit management tools.",
         "link": "https://gitextensions.github.io/",
         "winget": "GitExtensionsTeam.GitExtensions",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "githubcli": {
         "category": "Development",
@@ -583,7 +594,8 @@
         "description": "GitHub CLI brings pull requests, issues, releases, and other GitHub workflows to the terminal.",
         "link": "https://cli.github.com/",
         "winget": "GitHub.cli",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "githubdesktop": {
         "category": "Development",
@@ -592,7 +604,8 @@
         "description": "GitHub Desktop is a visual Git client that simplifies collaboration on GitHub repositories with an easy-to-use interface.",
         "link": "https://desktop.github.com/",
         "winget": "GitHub.GitHubDesktop",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "gog": {
         "category": "Games",
@@ -610,7 +623,8 @@
         "description": "Go (or Golang) is a statically typed, compiled programming language designed for simplicity, reliability, and efficiency.",
         "link": "https://go.dev/",
         "winget": "GoLang.Go",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "googledrive": {
         "category": "Utilities",
@@ -745,7 +759,8 @@
         "description": "Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development Kit (OpenJDK).",
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.8.JDK",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "java21": {
         "category": "Development",
@@ -754,7 +769,8 @@
         "description": "Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development Kit (OpenJDK).",
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.21.JDK",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "java25": {
         "category": "Development",
@@ -763,7 +779,8 @@
         "description": "Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development Kit (OpenJDK).",
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.25.JDK",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "jellyfinmediaplayer": {
         "category": "Selfhosted Tools",
@@ -790,7 +807,8 @@
         "description": "Jetbrains Toolbox is a platform for easy installation and management of JetBrains developer tools.",
         "link": "https://www.jetbrains.com/toolbox/",
         "winget": "JetBrains.Toolbox",
-        "foss": false
+        "foss": false,
+        "subcategory": "IDE"
     },
     "jpegview": {
         "category": "Utilities",
@@ -844,7 +862,8 @@
         "description": "Simple terminal UI for git commands.",
         "link": "https://github.com/jesseduffield/lazygit/",
         "winget": "JesseDuffield.lazygit",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "libreoffice": {
         "category": "Document",
@@ -1023,7 +1042,8 @@
         "description": "Neovim is a highly extensible text editor and an improvement over the original Vim editor.",
         "link": "https://neovim.io/",
         "winget": "Neovim.Neovim",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "nextclouddesktop": {
         "category": "Selfhosted Tools",
@@ -1050,7 +1070,8 @@
         "description": "NodeJS is a JavaScript runtime built on Chrome's V8 JavaScript engine for building server-side and networking applications.",
         "link": "https://nodejs.org/",
         "winget": "OpenJS.NodeJS",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "nodejslts": {
         "category": "Development",
@@ -1059,15 +1080,17 @@
         "description": "NodeJS LTS provides Long-Term Support releases for stable and reliable server-side JavaScript development.",
         "link": "https://nodejs.org/",
         "winget": "OpenJS.NodeJS.LTS",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "pnpm": {
-    "category": "Development",
-    "content": "pnpm",
-    "description": "pnpm is a fast and disk space efficient package manager for JavaScript and Node.js applications.",
-    "link": "https://pnpm.io/",
-    "winget": "pnpm.pnpm",
-    "foss": true
+        "category": "Development",
+        "content": "pnpm",
+        "description": "pnpm is a fast and disk space efficient package manager for JavaScript and Node.js applications.",
+        "link": "https://pnpm.io/",
+        "winget": "pnpm.pnpm",
+        "foss": true,
+        "subcategory": "CLI"
     },
     "notepadplus": {
         "category": "Multimedia Tools",
@@ -1310,7 +1333,8 @@
         "description": "Oh My Posh is a cross-platform prompt theme engine for any shell.",
         "link": "https://ohmyposh.dev/",
         "winget": "JanDeDobbeleer.OhMyPosh",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "postman": {
         "category": "Development",
@@ -1319,7 +1343,8 @@
         "description": "Postman is an API platform and desktop client for designing, testing, documenting, and collaborating on APIs.",
         "link": "https://www.postman.com/downloads/",
         "winget": "Postman.Postman",
-        "foss": false
+        "foss": false,
+        "subcategory": "API"
     },
     "powershell": {
         "category": "Microsoft Tools",
@@ -1427,7 +1452,8 @@
         "description": "Python is a versatile programming language used for web development, data analysis, artificial intelligence, and more.",
         "link": "https://www.python.org/",
         "winget": "Python.Python.3.14",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "qbittorrent": {
         "category": "Utilities",
@@ -1439,13 +1465,13 @@
         "foss": true
     },
     "qownnotes": {
-      "category": "Document",
-      "choco": "qownnotes",
-      "content": "QOwnNotes",
-      "description": "QOwnNotes is a free open-source note-taking app with Nextcloud/ownCloud integration.",
-      "link": "https://www.qownnotes.org/",
-      "winget": "pbek.QOwnNotes",
-      "foss": true  
+        "category": "Document",
+        "choco": "qownnotes",
+        "content": "QOwnNotes",
+        "description": "QOwnNotes is a free open-source note-taking app with Nextcloud/ownCloud integration.",
+        "link": "https://www.qownnotes.org/",
+        "winget": "pbek.QOwnNotes",
+        "foss": true
     },
     "qtox": {
         "category": "Communications",
@@ -1490,7 +1516,8 @@
         "description": "Rust is a programming language designed for safety and performance, particularly focused on systems programming.",
         "link": "https://www.rust-lang.org/",
         "winget": "Rustlang.Rust.MSVC",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "sdio": {
         "category": "Utilities",
@@ -1526,7 +1553,8 @@
         "description": "A free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware.",
         "link": "https://systeminformer.com/",
         "winget": "WinsiderSS.SystemInformer",
-        "foss": true
+        "foss": true,
+        "subcategory": "Tools"
     },
     "signal": {
         "category": "Communications",
@@ -1589,7 +1617,8 @@
         "description": "Starship is a fast, customizable, cross-platform prompt for PowerShell and other shells.",
         "link": "https://starship.rs/",
         "winget": "Starship.Starship",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "steam": {
         "category": "Games",
@@ -1616,7 +1645,8 @@
         "description": "Sublime Text is a sophisticated text editor for code, markup, and prose.",
         "link": "https://www.sublimetext.com/",
         "winget": "SublimeHQ.SublimeText.4",
-        "foss": false
+        "foss": false,
+        "subcategory": "IDE"
     },
     "sumatra": {
         "category": "Document",
@@ -1795,7 +1825,8 @@
         "description": "Unity is a powerful game development platform for creating 2D, 3D, augmented reality, and virtual reality games.",
         "link": "https://unity.com/",
         "winget": "Unity.UnityHub",
-        "foss": false
+        "foss": false,
+        "subcategory": "Tools"
     },
     "vagrant": {
         "category": "Development",
@@ -1804,7 +1835,8 @@
         "description": "Vagrant builds and manages reproducible virtual machine development environments from declarative configuration.",
         "link": "https://developer.hashicorp.com/vagrant",
         "winget": "Hashicorp.Vagrant",
-        "foss": false
+        "foss": false,
+        "subcategory": "SDK"
     },
     "everything": {
         "category": "Utilities",
@@ -1867,7 +1899,8 @@
         "description": "Visual Studio 2022 is an integrated development environment (IDE) for building, debugging, and deploying applications.",
         "link": "https://visualstudio.microsoft.com/",
         "winget": "Microsoft.VisualStudio.2022.Community",
-        "foss": false
+        "foss": false,
+        "subcategory": "IDE"
     },
     "visualstudio2026": {
         "category": "Development",
@@ -1876,7 +1909,8 @@
         "description": "Visual Studio 2026 is an integrated development environment (IDE) for building, debugging, and deploying applications.",
         "link": "https://visualstudio.microsoft.com/",
         "winget": "Microsoft.VisualStudio.Community",
-        "foss": false
+        "foss": false,
+        "subcategory": "IDE"
     },
     "vivaldi": {
         "category": "Browsers",
@@ -1912,7 +1946,8 @@
         "description": "Visual Studio Code is a free, open-source code editor with support for multiple programming languages.",
         "link": "https://code.visualstudio.com/",
         "winget": "Microsoft.VisualStudioCode",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "vscodium": {
         "category": "Development",
@@ -1921,7 +1956,8 @@
         "description": "VSCodium is a community-driven, freely-licensed binary distribution of Microsoft's VS Code.",
         "link": "https://vscodium.com/",
         "winget": "VSCodium.VSCodium",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "waterfox": {
         "category": "Browsers",
@@ -2020,7 +2056,8 @@
         "description": "Yarn is a fast, reliable, and secure dependency management tool for JavaScript projects.",
         "link": "https://yarnpkg.com/",
         "winget": "Yarn.Yarn",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "zoom": {
         "category": "Communications",
@@ -2038,7 +2075,8 @@
         "description": "uv is a fast Python package and project manager written in Rust.",
         "link": "https://docs.astral.sh/uv/getting-started/installation/",
         "winget": "astral-sh.uv",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "tightvnc": {
         "category": "Utilities",
@@ -2091,7 +2129,8 @@
         "description": "Zed is a modern, high-performance code editor designed from the ground up for speed and collaboration.",
         "link": "https://zed.dev/",
         "winget": "ZedIndustries.Zed",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "zotero": {
         "category": "Document",
@@ -2118,7 +2157,8 @@
         "description": "A Ruby language execution environment with a MSYS2 installation.",
         "content": "Ruby",
         "link": "https://rubyinstaller.org/",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "Lua": {
         "category": "Development",
@@ -2127,7 +2167,8 @@
         "description": "A 'batteries included environment' for the Lua scripting language on Windows.",
         "content": "Lua",
         "link": "https://github.com/rjpcomputing/luaforwindows",
-        "foss": true
+        "foss": true,
+        "subcategory": "SDK"
     },
     "CloudflareWARP": {
         "category": "Utilities",
@@ -2139,4 +2180,3 @@
         "foss": false
     }
 }
-

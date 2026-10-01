@@ -9,6 +9,10 @@ Describe "Win11 Creator setup media" {
         $script:isoScriptPath = Join-Path $script:repoRoot "functions\private\Invoke-WinUtilISOScript.ps1"
         $script:autoUnattendPath = Join-Path $script:repoRoot "tools\autounattend.xml"
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
         function Get-WinUtilFunctionText {
             param (
                 [Parameter(Mandatory)][string]$Path,

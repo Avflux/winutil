@@ -8,6 +8,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\private\Save-WinUtilFile.ps1")
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFOOSU.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Invoke-WPFRunspace {
         param($ArgumentList, $ParameterList, [scriptblock]$ScriptBlock)
     }

@@ -21,11 +21,11 @@ function Invoke-WPFFeatureInstall {
 
         foreach ($feature in $Features) {
             $completed++
-            Step-WinUtilJob -Status "Installing $feature ($completed/$total)" -Percent ([int]((($completed - 1) / $total) * 100))
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installing {0} ({1}/{2})") -f $feature, $completed, $total) -Percent ([int]((($completed - 1) / $total) * 100))
             Measure-WinUtilStep -Scope "Features" -Name $feature -ScriptBlock {
                 Invoke-WinUtilFeatureInstall $feature
             }
-            Step-WinUtilJob -Status "Installed $feature ($completed/$total)" -Percent ([int](($completed / $total) * 100))
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installed {0} ({1}/{2})") -f $feature, $completed, $total) -Percent ([int](($completed / $total) * 100))
         }
 
         Write-Host "A reboot may be required."

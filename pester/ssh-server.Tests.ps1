@@ -5,6 +5,10 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Get-WindowsCapability {
         param($Name, [switch]$Online)
         [pscustomobject]@{ State = "Installed" }

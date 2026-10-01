@@ -43,6 +43,20 @@ function Invoke-WPFToggleAllCategories {
                     $escapedSourcePrefix = [regex]::Escape($sourcePrefix)
                     $categoryLabel.Content = $categoryLabel.Content -replace "^$escapedSourcePrefix ", "$targetPrefix "
                 }
+
+                # When expanding, also expand sub-categories so their apps are visible
+                if ($Action -eq "Expand") {
+                    $wrapPanel.Children | ForEach-Object {
+                        if ($_ -is [System.Windows.Controls.StackPanel] -and $_.Tag -eq "SubCategoryContainer") {
+                            $subHeader = $_.Children[0]
+                            $subWrapPanel = $_.Children[1]
+                            if ($subHeader.Content -like "+*") {
+                                $subHeader.Content = $subHeader.Content -replace "^\+ ", "- "
+                            }
+                            $subWrapPanel.Visibility = [Windows.Visibility]::Visible
+                        }
+                    }
+                }
             }
         }
     }

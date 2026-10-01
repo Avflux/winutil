@@ -308,6 +308,21 @@ function Invoke-WinUtilTranslation {
         }
     }
 
+    # Win11ISO step TabItems ("1   Select ISO" etc.) are HeaderedContentControl, not
+    # HeaderedItemsControl, so the walker above skips their headers. They are not the main
+    # nav tabs (which feed $sync.currentTab), so translate them here.
+    foreach ($stepName in @("WPFWin11ISOSelectSection", "WPFWin11ISOModifySection", "WPFWin11ISOOutputSection")) {
+        $stepTab = $sync.Form.FindName($stepName)
+        if ($stepTab -and $stepTab.Header -is [string] -and $stepTab.Header) {
+            $english = Get-WinUtilTextBaseline -Control $stepTab -Kind "Header" -Current $stepTab.Header
+            $value = & $resolveValue $english
+            if ($null -ne $value) {
+                $stepTab.Header = $value
+                $changed++
+            }
+        }
+    }
+
     # The counter is template-built, so it never matches a static key. Rebuild it in the
     # selected language; before the Install tab exists the config label renders verbatim and
     # the next counter update picks the language up.

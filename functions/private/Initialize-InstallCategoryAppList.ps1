@@ -101,11 +101,84 @@ function Initialize-InstallCategoryAppList {
             # Add the entire category container to the target element
             $null = $TargetElement.Items.Add($categoryContainer)
 
-            $sync.InstallAppRenderQueue.Enqueue([pscustomobject]@{
-                Category = $category
-                TargetElement = $wrapPanel
-                AppKeys = @($appsByCategory[$category] | Sort-Object)
-            })
+            # Check if this category has subcategories (any app with a 'subcategory' field)
+            $categoryApps = @($appsByCategory[$category] | Sort-Object)
+            $hasSubcats = $false
+            foreach ($appKey in $categoryApps) {
+                if ($Apps[$appKey].subcategory) { $hasSubcats = $true; break }
+            }
+
+            if ($hasSubcats) {
+                # Group apps by subcategory for visual grouping within this category
+                $appsBySubcategory = @{}
+                foreach ($appKey in $categoryApps) {
+                    $subcat = $Apps[$appKey].subcategory
+                    if (-not $appsBySubcategory.ContainsKey($subcat)) {
+                        $appsBySubcategory[$subcat] = [System.Collections.Generic.List[string]]::new()
+                    }
+                    $appsBySubcategory[$subcat].Add($appKey)
+                }
+
+                foreach ($subcat in ($appsBySubcategory.Keys | Sort-Object)) {
+                    # Create sub-container: sub-header label + sub-wrap-panel (apps)
+                    $subContainer = New-Object Windows.Controls.StackPanel
+                    $subContainer.Orientation = "Vertical"
+                    $subContainer.HorizontalAlignment = [Windows.HorizontalAlignment]::Stretch
+                    $subContainer.Tag = "SubCategoryContainer"
+
+                    $subHeader = New-Object Windows.Controls.Label
+                    $translatedSubcat = Get-WinUtilTranslation -Text $subcat
+                    $subHeader.Content = "- $translatedSubcat"
+                    $subHeader.Tag = "SubCategoryToggleButton"
+                    Set-WinUtilTextBaseline -Control $subHeader -Kind "Content" -English "- $subcat"
+                    $subHeader.FontSize = 14
+                    $subHeader.SetResourceReference([Windows.Controls.Control]::FontFamilyProperty, "HeaderFontFamily")
+                    $subHeader.SetResourceReference([Windows.Controls.Control]::ForegroundProperty, "LabelboxForegroundColor")
+                    $subHeader.Cursor = [System.Windows.Input.Cursors]::Hand
+                    $subHeader.HorizontalAlignment = [Windows.HorizontalAlignment]::Stretch
+                    $subHeader.Margin = New-Object Windows.Thickness(10, 5, 0, 0)
+
+                    $subHeader.Add_MouseLeftButtonUp({
+                        param($subcategoryToggle)
+                        $subStackPanel = $subcategoryToggle.Parent
+                        if ($subStackPanel -and $subStackPanel.Children.Count -ge 2) {
+                            $subWrapPanel = $subStackPanel.Children[1]
+                            if ($subWrapPanel.Visibility -eq [Windows.Visibility]::Visible) {
+                                $subWrapPanel.Visibility = [Windows.Visibility]::Collapsed
+                                $subcategoryToggle.Content = $subcategoryToggle.Content -replace "^- ", "+ "
+                            } else {
+                                $subWrapPanel.Visibility = [Windows.Visibility]::Visible
+                                $subcategoryToggle.Content = $subcategoryToggle.Content -replace "^\+ ", "- "
+                            }
+                        }
+                    })
+
+                    $null = $subContainer.Children.Add($subHeader)
+
+                    $subWrapPanel = New-Object Windows.Controls.WrapPanel
+                    $subWrapPanel.Orientation = "Horizontal"
+                    $subWrapPanel.HorizontalAlignment = "Left"
+                    $subWrapPanel.VerticalAlignment = "Top"
+                    $subWrapPanel.Visibility = [Windows.Visibility]::Visible
+
+                    $null = $subContainer.Children.Add($subWrapPanel)
+                    $null = $wrapPanel.Children.Add($subContainer)
+
+                    $sync.InstallAppRenderQueue.Enqueue([pscustomobject]@{
+                        Category = $category
+                        TargetElement = $subWrapPanel
+                        AppKeys = @($appsBySubcategory[$subcat] | Sort-Object)
+                    })
+                }
+            }
+            else {
+                # No subcategories — flat layout (original behavior)
+                $sync.InstallAppRenderQueue.Enqueue([pscustomobject]@{
+                    Category = $category
+                    TargetElement = $wrapPanel
+                    AppKeys = @($categoryApps)
+                })
+            }
         }
 
         Start-WinUtilInstallAppRendering

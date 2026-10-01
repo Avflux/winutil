@@ -11,6 +11,10 @@ BeforeAll {
 
     . (Join-Path $script:repoRoot "functions\private\Step-WinUtilJob.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Test-WinUtilUIAlive { return $true }
     function Write-WinUtilConsoleProgress { param([string]$Status, [int]$Percent) }
     function Write-WinUtilLog { param($Message, $Level, $Component) }

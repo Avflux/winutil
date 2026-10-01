@@ -7,6 +7,10 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function script:Test-WinUtilParser {
         param([string]$Path)
 

@@ -10,6 +10,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilCloseRequest.ps1")
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUIThread.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Invoke-WPFRunspace {
         param($ArgumentList, $ParameterList, [scriptblock]$ScriptBlock)
     }

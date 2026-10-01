@@ -29,7 +29,7 @@ function Invoke-WPFToggleSelections {
         $completed = 0
 
         foreach ($toggle in $Toggles) {
-            Step-WinUtilJob -Status "Applying $toggle ($($completed + 1)/$total)" -Percent ([int](($completed / $total) * 100))
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Applying {0} ({1}/{2})") -f $toggle, ($completed + 1), $total) -Percent ([int](($completed / $total) * 100))
             Measure-WinUtilStep -Scope "Toggles" -Name $toggle -ScriptBlock {
                 Invoke-WinUtilTweaks $toggle
             }

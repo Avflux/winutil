@@ -18,7 +18,13 @@ function Show-WinUtilMessage {
         $Icon = "Information"
     )
 
-    Write-WinUtilLog -Component "Dialog" -Message "$Title : $($Message -replace '\r?\n', ' ')"
+    # Translate the title and message through the same dictionary the walker uses, so
+    # any caller can pass English strings and they are rendered in the selected language.
+    # Strings with dynamic content fall back to English when no template key matches.
+    $Message = Get-WinUtilTranslation -Text $Message
+    $Title = Get-WinUtilTranslation -Text $Title
+
+    Write-WinUtilLog -Component "Dialog" -Message "$Title : $(($Message -split "`n" | ForEach-Object { $_.Trim() }) -join ' | ')"
 
     if (-not (Test-WinUtilUIAlive)) {
         # Anything with a choice is answered with the one that does not go ahead, so a prompt

@@ -12,6 +12,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFPanelAutologin.ps1")
     . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilInstallPSProfile.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function winget {
         param([Parameter(ValueFromRemainingArguments = $true)]$Arguments)
     }

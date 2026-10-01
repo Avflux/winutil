@@ -10,6 +10,10 @@ BeforeAll {
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFInstall.ps1")
     . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUnInstall.ps1")
 
+    function Get-WinUtilTranslation {
+        param([string]$Text)
+        return $Text
+    }
     function Show-WinUtilMessage {
         param($Message, $Title, $Button, $Icon)
     }

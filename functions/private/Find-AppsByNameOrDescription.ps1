@@ -84,7 +84,21 @@ function Find-AppsByNameOrDescription {
                     }
 
                     $wrapPanel.Children | ForEach-Object {
-                        $_.Visibility = [Windows.Visibility]::Visible
+                        if ($_ -is [System.Windows.Controls.StackPanel] -and $_.Tag -eq "SubCategoryContainer") {
+                            $_.Visibility = [Windows.Visibility]::Visible
+                            $subHeader = $_.Children[0]
+                            $subWrapPanel = $_.Children[1]
+                            if ($subHeader.Content -like "+*") {
+                                $subWrapPanel.Visibility = [Windows.Visibility]::Collapsed
+                            } else {
+                                $subWrapPanel.Visibility = [Windows.Visibility]::Visible
+                                $subWrapPanel.Children | ForEach-Object {
+                                    $_.Visibility = [Windows.Visibility]::Visible
+                                }
+                            }
+                        } else {
+                            $_.Visibility = [Windows.Visibility]::Visible
+                        }
                     }
                 }
             }
@@ -103,32 +117,81 @@ function Find-AppsByNameOrDescription {
 
                 $categoryLabel.Visibility = [Windows.Visibility]::Visible
 
-                foreach ($appControl in $wrapPanel.Children) {
-                    $appTag = $appControl.Tag
-                    $appEntry = $null
+                foreach ($child in $wrapPanel.Children) {
+                    if ($child -is [System.Windows.Controls.StackPanel] -and $child.Tag -eq "SubCategoryContainer") {
+                        # Subcategory container — search within its apps
+                        $subHeader = $child.Children[0]
+                        $subWrapPanel = $child.Children[1]
+                        $subHasMatch = $false
 
-                    if (-not [string]::IsNullOrWhiteSpace($appTag) -and $sync.configs.applicationsHashtable.ContainsKey($appTag)) {
-                        $appEntry = $sync.configs.applicationsHashtable[$appTag]
-                    }
+                        foreach ($appControl in $subWrapPanel.Children) {
+                            $appTag = $appControl.Tag
+                            $appEntry = $null
 
-                    if ($null -ne $appEntry) {
-                        $categoryMatch = -not $hasCategories -or $activeCategories -contains $appEntry.Category
-                        $textMatch = -not $hasSearch -or
-                            $appEntry.Content -like "*$escapedSearchString*" -or
-                            $appEntry.Description -like "*$escapedSearchString*" -or
-                            $appTag -like "*$escapedSearchString*"
+                            if (-not [string]::IsNullOrWhiteSpace($appTag) -and $sync.configs.applicationsHashtable.ContainsKey($appTag)) {
+                                $appEntry = $sync.configs.applicationsHashtable[$appTag]
+                            }
 
-                        if ($categoryMatch -and $textMatch) {
-                            $appControl.Visibility = [Windows.Visibility]::Visible
+                            if ($null -ne $appEntry) {
+                                $categoryMatch = -not $hasCategories -or $activeCategories -contains $appEntry.Category
+                                $textMatch = -not $hasSearch -or
+                                    $appEntry.Content -like "*$escapedSearchString*" -or
+                                    $appEntry.Description -like "*$escapedSearchString*" -or
+                                    $appTag -like "*$escapedSearchString*"
+
+                                if ($categoryMatch -and $textMatch) {
+                                    $appControl.Visibility = [Windows.Visibility]::Visible
+                                    $subHasMatch = $true
+                                }
+                                else {
+                                    $appControl.Visibility = [Windows.Visibility]::Collapsed
+                                }
+                            }
+                            else {
+                                $appControl.Visibility = [Windows.Visibility]::Collapsed
+                            }
+                        }
+
+                        if ($subHasMatch) {
+                            $child.Visibility = [Windows.Visibility]::Visible
+                            $subWrapPanel.Visibility = [Windows.Visibility]::Visible
+                            if ($subHeader.Content -like "+*") {
+                                $subHeader.Content = $subHeader.Content -replace "^\+ ", "- "
+                            }
                             $categoryHasMatch = $true
                         }
                         else {
-                            $appControl.Visibility = [Windows.Visibility]::Collapsed
+                            $child.Visibility = [Windows.Visibility]::Collapsed
                         }
                     }
                     else {
-                        # Hide app if no entry found (data integrity issue)
-                        $appControl.Visibility = [Windows.Visibility]::Collapsed
+                        # Regular app entry
+                        $appTag = $child.Tag
+                        $appEntry = $null
+
+                        if (-not [string]::IsNullOrWhiteSpace($appTag) -and $sync.configs.applicationsHashtable.ContainsKey($appTag)) {
+                            $appEntry = $sync.configs.applicationsHashtable[$appTag]
+                        }
+
+                        if ($null -ne $appEntry) {
+                            $categoryMatch = -not $hasCategories -or $activeCategories -contains $appEntry.Category
+                            $textMatch = -not $hasSearch -or
+                                $appEntry.Content -like "*$escapedSearchString*" -or
+                                $appEntry.Description -like "*$escapedSearchString*" -or
+                                $appTag -like "*$escapedSearchString*"
+
+                            if ($categoryMatch -and $textMatch) {
+                                $child.Visibility = [Windows.Visibility]::Visible
+                                $categoryHasMatch = $true
+                            }
+                            else {
+                                $child.Visibility = [Windows.Visibility]::Collapsed
+                            }
+                        }
+                        else {
+                            # Hide app if no entry found (data integrity issue)
+                            $child.Visibility = [Windows.Visibility]::Collapsed
+                        }
                     }
                 }
 
