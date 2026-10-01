@@ -78,7 +78,7 @@ function Start-WinUtilJob {
     }
 
     if ($blockedBy) {
-        Show-WinUtilMessage -Message "$blockedBy is still running. Wait for it to finish before starting another action." -Title "WinUtil" -Button "OK" -Icon "Warning" | Out-Null
+        Show-WinUtilMessage -Message ((Get-WinUtilTranslation -Text "{0} is still running. Wait for it to finish before starting another action.") -f $blockedBy) -Title "WinUtil" -Button "OK" -Icon "Warning" | Out-Null
         return $null
     }
 
@@ -87,7 +87,7 @@ function Start-WinUtilJob {
         $timingStartIndex = if ($sync.StepTimings) { $sync.StepTimings.Count } else { 0 }
 
         Write-WinUtilLog -Component $Name -Message "$Name job started."
-        Write-WinUtilJobBanner -Message $label
+        Write-WinUtilJobBanner -Message (Get-WinUtilTranslation -Text $label)
         Step-WinUtilJob -Status "$label..." -Percent 0 -State "Normal" -Overlay "logo"
 
         if ($DisableAppList -and (Test-WinUtilUIAlive)) {
@@ -140,16 +140,20 @@ function Start-WinUtilJob {
             $newWarnings = $global:WinUtilJobWarningCount
             if ($newErrors -gt 0) {
                 Write-WinUtilLog -Level "WARN" -Component $JobName -Message "$JobName job finished in $($jobClock.ElapsedMilliseconds) ms with $newErrors error(s)."
-                Write-WinUtilJobBanner -Message "$JobLabel finished with $newErrors error(s), see the log" -Level "ERROR"
-                Step-WinUtilJob -Status "$JobName finished with $newErrors error(s)" -Percent 100 -State "Paused" -Overlay "warning"
+            $translatedLabel = Get-WinUtilTranslation -Text $JobLabel
+            $bannerMsg = ((Get-WinUtilTranslation -Text "{0} finished with {1} error(s)") -f $translatedLabel, $newErrors) + ", " + (Get-WinUtilTranslation -Text "see the log")
+            Write-WinUtilJobBanner -Message $bannerMsg -Level "ERROR"
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "{0} finished with {1} error(s)") -f $JobName, $newErrors) -Percent 100 -State "Paused" -Overlay "warning"
             } elseif ($newWarnings -gt 0) {
                 Write-WinUtilLog -Level "WARN" -Component $JobName -Message "$JobName job finished in $($jobClock.ElapsedMilliseconds) ms with $newWarnings warning(s)."
-                Write-WinUtilJobBanner -Message "$JobLabel finished with $newWarnings warning(s), see the log"
-                Step-WinUtilJob -Status "$JobName finished with $newWarnings warning(s)" -Percent 100 -State "Paused" -Overlay "warning"
+                $translatedLabel = Get-WinUtilTranslation -Text $JobLabel
+                $bannerMsg = ((Get-WinUtilTranslation -Text "{0} finished with {1} warning(s)") -f $translatedLabel, $newWarnings) + ", " + (Get-WinUtilTranslation -Text "see the log")
+                Write-WinUtilJobBanner -Message $bannerMsg
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "{0} finished with {1} warning(s)") -f $JobName, $newWarnings) -Percent 100 -State "Paused" -Overlay "warning"
             } else {
                 Write-WinUtilLog -Component $JobName -Message "$JobName job finished in $($jobClock.ElapsedMilliseconds) ms."
-                Write-WinUtilJobBanner -Message "$JobLabel finished"
-                Step-WinUtilJob -Status "$JobName finished" -Percent 100 -State "None" -Overlay "checkmark"
+                Write-WinUtilJobBanner -Message ((Get-WinUtilTranslation -Text "{0} finished") -f (Get-WinUtilTranslation -Text $JobLabel))
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "{0} finished") -f $JobName) -Percent 100 -State "None" -Overlay "checkmark"
             }
         } catch {
             $jobClock.Stop()
@@ -157,8 +161,8 @@ function Start-WinUtilJob {
             # context and stack without counting it twice; unrelated earlier errors do not qualify.
             $errorAlreadyReported = $_.Exception.Data["WinUtilErrorReported"] -eq $true
             Write-WinUtilErrorRecord -ErrorRecord $_ -Component $JobName -Context "$JobName failed after $($jobClock.ElapsedMilliseconds) ms" -DetailOnly:$errorAlreadyReported
-            Write-WinUtilJobBanner -Message "$JobLabel failed: $($_.Exception.Message)" -Level "ERROR"
-            Step-WinUtilJob -Status "$JobName failed" -Percent 100 -State "Error" -Overlay "warning"
+            Write-WinUtilJobBanner -Message (((Get-WinUtilTranslation -Text "{0} failed") -f (Get-WinUtilTranslation -Text $JobLabel)) + ": $($_.Exception.Message)") -Level "ERROR"
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "{0} failed") -f $JobName) -Percent 100 -State "Error" -Overlay "warning"
         } finally {
             $jobResult = [pscustomobject]@{
                 Token = $JobToken
@@ -212,7 +216,7 @@ function Start-WinUtilJob {
             Write-WinUtilErrorRecord -ErrorRecord $scheduleError -Component $Name -Context "Could not schedule $Name"
             $sync.LastJobResult = [pscustomobject]@{ Token = $jobToken; Errors = 1; Warnings = 0 }
             Write-WinUtilJobBanner -Message "$label could not start" -Level "ERROR"
-            Step-WinUtilJob -Status "$Name could not start" -Percent 100 -State "Error" -Overlay "warning"
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "{0} could not start") -f $Name) -Percent 100 -State "Error" -Overlay "warning"
         } catch {
             Write-WinUtilLog -Level "WARN" -Component $Name -Message "Could not report that $Name failed to start: $($_.Exception.Message)"
         } finally {

@@ -18,14 +18,7 @@ function Invoke-WinUtilCloseRequest {
 
     # The question carries the meaning rather than naming buttons: Windows labels them in its own
     # language, so "Yes" in the text would not match a button reading "Ja".
-    $answer = Show-WinUtilMessage -Button "YesNoCancel" -Icon "Warning" -Title "$RunningJob is still running" -Message @"
-$RunningJob has not finished yet.
-
-Close the window and let it finish in the console?
-
-WinUtil will exit on its own once it is done. If you do not, it will be
-stopped and everything closes now. Cancel keeps WinUtil open.
-"@
+    $answer = Show-WinUtilMessage -Button "YesNoCancel" -Icon "Warning" -Title ((Get-WinUtilTranslation -Text "{0} is still running") -f $RunningJob) -Message ((Get-WinUtilTranslation -Text "{0} has not finished yet.`n`nClose the window and let it finish in the console?`n`nWinUtil will exit on its own once it is done. If you do not, it will be`nstopped and everything closes now. Cancel keeps WinUtil open.") -f $RunningJob)
 
     switch ("$answer") {
         "Yes" {
@@ -42,7 +35,7 @@ stopped and everything closes now. Cancel keeps WinUtil open.
         }
         "No" {
             Write-WinUtilLog -Component "UI" -Message "Close requested: stopping $RunningJob."
-            Step-WinUtilJob -Status "Stopping $RunningJob" -State "Indeterminate"
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Stopping {0}") -f $RunningJob) -State "Indeterminate"
             $sync.ForceClose = $true
 
             # Close the window first. The main thread owns pool shutdown after ShowDialog

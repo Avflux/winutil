@@ -38,19 +38,19 @@ function Invoke-WPFInstall {
             Install-WinUtilWinget
             foreach ($program in $packagesWinget) {
                 $position = $completedPackages + 1
-                Step-WinUtilJob -Status "Installing $program ($position/$totalPackages)" -Percent ([int](($completedPackages / $totalPackages) * 100))
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installing {0} ({1}/{2})") -f $program, $position, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
 
                 $results += Measure-WinUtilStep -Scope "Install" -Name "winget $program" -ScriptBlock {
                     Install-WinUtilProgramWinget -Action Install -Programs @($program)
                 }
                 $completedPackages++
-                Step-WinUtilJob -Status "Installed $program ($completedPackages/$totalPackages)" -Percent ([int](($completedPackages / $totalPackages) * 100))
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installed {0} ({1}/{2})") -f $program, $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
             }
         }
 
         if ($packagesChoco.Count -gt 0) {
             $position = $completedPackages + 1
-            Step-WinUtilJob -Status "Installing Chocolatey packages ($position/$totalPackages)" -Percent ([int](($completedPackages / $totalPackages) * 100))
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installing Chocolatey packages ({0}/{1})") -f $position, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
 
             Install-WinUtilChoco
             $chocoBase = [int](($completedPackages / $totalPackages) * 100)
@@ -59,7 +59,7 @@ function Invoke-WPFInstall {
                 Install-WinUtilProgramChoco -Action Install -Programs $packagesChoco -ProgressBase $chocoBase -ProgressSpan $chocoSpan
             }
             $completedPackages += @($packagesChoco).Count
-            Step-WinUtilJob -Status "Installed Chocolatey packages ($completedPackages/$totalPackages)" -Percent ([int](($completedPackages / $totalPackages) * 100))
+            Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installed Chocolatey packages ({0}/{1})") -f $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
         }
 
         Complete-WinUtilPackageRun -Action "Install" -Results $results

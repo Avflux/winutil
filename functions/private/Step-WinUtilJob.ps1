@@ -40,6 +40,13 @@ function Step-WinUtilJob {
         [switch]$Hide
     )
 
+    # Translate the status text through the active language so static labels on the
+    # progress bar appear in the selected language. Dynamic strings that include
+    # interpolated values fall back to English through Get-WinUtilTranslation.
+    if ($Status) {
+        $Status = Get-WinUtilTranslation -Text $Status
+    }
+
     # With no window every update is thrown away, and a window closed over running work counts
     # as none: its dispatcher accepts posts and discards them. The console is what is left.
     if (-not (Test-WinUtilUIAlive)) {

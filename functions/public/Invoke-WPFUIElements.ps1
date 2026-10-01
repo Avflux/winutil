@@ -342,9 +342,9 @@ function Invoke-WPFUIElements {
                                 $comboBox.SelectedIndex = @($comboBox.Items.Content).IndexOf([string]$comboBox.Tag.State)
                             } catch {
                                 $unknownStateItem = New-Object Windows.Controls.ComboBoxItem
-                                $unknownStateItem.Content = "Custom / Unknown - select a state"
+                                $unknownStateItem.Content = Get-WinUtilTranslation -Text "Custom / Unknown - select a state"
                                 $unknownStateItem.IsEnabled = $false
-                                $unknownStateItem.ToolTip = "$($_.Exception.Message) Select one of the supported states to replace these values."
+                                $unknownStateItem.ToolTip = "$(Get-WinUtilTranslation -Text "Custom / Unknown - select a state") $($_.Exception.Message)"
                                 $comboBox.Items.Add($unknownStateItem) | Out-Null
                                 $comboBox.SelectedItem = $unknownStateItem
                                 $comboBox.ToolTip = $unknownStateItem.ToolTip

@@ -5,7 +5,7 @@ function Invoke-WinUtilISORefreshUSBDrives {
     $combo.Items.Clear()
 
     if ($removable.Count -eq 0) {
-        $combo.Items.Add("No USB drives detected.")
+        $combo.Items.Add((Get-WinUtilTranslation -Text "No USB drives detected."))
         $combo.SelectedIndex = 0
         $sync["Win11ISOUSBDisks"] = @()
         Write-WinUtilISOLog "No USB drives detected."
@@ -48,7 +48,7 @@ function Invoke-WinUtilISOWriteUSB {
         $esdSizeBytes = (Get-Item $installEsd).Length
         if ($esdSizeBytes -ge 4GB) {
             $esdSizeMB = [math]::Ceiling($esdSizeBytes / 1MB)
-            Show-WinUtilMessage -Message "This ISO uses an install.esd file that is $esdSizeMB MB. WinUtil's FAT32 USB format cannot store files larger than 4 GB.`n`nExport an ISO instead or use media with install.wim." -Title "USB Creation Not Supported" -Button "OK" -Icon "Warning" | Out-Null
+            Show-WinUtilMessage -Message ((Get-WinUtilTranslation -Text "This ISO uses an install.esd file that is {0} MB. WinUtil's FAT32 USB format cannot store files larger than 4 GB.`n`nExport an ISO instead or use media with install.wim.") -f $esdSizeMB) -Title "USB Creation Not Supported" -Button "OK" -Icon "Warning" | Out-Null
             return
         }
     }
@@ -74,7 +74,7 @@ function Invoke-WinUtilISOWriteUSB {
     $diskNum = $targetDisk.Number
     $sizeGB  = [math]::Round($targetDisk.Size / 1GB, 1)
 
-    $confirm = Show-WinUtilMessage -Message "ALL data on Disk $diskNum ($($targetDisk.FriendlyName), $sizeGB GB) will be PERMANENTLY ERASED.`n`nAre you sure you want to continue?" -Title "Confirm USB Erase" -Button "YesNo" -Icon "Warning"
+    $confirm = Show-WinUtilMessage -Message ((Get-WinUtilTranslation -Text "ALL data on Disk {0} ({1}, {2} GB) will be PERMANENTLY ERASED.`n`nAre you sure you want to continue?") -f $diskNum, $targetDisk.FriendlyName, $sizeGB) -Title "Confirm USB Erase" -Button "YesNo" -Icon "Warning"
     if ($confirm -ne "Yes") {
         Write-WinUtilISOLog "USB write cancelled by user."
         return
@@ -237,7 +237,7 @@ function Invoke-WinUtilISOWriteUSB {
             Invoke-WPFUIThread -Parameters @{ DiskNumber = $DiskNumber } -ScriptBlock {
                 param($DiskNumber)
 
-                $sync["WPFWin11ISODoneLabel"].Text = "Disk $DiskNumber is ready to boot from."
+                $sync["WPFWin11ISODoneLabel"].Text = (Get-WinUtilTranslation -Text "Disk {0} is ready to boot from.") -f $DiskNumber
                 $sync["WPFWin11ISODonePanel"].Visibility = "Visible"
             }
             Set-WinUtilISOStep -Step "Output"
@@ -246,7 +246,7 @@ function Invoke-WinUtilISOWriteUSB {
             Write-WinUtilISOLog -Level "ERROR" -Message "USB write failed: $_"
             $_.Exception.Data["WinUtilErrorReported"] = $true
             Set-WinUtilISOStep -Step "Output"
-            Show-WinUtilMessage -Message "USB write failed:`n`n$_" -Title "USB Write Error" -Button "OK" -Icon "Error" | Out-Null
+            Show-WinUtilMessage -Message ((Get-WinUtilTranslation -Text "USB write failed:`n`n{0}") -f $_) -Title "USB Write Error" -Button "OK" -Icon "Error" | Out-Null
             throw
         } finally {
             Invoke-WPFUIThread -ScriptBlock {
