@@ -89,6 +89,25 @@
         "winget": "Microsoft.Sysinternals.Autoruns",
         "foss": false
     },
+    "dbeaver": {
+        "category": "Development",
+        "choco": "dbeaver",
+        "content": "DBeaver Community",
+        "description": "DBeaver Community is a free, open-source universal database tool for developers, SQL programmers, database administrators, and analysts.",
+        "link": "https://dbeaver.io/",
+        "winget": "DBeaver.DBeaver.Community",
+        "foss": true,
+        "subcategory": "IDE"
+    },
+    "krita": {
+        "category": "Multimedia Tools",
+        "choco": "krita",
+        "content": "Krita",
+        "description": "Krita is a free and open-source painting tool designed for concept artists, illustrators, matte and texture artists, and the VFX industry.",
+        "link": "https://krita.org/",
+        "winget": "KDE.Krita",
+        "foss": true
+    },
     "rdcman": {
         "category": "Microsoft Tools",
         "choco": "rdcman",
@@ -172,7 +191,7 @@
         "foss": true
     },
     "calibre": {
-        "category": "Multimedia Tools",
+        "category": "Document",
         "choco": "calibre",
         "content": "Calibre",
         "description": "Calibre is a powerful and easy-to-use e-book manager, viewer, and converter.",
@@ -645,13 +664,14 @@
         "foss": false
     },
     "gsudo": {
-        "category": "Pro Tools",
+        "category": "Development",
         "choco": "gsudo",
         "content": "gsudo",
         "description": "gsudo is a sudo equivalent for Windows. It allows you to run commands with elevated administrative privileges directly within the current console window.",
         "link": "https://github.com/gerardog/gsudo",
         "winget": "gerardog.gsudo",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "helium": {
         "category": "Browsers",
@@ -663,13 +683,14 @@
         "foss": true
     },
     "hugo": {
-        "category": "Utilities",
+        "category": "Development",
         "choco": "hugo-extended",
         "content": "Hugo",
         "description": "The world's fastest framework for building websites.",
         "link": "https://gohugo.io",
         "winget": "Hugo.Hugo.Extended",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "handbrake": {
         "category": "Multimedia Tools",
@@ -837,6 +858,16 @@
         "winget": "KeePassXCTeam.KeePassXC",
         "foss": true
     },
+    "kiro": {
+        "category": "Development",
+        "choco": "kiro",
+        "content": "Kiro",
+        "description": "Kiro is an agentic IDE from AWS that turns prompts into specs, then into working code, docs, and tests through spec-driven development workflows.",
+        "link": "https://kiro.dev/",
+        "winget": "Amazon.Kiro",
+        "foss": false,
+        "subcategory": "IDE"
+    },
     "klite": {
         "category": "Multimedia Tools",
         "choco": "k-litecodecpack-standard",
@@ -847,7 +878,7 @@
         "foss": false
     },
     "kodi": {
-        "category": "Selfhosted Tools",
+        "category": "Multimedia Tools",
         "choco": "kodi",
         "content": "Kodi Media Center",
         "description": "Kodi is an open-source media center application that allows you to play and view most videos, music, podcasts, and other digital media files.",
@@ -1017,8 +1048,18 @@
         "winget": "Netbird.Netbird",
         "foss": true
     },
+    "rstudio": {
+        "category": "Development",
+        "choco": "na",
+        "content": "RStudio",
+        "description": "RStudio is an integrated development environment (IDE) for R, with a console, syntax-highlighting editor, and tools for plotting, history, debugging, and workspace management.",
+        "link": "https://posit.co/products/open-source/rstudio/",
+        "winget": "Posit.RStudio",
+        "foss": true,
+        "subcategory": "IDE"
+    },
     "tailscale": {
-        "category": "Utilities",
+        "category": "Pro Tools",
         "choco": "tailscale",
         "content": "Tailscale",
         "description": "The Tailscale client allows you to connect all your devices using WireGuard®, without the hassle. Tailscale makes it as easy as installing an app and signing in.",
@@ -1093,13 +1134,14 @@
         "subcategory": "CLI"
     },
     "notepadplus": {
-        "category": "Multimedia Tools",
+        "category": "Development",
         "choco": "notepadplusplus",
         "content": "Notepad++",
         "description": "Notepad++ is a free, open-source code editor and Notepad replacement with support for multiple languages.",
         "link": "https://notepad-plus-plus.org/",
         "winget": "Notepad++.Notepad++",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "nuget": {
         "category": "Microsoft Tools",
@@ -1199,6 +1241,16 @@
         "link": "https://www.opera.com/gx",
         "winget": "Opera.OperaGX",
         "foss": false
+    },
+    "opencode": {
+        "category": "Development",
+        "choco": "opencode",
+        "content": "opencode",
+        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
+        "link": "https://opencode.ai/",
+        "winget": "SST.opencode",
+        "foss": true,
+        "subcategory": "CLI"
     },
     "OpenVPN": {
         "category": "Pro Tools",
@@ -1547,14 +1599,13 @@
         "foss": false
     },
     "systeminformer": {
-        "category": "Development",
+        "category": "Utilities",
         "choco": "systeminformer",
         "content": "System Informer",
         "description": "A free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware.",
         "link": "https://systeminformer.com/",
         "winget": "WinsiderSS.SystemInformer",
-        "foss": true,
-        "subcategory": "Tools"
+        "foss": true
     },
     "signal": {
         "category": "Communications",
@@ -1866,7 +1917,7 @@
         "foss": false
     },
     "ventoy": {
-        "category": "Pro Tools",
+        "category": "Utilities",
         "choco": "ventoy",
         "content": "Ventoy",
         "description": "Ventoy is an open-source tool for creating bootable USB drives. It supports multiple ISO files on a single USB drive, making it a versatile solution for installing operating systems.",

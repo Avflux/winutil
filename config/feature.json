@@ -359,5 +359,38 @@
     "ButtonWidth": "300",
     "function": "Invoke-WPFSSHServer",
     "link": "https://winutil.christitus.com/code-reference/features/remote-access/sshserver"
+  },
+  "WPFFeaturesVirtualMachinePlatform": {
+    "Content": "Virtual Machine Platform - Enable",
+    "Description": "Enables the Virtual Machine Platform, a required component for WSL 2 and other virtualization-based workloads.",
+    "category": "Features",
+    "panel": "1",
+    "feature": [
+      "VirtualMachinePlatform"
+    ],
+    "InvokeScript": [],
+    "link": "https://winutil.christitus.com/code-reference/features/features/virtualmachineplatform"
+  },
+  "WPFFeaturesTelnet": {
+    "Content": "Telnet Client - Enable",
+    "Description": "Enables the Telnet client command-line tool for connecting to remote hosts over the Telnet protocol.",
+    "category": "Features",
+    "panel": "1",
+    "feature": [
+      "TelnetClient"
+    ],
+    "InvokeScript": [],
+    "link": "https://winutil.christitus.com/code-reference/features/features/telnet"
+  },
+  "WPFFeaturesTFTP": {
+    "Content": "TFTP Client - Enable",
+    "Description": "Enables the Trivial File Transfer Protocol (TFTP) client for transferring files to and from remote hosts.",
+    "category": "Features",
+    "panel": "1",
+    "feature": [
+      "TFTP"
+    ],
+    "InvokeScript": [],
+    "link": "https://winutil.christitus.com/code-reference/features/features/tftp"
   }
 }

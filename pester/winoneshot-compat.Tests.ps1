@@ -265,7 +265,20 @@ BeforeAll {
         )
 
         try {
-            $catalog = $Json | ConvertFrom-Json -NoEnumerate -ErrorAction Stop
+            # -NoEnumerate is a PowerShell 6+ parameter. Detect it so the tests also
+            # run under Windows PowerShell 5.1 (which AGENTS.md uses to run the suite).
+            $convertParams = @{ ErrorAction = 'Stop' }
+            if ((Get-Command ConvertFrom-Json).Parameters.ContainsKey('NoEnumerate')) {
+                $convertParams['NoEnumerate'] = $true
+            }
+
+            $catalog = $Json | ConvertFrom-Json @convertParams
+
+            # Without -NoEnumerate (5.1), a single-element top-level array is unwrapped to
+            # its element; re-wrap it so an array is still reported as an array, not an object.
+            if (-not $convertParams.ContainsKey('NoEnumerate') -and $Json.TrimStart().StartsWith('[')) {
+                $catalog = @($catalog)
+            }
         } catch {
             return "WinOneShot cannot parse ${Name}: $_"
         }
