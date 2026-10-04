@@ -172,7 +172,7 @@
         "foss": true
     },
     "calibre": {
-        "category": "Multimedia Tools",
+        "category": "Document",
         "choco": "calibre",
         "content": "Calibre",
         "description": "Calibre is a powerful and easy-to-use e-book manager, viewer, and converter.",
@@ -645,13 +645,14 @@
         "foss": false
     },
     "gsudo": {
-        "category": "Pro Tools",
+        "category": "Development",
         "choco": "gsudo",
         "content": "gsudo",
         "description": "gsudo is a sudo equivalent for Windows. It allows you to run commands with elevated administrative privileges directly within the current console window.",
         "link": "https://github.com/gerardog/gsudo",
         "winget": "gerardog.gsudo",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "helium": {
         "category": "Browsers",
@@ -663,13 +664,14 @@
         "foss": true
     },
     "hugo": {
-        "category": "Utilities",
+        "category": "Development",
         "choco": "hugo-extended",
         "content": "Hugo",
         "description": "The world's fastest framework for building websites.",
         "link": "https://gohugo.io",
         "winget": "Hugo.Hugo.Extended",
-        "foss": true
+        "foss": true,
+        "subcategory": "CLI"
     },
     "handbrake": {
         "category": "Multimedia Tools",
@@ -857,7 +859,7 @@
         "foss": false
     },
     "kodi": {
-        "category": "Selfhosted Tools",
+        "category": "Multimedia Tools",
         "choco": "kodi",
         "content": "Kodi Media Center",
         "description": "Kodi is an open-source media center application that allows you to play and view most videos, music, podcasts, and other digital media files.",
@@ -1028,7 +1030,7 @@
         "foss": true
     },
     "tailscale": {
-        "category": "Utilities",
+        "category": "Pro Tools",
         "choco": "tailscale",
         "content": "Tailscale",
         "description": "The Tailscale client allows you to connect all your devices using WireGuard®, without the hassle. Tailscale makes it as easy as installing an app and signing in.",
@@ -1103,13 +1105,14 @@
         "subcategory": "CLI"
     },
     "notepadplus": {
-        "category": "Multimedia Tools",
+        "category": "Development",
         "choco": "notepadplusplus",
         "content": "Notepad++",
         "description": "Notepad++ is a free, open-source code editor and Notepad replacement with support for multiple languages.",
         "link": "https://notepad-plus-plus.org/",
         "winget": "Notepad++.Notepad++",
-        "foss": true
+        "foss": true,
+        "subcategory": "IDE"
     },
     "nuget": {
         "category": "Microsoft Tools",
@@ -1567,14 +1570,13 @@
         "foss": false
     },
     "systeminformer": {
-        "category": "Development",
+        "category": "Utilities",
         "choco": "systeminformer",
         "content": "System Informer",
         "description": "A free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware.",
         "link": "https://systeminformer.com/",
         "winget": "WinsiderSS.SystemInformer",
-        "foss": true,
-        "subcategory": "Tools"
+        "foss": true
     },
     "signal": {
         "category": "Communications",
@@ -1886,7 +1888,7 @@
         "foss": false
     },
     "ventoy": {
-        "category": "Pro Tools",
+        "category": "Utilities",
         "choco": "ventoy",
         "content": "Ventoy",
         "description": "Ventoy is an open-source tool for creating bootable USB drives. It supports multiple ISO files on a single USB drive, making it a versatile solution for installing operating systems.",
