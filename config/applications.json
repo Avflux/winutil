@@ -89,6 +89,25 @@
         "winget": "Microsoft.Sysinternals.Autoruns",
         "foss": false
     },
+    "dbeaver": {
+        "category": "Development",
+        "choco": "dbeaver",
+        "content": "DBeaver Community",
+        "description": "DBeaver Community is a free, open-source universal database tool for developers, SQL programmers, database administrators, and analysts.",
+        "link": "https://dbeaver.io/",
+        "winget": "DBeaver.DBeaver.Community",
+        "foss": true,
+        "subcategory": "IDE"
+    },
+    "krita": {
+        "category": "Multimedia Tools",
+        "choco": "krita",
+        "content": "Krita",
+        "description": "Krita is a free and open-source painting tool designed for concept artists, illustrators, matte and texture artists, and the VFX industry.",
+        "link": "https://krita.org/",
+        "winget": "KDE.Krita",
+        "foss": true
+    },
     "rdcman": {
         "category": "Microsoft Tools",
         "choco": "rdcman",
@@ -1028,6 +1047,16 @@
         "link": "https://netbird.io/",
         "winget": "Netbird.Netbird",
         "foss": true
+    },
+    "rstudio": {
+        "category": "Development",
+        "choco": "na",
+        "content": "RStudio",
+        "description": "RStudio is an integrated development environment (IDE) for R, with a console, syntax-highlighting editor, and tools for plotting, history, debugging, and workspace management.",
+        "link": "https://posit.co/products/open-source/rstudio/",
+        "winget": "Posit.RStudio",
+        "foss": true,
+        "subcategory": "IDE"
     },
     "tailscale": {
         "category": "Pro Tools",
