@@ -837,6 +837,16 @@
         "winget": "KeePassXCTeam.KeePassXC",
         "foss": true
     },
+    "kiro": {
+        "category": "Development",
+        "choco": "kiro",
+        "content": "Kiro",
+        "description": "Kiro is an agentic IDE from AWS that turns prompts into specs, then into working code, docs, and tests through spec-driven development workflows.",
+        "link": "https://kiro.dev/",
+        "winget": "Amazon.Kiro",
+        "foss": false,
+        "subcategory": "IDE"
+    },
     "klite": {
         "category": "Multimedia Tools",
         "choco": "k-litecodecpack-standard",
@@ -1199,6 +1209,16 @@
         "link": "https://www.opera.com/gx",
         "winget": "Opera.OperaGX",
         "foss": false
+    },
+    "opencode": {
+        "category": "Development",
+        "choco": "opencode",
+        "content": "opencode",
+        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
+        "link": "https://opencode.ai/",
+        "winget": "SST.opencode",
+        "foss": true,
+        "subcategory": "CLI"
     },
     "OpenVPN": {
         "category": "Pro Tools",
