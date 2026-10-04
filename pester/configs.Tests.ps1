@@ -174,6 +174,55 @@ Describe "Applications config" {
             throw ($invalidEntries -join "`n")
         }
     }
+
+    It "uses unique package manager IDs" -TestCases $testCase {
+        param([string]$Path)
+
+        $applications = Get-Content -Path $Path -Raw | ConvertFrom-Json
+        # A few variants intentionally install the same package; list them here.
+        $sharedChoco = @("vcredist2015")
+        $invalidEntries = New-Object System.Collections.Generic.List[string]
+
+        foreach ($source in @("winget", "choco")) {
+            $owners = @{}
+            foreach ($entry in $applications.PSObject.Properties) {
+                $id = [string]$entry.Value.$source
+                if ([string]::IsNullOrWhiteSpace($id) -or $id -eq "na") {
+                    continue
+                }
+                if ($source -eq "choco" -and $sharedChoco -contains $id) {
+                    continue
+                }
+
+                if ($owners.ContainsKey($id)) {
+                    $invalidEntries.Add("$source '$id' is used by both $($owners[$id]) and $($entry.Name)")
+                } else {
+                    $owners[$id] = $entry.Name
+                }
+            }
+        }
+
+        if ($invalidEntries.Count -gt 0) {
+            throw ($invalidEntries -join "`n")
+        }
+    }
+
+    It "assigns a subcategory to every Development application" -TestCases $testCase {
+        param([string]$Path)
+
+        $applications = Get-Content -Path $Path -Raw | ConvertFrom-Json
+        $invalidEntries = New-Object System.Collections.Generic.List[string]
+
+        foreach ($entry in $applications.PSObject.Properties) {
+            if ($entry.Value.category -eq "Development" -and [string]::IsNullOrWhiteSpace([string]$entry.Value.subcategory)) {
+                $invalidEntries.Add("$($entry.Name) is in Development without a subcategory")
+            }
+        }
+
+        if ($invalidEntries.Count -gt 0) {
+            throw ($invalidEntries -join "`n")
+        }
+    }
 }
 
 Describe "Tweaks config" {
