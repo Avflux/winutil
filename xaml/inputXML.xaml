@@ -1058,7 +1058,7 @@
                 <StackPanel Name="NavLogoPanel" Orientation="Horizontal" HorizontalAlignment="Left" Background="{DynamicResource MainBackgroundColor}" SnapsToDevicePixels="True" Margin="10,0,20,0">
                 </StackPanel>
                 <ToggleButton Style="{StaticResource TabToggleButton}" Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonInstallBackgroundColor}" Foreground="white" FontWeight="Bold" Name="WPFTab1BT">
+                    Background="{DynamicResource ButtonInstallBackgroundColor}" Foreground="white" FontWeight="Bold" AutomationProperties.Name="Install tab" ToolTip="Install and upgrade applications" Name="WPFTab1BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonInstallForegroundColor}" >
                             <Underline>I</Underline>nstall
@@ -1066,7 +1066,7 @@
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton Style="{StaticResource TabToggleButton}" Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonTweaksBackgroundColor}" Foreground="{DynamicResource ButtonTweaksForegroundColor}" FontWeight="Bold" Name="WPFTab2BT">
+                    Background="{DynamicResource ButtonTweaksBackgroundColor}" Foreground="{DynamicResource ButtonTweaksForegroundColor}" FontWeight="Bold" AutomationProperties.Name="Tweaks tab" ToolTip="Apply Windows tweaks" Name="WPFTab2BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonTweaksForegroundColor}">
                             <Underline>T</Underline>weaks
@@ -1074,7 +1074,7 @@
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton Style="{StaticResource TabToggleButton}" Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonConfigBackgroundColor}" Foreground="{DynamicResource ButtonConfigForegroundColor}" FontWeight="Bold" Name="WPFTab3BT">
+                    Background="{DynamicResource ButtonConfigBackgroundColor}" Foreground="{DynamicResource ButtonConfigForegroundColor}" FontWeight="Bold" AutomationProperties.Name="Config tab" ToolTip="Import and export configurations" Name="WPFTab3BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonConfigForegroundColor}">
                             <Underline>C</Underline>onfig
@@ -1082,7 +1082,7 @@
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton Style="{StaticResource TabToggleButton}" Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonUpdatesBackgroundColor}" Foreground="{DynamicResource ButtonUpdatesForegroundColor}" FontWeight="Bold" Name="WPFTab4BT">
+                    Background="{DynamicResource ButtonUpdatesBackgroundColor}" Foreground="{DynamicResource ButtonUpdatesForegroundColor}" FontWeight="Bold" AutomationProperties.Name="Updates tab" ToolTip="Manage Windows Update profiles" Name="WPFTab4BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonUpdatesForegroundColor}">
                             <Underline>U</Underline>pdates
@@ -1090,7 +1090,7 @@
                     </ToggleButton.Content>
                 </ToggleButton>
                 <ToggleButton Style="{StaticResource TabToggleButton}" Margin="0,0,5,0" Height="{DynamicResource TabButtonHeight}" Width="Auto" MinWidth="{DynamicResource TabButtonWidth}"
-                    Background="{DynamicResource ButtonWin11ISOBackgroundColor}" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}" FontWeight="Bold" Name="WPFTab5BT">
+                    Background="{DynamicResource ButtonWin11ISOBackgroundColor}" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}" FontWeight="Bold" AutomationProperties.Name="Win11 Creator tab" ToolTip="Create a customized Windows 11 ISO or USB" Name="WPFTab5BT">
                     <ToggleButton.Content>
                         <TextBlock FontSize="{DynamicResource TabButtonFontSize}" Background="Transparent" Foreground="{DynamicResource ButtonWin11ISOForegroundColor}">
                             <Underline>W</Underline>in11 Creator
@@ -1592,12 +1592,12 @@
                                         <TextBlock Text="Disable Updates"
                                                    FontSize="20"
                                                    FontWeight="Bold"
-                                                   Foreground="Red"/>
+                                                   Foreground="{DynamicResource ProgressBarErrorColor}"/>
                                         <TextBlock Text="Advanced use only"
                                                    Margin="0,4,0,0"
                                                    FontSize="13"
                                                    FontWeight="SemiBold"
-                                                   Foreground="Red"/>
+                                                   Foreground="{DynamicResource ProgressBarErrorColor}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">
                                         <TextBlock Text="- Disables automatic update policy" TextWrapping="Wrap" Margin="0,0,0,7" Foreground="{DynamicResource MainForegroundColor}"/>
@@ -1607,13 +1607,13 @@
                                                    FontSize="11"
                                                    FontStyle="Italic"
                                                    TextWrapping="Wrap"
-                                                   Foreground="Red"/>
+                                                   Foreground="{DynamicResource ProgressBarErrorColor}"/>
                                     </StackPanel>
                                     <Button Name="WPFUpdatesdisable"
                                             Grid.Row="2"
                                             Content="Disable Updates"
                                             FontSize="{DynamicResource ConfigTabButtonFontSize}"
-                                            Foreground="Red"
+                                            Foreground="{DynamicResource ProgressBarErrorColor}"
                                             Margin="0,16,0,0"
                                             Padding="10"/>
                                 </Grid>
@@ -1924,7 +1924,7 @@
 
                                     <Border Style="{StaticResource Win11InfoPanel}">
                                         <StackPanel>
-                                            <TextBlock Style="{StaticResource Win11StepLabel}" Foreground="OrangeRed" Margin="0,0,0,10">
+                                            <TextBlock Style="{StaticResource Win11StepLabel}" Foreground="{DynamicResource ProgressBarWarningColor}" Margin="0,0,0,10">
                                                 <Run FontFamily="Segoe MDL2 Assets" Text="&#xE7BA;"/>
                                                 <Run Text=" You must use an official Microsoft ISO"/>
                                             </TextBlock>
@@ -2057,7 +2057,7 @@
 
                                     <Button Name="WPFWin11ISOChooseISOButton" Margin="0,0,0,10"
                                             Style="{StaticResource Win11StepButton}" Tag="&#xE74E;" Content="Save as an ISO File"/>
-                                    <Button Name="WPFWin11ISOChooseUSBButton" Foreground="OrangeRed"
+                                    <Button Name="WPFWin11ISOChooseUSBButton" Foreground="{DynamicResource ProgressBarWarningColor}"
                                             Style="{StaticResource Win11StepButton}" Tag="&#xE88E;"
                                             Content="Write Directly to a USB Drive (ERASES DRIVE)"/>
 
@@ -2067,7 +2067,7 @@
                                             Margin="0,14,0,0">
                                         <StackPanel>
                                             <TextBlock Style="{StaticResource Win11StepBody}">
-                                                <Run FontWeight="Bold" Foreground="OrangeRed">!! All data on the selected USB drive will be permanently erased !!</Run>
+                                                <Run FontWeight="Bold" Foreground="{DynamicResource ProgressBarWarningColor}">!! All data on the selected USB drive will be permanently erased !!</Run>
                                             </TextBlock>
                                             <TextBlock Style="{StaticResource Win11StepLabel}" Text="USB drive"/>
                                             <Grid Margin="0,0,0,12">
@@ -2085,7 +2085,7 @@
                                                 <Button Grid.Column="1" Name="WPFWin11ISORefreshUSBButton" MinWidth="130"
                                                         Style="{StaticResource Win11StepButton}" Tag="&#xE895;" Content="Refresh"/>
                                             </Grid>
-                                            <Button Name="WPFWin11ISOWriteUSBButton" Foreground="OrangeRed"
+                                            <Button Name="WPFWin11ISOWriteUSBButton" Foreground="{DynamicResource ProgressBarWarningColor}"
                                                     Style="{StaticResource Win11StepButton}" Tag="&#xE7BA;" Content="Erase &amp; Write to USB"/>
                                         </StackPanel>
                                     </Border>
@@ -2281,7 +2281,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
                     <TextBlock Name="WPFTweaksProgressLabel" Text="" Foreground="{DynamicResource MainForegroundColor}" FontSize="13" Background="Transparent" Margin="0,0,0,4"/>
-                    <ProgressBar Name="WPFTweaksProgressValue" Height="6" Minimum="0" Maximum="100" Value="0" Style="{StaticResource RoundedProgressBarStyle}"/>
+                    <ProgressBar Name="WPFTweaksProgressValue" AutomationProperties.Name="Progress" Height="6" Minimum="0" Maximum="100" Value="0" Style="{StaticResource RoundedProgressBarStyle}"/>
                 </StackPanel>
             </Grid>
         </Border>
