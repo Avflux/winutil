@@ -1481,7 +1481,7 @@
     },
     "processmonitor": {
         "category": "Microsoft Tools",
-        "choco": "procexp",
+        "choco": "procmon",
         "content": "Process Monitor",
         "description": "SysInternals Process Monitor is an advanced monitoring tool that shows real-time file system, registry, and process/thread activity.",
         "link": "https://docs.microsoft.com/en-us/sysinternals/downloads/procmon",
