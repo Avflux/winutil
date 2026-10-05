@@ -19,7 +19,7 @@ The `devdocs-generator.ps1` script automatically generates Astro/Starlight markd
 ### 1. Loads the Data
 
 - Reads `config/tweaks.json` and `config/feature.json`
-- Reads all `.ps1` function files from `functions/public/` and `functions/private/`
+- Reads all `.ps1` function files recursively from the `functions/` directory
 - Parses `Invoke-WPFButton.ps1` to build a mapping of button names to their function names
 
 ### 2. Updates Links in JSON

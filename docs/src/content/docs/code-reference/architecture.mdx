@@ -89,25 +89,17 @@ winutil/
 
 The interface itself lives in `Start-WinUtilUserInterface`, not here. See [Threading Model](#threading-model).
 
-#### 3. functions/public/
-**Purpose**: User-facing functions that implement main features.
+#### 3. functions/
+**Purpose**: Modular feature folders containing all PowerShell functions used by WinUtil.
 
-**Key Functions**:
-- `Initialize-WPFUI.ps1`: Sets up the GUI
-- `Invoke-WPFTweak*`: Applies system tweaks
-- `Invoke-WPFFeature*`: Enables Windows features
-- `Install-WinUtilProgram*`: Installs applications
+**Subdirectories**:
+- `UI/`: UI initialization, translation, visual element toggling (`Initialize-WPFUI.ps1`, `Invoke-WPFUIThread.ps1`).
+- `Apps/`: Application installation and removal logic (`Install-WinUtilWinget.ps1`, `Remove-WinUtilAPPX.ps1`).
+- `Tweaks/`: Registry tweaks, UI panels, optimization configurations (`Invoke-WinUtilTweaks.ps1`, `Set-WinUtilRegistry.ps1`).
+- `Features/`: Feature installation, SSH server setup, and system fixes.
+- `ISO/`: Win11 Creator and ISO/USB modifications.
+- `Core/`: Foundational logic, async jobs, runspace handling, and diagnostics (`Start-WinUtilJob.ps1`, `Write-WinUtilLog.ps1`).
 
-**Naming Convention**: Functions start with `WPF` or `Winutil` to be loaded into the runspace.
-
-#### 4. functions/private/
-**Purpose**: Internal helper functions not directly called by users.
-
-**Key Functions**:
-- `Get-WinUtilVariables.ps1`: Retrieves UI element references
-- `Install-WinUtilWinget.ps1`: Ensures WinGet is installed
-- `Get-WinUtilCheckBoxes.ps1`: Gets checkbox states
-- `Invoke-WinUtilCurrentSystem.ps1`: Gets system information
 
 #### 5. config/*.json
 **Purpose**: Define available applications, tweaks, and features declaratively.
@@ -134,7 +126,7 @@ The **Win11 Creator** is a specialized subsystem within Winutil that creates cus
 
 ### Win11 Creator Components
 
-**Core Functions** (`functions/private/`):
+**Core Functions** (`functions/ISO/`):
 - `Invoke-WinUtilISO.ps1`: Main orchestrator containing all Win11 Creator functions
   - `Invoke-WinUtilISOBrowse`: ISO file selection dialog
   - `Invoke-WinUtilISOMountAndVerify`: Validates and mounts ISO, verifies it is an official Windows 11 ISO
@@ -597,9 +589,9 @@ twenty times as much per command - enough to turn a checkbox refresh into a visi
 
 ### Adding a New Function
 
-1. Create file in `functions/public/` or `functions/private/`:
+1. Create file in the appropriate feature folder under `functions/` (e.g., `functions/Features/`):
 ```powershell
-# functions/public/Invoke-WPFNewFeature.ps1
+# functions/Features/Invoke-WPFNewFeature.ps1
 function Invoke-WPFNewFeature {
     <#
     .SYNOPSIS

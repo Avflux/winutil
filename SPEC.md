@@ -23,8 +23,7 @@ WinUtil is a Windows PowerShell utility with a WPF interface. The repository is 
 - `Compile.ps1`: build script that creates `winutil.ps1`.
 - `scripts/start.ps1`: startup/bootstrap segment used at the beginning of the compiled script.
 - `scripts/main.ps1`: main entrypoint appended at the end of the compiled script.
-- `functions/public/`: public/UI-facing PowerShell functions.
-- `functions/private/`: internal helper PowerShell functions.
+- `functions/`: modular feature folders (e.g. `Apps`, `Core`, `Features`, `ISO`, `Tweaks`, `UI`) containing PowerShell functions.
 - `config/`: JSON configuration consumed at compile time and embedded into `$sync.configs`.
 - `xaml/inputXML.xaml`: WPF UI markup embedded into the compiled script.
 - `tools/autounattend.xml`: unattended setup XML embedded for Windows ISO workflows.

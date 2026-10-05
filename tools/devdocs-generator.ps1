@@ -257,8 +257,7 @@ $tweaksJsonPath      = "$repoRoot/config/tweaks.json"
 $featuresJsonPath    = "$repoRoot/config/feature.json"
 $tweaksOutputDir     = "$repoRoot/docs/src/content/docs/code-reference/tweaks"
 $featuresOutputDir   = "$repoRoot/docs/src/content/docs/code-reference/features"
-$publicFunctionsDir  = "$repoRoot/functions/public"
-$privateFunctionsDir = "$repoRoot/functions/private"
+$functionsDir        = "$repoRoot/functions"
 
 $itemnametocut = 'WPF(WinUtil|Toggle|Features?|Tweaks?|Panel|Fix(es)?)?'
 $baseUrl       = "https://winutil.christitus.com"
@@ -289,15 +288,13 @@ $features = Get-Content -Path $featuresJsonPath -Raw | ConvertFrom-Json
 
 Update-Progress "Loading function files" 20
 $functionFiles = @{}
-Get-ChildItem -Path $publicFunctionsDir  -Filter *.ps1 | ForEach-Object {
-    $functionFiles[$_.BaseName] = @{ Content = (Get-Content -Path $_.FullName -Raw).TrimEnd(); RelativePath = "functions/public/$($_.Name)" }
-}
-Get-ChildItem -Path $privateFunctionsDir -Filter *.ps1 | ForEach-Object {
-    $functionFiles[$_.BaseName] = @{ Content = (Get-Content -Path $_.FullName -Raw).TrimEnd(); RelativePath = "functions/private/$($_.Name)" }
+Get-ChildItem -Path $functionsDir -Filter *.ps1 -Recurse | ForEach-Object {
+    $relativePath = $_.FullName.Substring($repoRoot.Length + 1).Replace('\', '/')
+    $functionFiles[$_.BaseName] = @{ Content = (Get-Content -Path $_.FullName -Raw).TrimEnd(); RelativePath = $relativePath }
 }
 
 Update-Progress "Building button-to-function mapping" 30
-$buttonFunctionMap = Get-ButtonFunctionMapping -ButtonFilePath "$publicFunctionsDir/Invoke-WPFButton.ps1"
+$buttonFunctionMap = Get-ButtonFunctionMapping -ButtonFilePath "$functionsDir/UI/Invoke-WPFButton.ps1"
 
 Update-Progress "Updating documentation links in JSON" 40
 Add-LinkAttributeToJson -JsonFilePath $tweaksJsonPath   -UrlPrefix "$baseUrl/code-reference/tweaks"   -ItemNameToCut $itemnametocut
