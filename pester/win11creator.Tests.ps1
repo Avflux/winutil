@@ -938,4 +938,49 @@ Describe "Win11 Creator setup media" {
         $exportRunIndex | Should -BeGreaterThan $exportDialogIndex
         $script:exportFunction | Should -Match ([regex]::Escape('return'))
     }
+
+    It "stages an expanded debloat script with optional capabilities" {
+        $contentRoot = Join-Path ([IO.Path]::GetTempPath()) "WinUtilIsoDebloat_$([guid]::NewGuid())"
+
+        try {
+            New-Item -Path $contentRoot -ItemType Directory -Force | Out-Null
+            . $script:isoScriptPath
+            Invoke-WinUtilISOScript -ISOContentsDir $contentRoot -AutoUnattendXml (Get-Content -Path $script:autoUnattendPath -Raw) -InstallEditionId 'Core'
+
+            [xml]$answerFile = Get-Content -Path (Join-Path $contentRoot 'autounattend.xml') -Raw
+            $nsMgr = New-Object System.Xml.XmlNamespaceManager($answerFile.NameTable)
+            $nsMgr.AddNamespace('sg', 'https://schneegans.de/windows/unattend-generator/')
+            $postInstall = $answerFile.SelectSingleNode('//sg:File[@path="C:\Windows\Setup\Scripts\WinUtil-PostInstall.ps1"]', $nsMgr).InnerText
+
+            $postInstall | Should -Not -BeNullOrEmpty
+
+            # Packages beyond the original 19 that the expansion adds, including the AI and
+            # ecosystem apps the user asked to cover.
+            foreach ($package in @(
+                    'Microsoft.Copilot', 'Microsoft.StartExperiencesApp', 'Microsoft.YourPhone',
+                    'MicrosoftWindows.CrossDevice', 'Microsoft.GamingApp', 'Microsoft.XboxGamingOverlay',
+                    'Microsoft.ZuneVideo', 'Microsoft.Windows.Photos', 'Microsoft.WindowsCamera',
+                    'Microsoft.WindowsCalculator', 'Microsoft.WindowsNotepad', 'Microsoft.ScreenSketch'
+                )) {
+                $postInstall | Should -Match ([regex]::Escape("'$package'"))
+            }
+
+            foreach ($capability in @(
+                    'Browser.InternetExplorer', 'Media.WindowsMediaPlayer', 'Microsoft.Windows.WordPad',
+                    'Hello.Face', 'App.StepsRecorder', 'Print.Fax.Scan',
+                    'MathRecognizer', 'XPS.Viewer', 'Print.Management.Console'
+                )) {
+                $postInstall | Should -Match ([regex]::Escape($capability))
+            }
+
+            $postInstall | Should -Match ([regex]::Escape('Remove-WindowsCapability'))
+            $postInstall | Should -Match ([regex]::Escape('Get-WindowsCapability'))
+            # Removal must still target all user profiles, not just the new one.
+            $postInstall | Should -Match ([regex]::Escape('Remove-AppxPackage -AllUsers'))
+            # WebView2 is intentionally retained: removing it breaks Edge, Widgets, and Office.
+            $postInstall | Should -Not -Match ([regex]::Escape('EdgeWebView'))
+        } finally {
+            Remove-Item -Path $contentRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
 }

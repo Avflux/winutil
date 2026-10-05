@@ -473,14 +473,28 @@ Retail
             [scriptblock]$Logger
         )
 
+        # Every package listed in config/appx.json. The generated script runs on the freshly
+        # installed image, which has no WinUtil config of its own, so the list is embedded here
+        # rather than read from the JSON at run time.
         $appxPackages = @(
-            'Clipchamp.Clipchamp', 'Microsoft.BingNews', 'Microsoft.BingSearch',
-            'Microsoft.BingWeather', 'Microsoft.GetHelp', 'Microsoft.MicrosoftOfficeHub',
-            'Microsoft.MicrosoftSolitaireCollection', 'Microsoft.MicrosoftStickyNotes',
-            'Microsoft.OutlookForWindows', 'Microsoft.Paint', 'Microsoft.PowerAutomateDesktop',
-            'Microsoft.StartExperiencesApp', 'Microsoft.Todos', 'Microsoft.Windows.DevHome',
-            'Microsoft.WindowsFeedbackHub', 'Microsoft.WindowsSoundRecorder',
-            'Microsoft.ZuneMusic', 'MicrosoftCorporationII.QuickAssist', 'MSTeams'
+            # Microsoft Apps
+            'Microsoft.GetHelp', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.OutlookForWindows',
+            'Microsoft.WindowsFeedbackHub', 'MSTeams',
+            # Bing & Web Services
+            'Microsoft.BingNews', 'Microsoft.BingSearch', 'Microsoft.BingWeather',
+            'Microsoft.Copilot', 'Microsoft.StartExperiencesApp',
+            # Utilities & Productivity
+            'Clipchamp.Clipchamp', 'Microsoft.MicrosoftStickyNotes', 'Microsoft.Paint',
+            'Microsoft.PowerAutomateDesktop', 'Microsoft.ScreenSketch', 'Microsoft.Todos',
+            'Microsoft.WindowsAlarms', 'Microsoft.WindowsCalculator', 'Microsoft.WindowsCamera',
+            'Microsoft.WindowsNotepad', 'Microsoft.Windows.Photos', 'Microsoft.WindowsSoundRecorder',
+            'Microsoft.ZuneMusic', 'Microsoft.ZuneVideo', 'MicrosoftCorporationII.QuickAssist',
+            # Xbox & Gaming
+            'Microsoft.GamingApp', 'Microsoft.MicrosoftSolitaireCollection',
+            'Microsoft.Xbox.TCUI', 'Microsoft.XboxGamingOverlay',
+            'Microsoft.XboxIdentityProvider', 'Microsoft.XboxSpeechToTextOverlay',
+            # Microsoft Ecosystem & Developer Tools
+            'Microsoft.Windows.DevHome', 'Microsoft.YourPhone', 'MicrosoftWindows.CrossDevice'
         )
 
         $appxList = ($appxPackages | ForEach-Object { "    '$_'" }) -join "`r`n"
@@ -501,6 +515,25 @@ $appxList
         Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue |
             Where-Object { `$_.Name -like "*`$package*" } |
             ForEach-Object { Remove-AppxPackage -AllUsers -Package `$_.PackageFullName -ErrorAction SilentlyContinue | Out-Null }
+    }
+
+    Write-Host 'WinUtil: Removing optional Windows capabilities...'
+    `$capabilities = @(
+        'Browser.InternetExplorer',
+        'Media.WindowsMediaPlayer',
+        'Microsoft.Windows.WordPad',
+        'Hello.Face',
+        'App.StepsRecorder',
+        'Print.Fax.Scan',
+        'MathRecognizer',
+        'XPS.Viewer',
+        'Print.Management.Console'
+    )
+    `$installedCapabilities = Get-WindowsCapability -Online -ErrorAction SilentlyContinue
+    foreach (`$capability in `$capabilities) {
+        `$installedCapabilities |
+            Where-Object { `$_.Name -like "`$capability*" } |
+            ForEach-Object { Remove-WindowsCapability -Online -Name `$_.Name -ErrorAction SilentlyContinue | Out-Null }
     }
 
     function Set-WinUtilRegistryValue([string]`$Path, [string]`$Name, [string]`$Type, [string]`$Value) {

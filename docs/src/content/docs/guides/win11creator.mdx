@@ -45,7 +45,8 @@ Once the ISO is verified, WinUtil moves to this step and shows the mounted drive
 Then click **Run Windows ISO Modification and Creator** to start the customization process. WinUtil will:
 
 **App & Component Removal:**
-- **Remove 40+ bloat apps** — Clipchamp, Teams, Copilot, Dev Home, new Outlook, Bing apps, Solitaire, and more
+- **Remove 34 bundled apps** — every package in WinUtil's app list: Xbox, Copilot, Widgets, Phone Link, Cross Device, Teams, Clipchamp, Dev Home, new Outlook, Bing apps, Solitaire, Media Player, and more
+- **Remove optional Windows capabilities** — Internet Explorer, Windows Media Player, WordPad, Hello Face, Steps Recorder, Fax & Scan, Math Recognizer, XPS Viewer, and Print Management Console
 - **Delete OneDrive setup** from the image
 
 **System Customization:**
@@ -59,6 +60,7 @@ Then click **Run Windows ISO Modification and Creator** to start the customizati
 - **Disable telemetry** — advertising ID, tailored experiences, input personalization, speech online privacy
 - **Disable cloud content features** — app suggestions, Microsoft Store recommendations
 - **Remove telemetry scheduled tasks** — CEIP, Appraiser, WaaSMedic, and others
+- **Remove the Recall optional feature** — done during the setup pass of `autounattend.xml`
 - **Disable OneDrive folder backup** — prevents automatic backups to cloud
 - **Prevent DevHome and Outlook post-setup installation**
 - **Prevent Teams installation** — blocks auto-install after OOBE
@@ -136,6 +138,7 @@ When you install Windows 11 from your modified ISO:
 | Modification seems stuck | The WIM dismount step is slow — wait at least 10 minutes before assuming it's frozen |
 | "Access Denied" error | Make sure WinUtil is running as Administrator |
 | Driver injection warning | Review the live log for the named package. Other compatible packages continue; if none succeed, the ISO is created with the original `install.wim` |
+| A removed app is still present after install | AppX and capability removal runs at first logon and can take a few minutes. Check `C:\Windows\Setup\Scripts\WinUtil-PostInstall.log` on the installed system for failures |
 | "Setup has failed to validate the product key" | Recreate the ISO with the latest WinUtil. The creator now removes stale `PID.txt`, writes `sources\ei.cfg`, and pins the selected image in `autounattend.xml` so setup does not use an embedded OEM key for a different edition |
 
 ---

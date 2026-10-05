@@ -144,7 +144,8 @@ The **Win11 Creator** is a specialized subsystem within Winutil that creates cus
   - `Invoke-WinUtilISOCleanAndReset`: Cleans up temp directories and resets UI
 
 - `Invoke-WinUtilISOScript.ps1`: Applies modifications to mounted install.wim
-  - Removes provisioned AppX packages (40+ bloatware apps)
+  - Removes provisioned AppX packages (all 34 packages from config/appx.json)
+  - Removes optional Windows capabilities (Internet Explorer, Windows Media Player, WordPad, Hello Face, Steps Recorder, Fax & Scan, Math Recognizer, XPS Viewer, Print Management Console)
   - Injects drivers (optional) from the current system
   - Removes OneDrive setup files
   - Applies offline registry tweaks (hardware bypass, privacy, telemetry, OOBE)
@@ -172,7 +173,8 @@ Invoke-WinUtilISOModify (runs in background runspace)
     ├─ Copy ISO contents to disk (~5-6 GB)
     ├─ Mount install.wim at selected edition/index
     ├─ Invoke-WinUtilISOScript:
-    │   ├─ Remove 40+ bloat AppX packages
+    │   ├─ Remove 34 bloat AppX packages
+    │   ├─ Remove optional Windows capabilities
     │   ├─ Export and inject drivers (if enabled)
     │   ├─ Remove OneDrive setup
     │   ├─ Load offline registry hives
