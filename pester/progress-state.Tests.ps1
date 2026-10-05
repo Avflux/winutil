@@ -9,7 +9,7 @@ BeforeAll {
     Add-Type -AssemblyName PresentationCore
     Add-Type -AssemblyName WindowsBase
 
-    . (Join-Path $script:repoRoot "functions\private\Step-WinUtilJob.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Step-WinUtilJob.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

@@ -55,7 +55,7 @@ Describe "Translation config" {
 
 Describe "Get-WinUtilTranslation" {
     BeforeAll {
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilText.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
     }
 
     It "returns the input when no translation table is loaded" {
@@ -87,7 +87,7 @@ Describe "Get-WinUtilTranslation" {
 
 Describe "Get-WinUtilSelectedAppsCountText" {
     BeforeAll {
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilText.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
     }
 
     It "formats the counter with the translated template" {
@@ -121,8 +121,8 @@ Describe "Get-WinUtilSelectedAppsCountText" {
 
 Describe "Get-WinUtilTranslatedToolTip and Get-WinUtilTranslatedDescription" {
     BeforeAll {
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilText.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilEntryToolTip.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
+        . (Join-Path $script:repoRoot "functions\UI\Get-WinUtilEntryToolTip.ps1")
     }
 
     It "translates description and appends preset key" {
@@ -168,10 +168,10 @@ Describe "Get-WinUtilTranslatedToolTip and Get-WinUtilTranslatedDescription" {
 Describe "Invoke-WinUtilTranslation ToolTip handling" {
     BeforeAll {
         Add-Type -AssemblyName PresentationFramework
-        . (Join-Path $script:repoRoot "functions\private\Write-WinUtilLog.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilText.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilEntryToolTip.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilTranslation.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Write-WinUtilLog.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
+        . (Join-Path $script:repoRoot "functions\UI\Get-WinUtilEntryToolTip.ps1")
+        . (Join-Path $script:repoRoot "functions\UI\Invoke-WinUtilTranslation.ps1")
     }
 
     It "translates tooltip with preset key suffix and restores it on language change" {

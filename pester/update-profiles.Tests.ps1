@@ -4,9 +4,9 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUpdatesdisable.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUpdatesdefault.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUpdatessecurity.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFUpdatesdisable.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFUpdatesdefault.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFUpdatessecurity.ps1")
 
     function Write-WinUtilLog {
         param($Message, $Level, $Component)

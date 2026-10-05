@@ -3,11 +3,11 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilRunspacePoolLock.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Close-WinUtilRunspacePool.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Stop-WinUtilActiveWork.ps1")
-    . (Join-Path $script:repoRoot "functions\private\New-WinUtilSessionState.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Initialize-WinUtilRunspacePool.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilRunspacePoolLock.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Close-WinUtilRunspacePool.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Stop-WinUtilActiveWork.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\New-WinUtilSessionState.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Initialize-WinUtilRunspacePool.ps1")
 }
 
 Describe "Initialize-WinUtilRunspacePool" {
@@ -104,7 +104,7 @@ Describe "Runspace startup wiring" {
     }
 
     It "loads WPF assemblies inside the cold-start asset runspace" {
-        $source = Get-Content -Path (Join-Path $script:repoRoot "functions\private\Start-WinUtilAssetRendering.ps1") -Raw
+        $source = Get-Content -Path (Join-Path $script:repoRoot "functions\Core\Start-WinUtilAssetRendering.ps1") -Raw
 
         $source | Should -Match 'Add-Type -AssemblyName WindowsBase'
         $source | Should -Match 'Add-Type -AssemblyName PresentationCore'

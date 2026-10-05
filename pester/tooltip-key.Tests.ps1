@@ -4,8 +4,8 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilEntryToolTip.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Update-WinUtilSelections.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Get-WinUtilEntryToolTip.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Update-WinUtilSelections.ps1")
 
     $applications = Get-Content (Join-Path $script:repoRoot "config\applications.json") -Raw | ConvertFrom-Json
     $applicationsHashtable = @{}
@@ -27,7 +27,7 @@ BeforeAll {
     # Map each control type the renderer handles to whether its branch adds the preset key.
     # Read from the source AST so re-adding the helper to an unsupported branch fails the test.
     $script:rendererClauses = @{}
-    $rendererPath = Join-Path $script:repoRoot "functions\public\Invoke-WPFUIElements.ps1"
+    $rendererPath = Join-Path $script:repoRoot "functions\UI\Invoke-WPFUIElements.ps1"
     $rendererAst = [System.Management.Automation.Language.Parser]::ParseFile($rendererPath, [ref]$null, [ref]$null)
     $typeSwitch = $rendererAst.FindAll({
         $args[0] -is [System.Management.Automation.Language.SwitchStatementAst]
@@ -39,7 +39,7 @@ BeforeAll {
     }
     $script:rendererClauses["default"] = [bool]($typeSwitch.Default.Extent.Text -match 'Get-WinUtil(Entry|Translated)ToolTip')
 
-    $appRendererPath = Join-Path $script:repoRoot "functions\private\Initialize-InstallAppEntry.ps1"
+    $appRendererPath = Join-Path $script:repoRoot "functions\Apps\Initialize-InstallAppEntry.ps1"
     $script:appRenderer = Get-Content $appRendererPath -Raw
 
     # Every entry the renderer draws, with the branch that draws it

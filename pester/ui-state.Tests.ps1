@@ -78,14 +78,14 @@ namespace System.Windows.Controls
 "@
     }
 
-    . (Join-Path $script:repoRoot "functions\private\Update-WinUtilSelections.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Reset-WPFCheckBoxes.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilText.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFImpex.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFGetInstalled.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFSelectedCheckboxesUpdate.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFButton.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFToggleAllCategories.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Update-WinUtilSelections.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Reset-WPFCheckBoxes.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFImpex.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFGetInstalled.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFSelectedCheckboxesUpdate.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WPFButton.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFToggleAllCategories.ps1")
 
     function Invoke-WPFRunspace {
         param($ArgumentList, $ParameterList, [scriptblock]$ScriptBlock)

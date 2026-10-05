@@ -3,8 +3,8 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUpdatesdisable.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFButton.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFUpdatesdisable.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WPFButton.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

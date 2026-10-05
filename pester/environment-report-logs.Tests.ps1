@@ -3,7 +3,7 @@
 #===========================================================================
 
 BeforeAll {
-    . (Join-Path (Resolve-Path (Join-Path $PSScriptRoot "..")).Path "functions\private\Get-WinUtilRecentLogs.ps1")
+    . (Join-Path (Resolve-Path (Join-Path $PSScriptRoot "..")).Path "functions\Core\Get-WinUtilRecentLogs.ps1")
 }
 
 Describe "Get-WinUtilRecentLogs" {

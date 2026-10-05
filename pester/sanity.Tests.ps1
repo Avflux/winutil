@@ -215,13 +215,13 @@ Describe "Compiled WinUtil sanity" {
 
 Describe "Runspace sanity" {
     BeforeAll {
-        . (Join-Path $script:repoRoot "functions\private\Get-WinUtilRunspacePoolLock.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Register-WinUtilRunspaceCleanup.ps1")
-        . (Join-Path $script:repoRoot "functions\public\Invoke-WPFRunspace.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Close-WinUtilRunspacePool.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Stop-WinUtilActiveWork.ps1")
-        . (Join-Path $script:repoRoot "functions\private\New-WinUtilSessionState.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Initialize-WinUtilRunspacePool.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilRunspacePoolLock.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Register-WinUtilRunspaceCleanup.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Invoke-WPFRunspace.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Close-WinUtilRunspacePool.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Stop-WinUtilActiveWork.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\New-WinUtilSessionState.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Initialize-WinUtilRunspacePool.ps1")
     }
 
     It "returns a single async handle and runs a scriptblock with arguments in the shared runspace pool" {

@@ -5,7 +5,7 @@ BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
     $script:functionRoot = Join-Path $script:repoRoot "functions"
 
-    . (Join-Path $script:functionRoot "private\Test-WinUtilDeferBackgroundWork.ps1")
+    . (Join-Path $script:functionRoot "Core\Test-WinUtilDeferBackgroundWork.ps1")
 
     function Test-WinUtilUIAlive { $null -ne $sync.Form -and $null -ne $sync.Form.Dispatcher }
 

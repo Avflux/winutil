@@ -5,7 +5,7 @@ BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
     $script:functionRoot = Join-Path $script:repoRoot "functions"
 
-    . (Join-Path $script:functionRoot "private\Stop-WinUtilActiveWork.ps1")
+    . (Join-Path $script:functionRoot "Core\Stop-WinUtilActiveWork.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)
@@ -13,7 +13,7 @@ BeforeAll {
     }
     function Test-WinUtilUIAlive { $null -ne $sync.Form -and $null -ne $sync.Form.Dispatcher }
 
-    . (Join-Path $script:functionRoot "private\Invoke-WinUtilCloseRequest.ps1")
+    . (Join-Path $script:functionRoot "UI\Invoke-WinUtilCloseRequest.ps1")
 
     function Write-WinUtilLog { param($Level, $Component, $Message, [switch]$Detail) }
     function Step-WinUtilJob { param($Status, $Percent, $State, $Overlay, [switch]$Hide) }
@@ -153,12 +153,12 @@ Describe "The close question" {
 
         $sync.ForceClose | Should -BeTrue
         Should -Invoke -CommandName Request-WinUtilWindowClose -Times 1 -Exactly
-        (Get-Content (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilCloseRequest.ps1") -Raw) |
+        (Get-Content (Join-Path $script:repoRoot "functions\UI\Invoke-WinUtilCloseRequest.ps1") -Raw) |
             Should -Not -Match 'Request-WinUtilWindowClose\s+-Before'
     }
 
     It "never shuts down the worker pool from the window closing handler" {
-        (Get-Content (Join-Path $script:repoRoot "functions\private\Start-WinUtilUserInterface.ps1") -Raw) |
+        (Get-Content (Join-Path $script:repoRoot "functions\UI\Start-WinUtilUserInterface.ps1") -Raw) |
             Should -Not -Match 'Close-WinUtilRunspacePool'
     }
 

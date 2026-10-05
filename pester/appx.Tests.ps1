@@ -4,18 +4,18 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilInstalledAPPX.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Install-WinUtilAPPX.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Complete-WinUtilPackageRun.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Remove-WinUtilAPPX.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Remove-WinUtilProvisionedAPPX.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFAppxInstall.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFAppxRemoval.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFButton.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Get-WinUtilInstalledAPPX.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilAPPX.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Complete-WinUtilPackageRun.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Remove-WinUtilAPPX.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Remove-WinUtilProvisionedAPPX.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFAppxInstall.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFAppxRemoval.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WPFButton.ps1")
 
     $tokens = $null
     $parseErrors = $null
-    $provisionedSourcePath = Join-Path $script:repoRoot "functions\private\Remove-WinUtilProvisionedAPPX.ps1"
+    $provisionedSourcePath = Join-Path $script:repoRoot "functions\Apps\Remove-WinUtilProvisionedAPPX.ps1"
     $provisionedSourceAst = [System.Management.Automation.Language.Parser]::ParseFile($provisionedSourcePath, [ref]$tokens, [ref]$parseErrors)
     $ps5CommandAssignment = $provisionedSourceAst.Find({
         param($node)
@@ -25,7 +25,7 @@ BeforeAll {
     }, $true)
     $script:provisionedRemovalScriptBlock = $ps5CommandAssignment.Right.Expression.ScriptBlock.GetScriptBlock()
 
-    $installSourcePath = Join-Path $script:repoRoot "functions\private\Install-WinUtilAPPX.ps1"
+    $installSourcePath = Join-Path $script:repoRoot "functions\Apps\Install-WinUtilAPPX.ps1"
     $installSourceAst = [System.Management.Automation.Language.Parser]::ParseFile($installSourcePath, [ref]$tokens, [ref]$parseErrors)
     $installCommandAssignment = $installSourceAst.Find({
         param($node)

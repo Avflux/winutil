@@ -18,8 +18,8 @@ BeforeAll {
             $node.Name -eq "New-WinUtilElevationCommand"
     }, $true).Extent.Text
 
-    . (Join-Path $script:functionRoot "private\Update-WinUtilSelections.ps1")
-    . (Join-Path $script:functionRoot "public\Invoke-WPFImpex.ps1")
+    . (Join-Path $script:functionRoot "UI\Update-WinUtilSelections.ps1")
+    . (Join-Path $script:functionRoot "Features\Invoke-WPFImpex.ps1")
 
     # Stubs so the mocks below have something to replace; the real ones live in other files
     function Get-WinUtilTranslation {
@@ -209,7 +209,7 @@ Describe "Headless config import" {
 
 Describe "Invoke-WinUtilAutoRun" {
     BeforeAll {
-        . (Join-Path $script:functionRoot "public\Invoke-WinUtilAutoRun.ps1")
+        . (Join-Path $script:functionRoot "Core\Invoke-WinUtilAutoRun.ps1")
     }
 
     BeforeEach {
@@ -323,7 +323,7 @@ Describe "Invoke-WinUtilAutoRun" {
 
 Describe "Write-WinUtilAutoRunSummary" {
     BeforeAll {
-        . (Join-Path $script:functionRoot "public\Invoke-WinUtilAutoRun.ps1")
+        . (Join-Path $script:functionRoot "Core\Invoke-WinUtilAutoRun.ps1")
     }
 
     BeforeEach {

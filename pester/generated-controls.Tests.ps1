@@ -19,7 +19,7 @@ Describe "Generated controls" {
     # the interface build runs while that control is still $null. That produced three silent
     # "You cannot call a method on a null-valued expression" errors.
     It "are not touched while the interface is being built" {
-        $uiScript = Get-Content -Path (Join-Path $script:repoRoot "functions\private\Start-WinUtilUserInterface.ps1") -Raw
+        $uiScript = Get-Content -Path (Join-Path $script:repoRoot "functions\UI\Start-WinUtilUserInterface.ps1") -Raw
 
         $referenced = @(
             [regex]::Matches($uiScript, '\$sync(?:\["([A-Za-z_][A-Za-z0-9_]*)"\]|\.([A-Za-z_][A-Za-z0-9_]*))') |

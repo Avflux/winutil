@@ -1,7 +1,7 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Save-WinUtilPreferences.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Read-WinUtilPreferences.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Save-WinUtilPreferences.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Read-WinUtilPreferences.ps1")
 }
 
 Describe "Save-WinUtilPreferences" {

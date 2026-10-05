@@ -41,7 +41,7 @@ BeforeAll {
         param($Name, [switch]$Force)
     }
 
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilSSHServer.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WinUtilSSHServer.ps1")
 
     $script:defaultAdministratorsBlock = "Match Group administrators`n       AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys`n"
     $script:overriddenAdministratorsBlock = "# Match Group administrators`n#        AuthorizedKeysFile __PROGRAMDATA__/ssh/administrators_authorized_keys`n"

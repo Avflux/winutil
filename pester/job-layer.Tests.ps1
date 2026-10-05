@@ -3,12 +3,12 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Measure-WinUtilStep.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Write-WinUtilErrorRecord.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Complete-WinUtilPackageRun.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Start-WinUtilJob.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilCloseRequest.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUIThread.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Measure-WinUtilStep.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Write-WinUtilErrorRecord.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Complete-WinUtilPackageRun.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Start-WinUtilJob.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WinUtilCloseRequest.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WPFUIThread.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)
@@ -49,8 +49,8 @@ Describe "Interface thread dispatch" {
 
     It "passes deferred values as parameters rather than capturing them" {
         foreach ($path in @(
-            "functions\private\Step-WinUtilJob.ps1",
-            "functions\private\Invoke-WinUtilISO.ps1"
+            "functions\Core\Step-WinUtilJob.ps1",
+            "functions\ISO\Invoke-WinUtilISO.ps1"
         )) {
             $source = Get-Content -Path (Join-Path $script:repoRoot $path) -Raw
 
@@ -125,7 +125,7 @@ Describe "Invoke-WPFUIThread output" {
         $tokens = $null
         $errors = $null
         $uiAst = [System.Management.Automation.Language.Parser]::ParseFile(
-            (Join-Path $script:repoRoot "functions\private\Start-WinUtilUserInterface.ps1"),
+            (Join-Path $script:repoRoot "functions\UI\Start-WinUtilUserInterface.ps1"),
             [ref]$tokens,
             [ref]$errors
         )
@@ -147,7 +147,7 @@ Describe "Invoke-WPFUIThread output" {
         $tokens = $null
         $errors = $null
         $uiAst = [System.Management.Automation.Language.Parser]::ParseFile(
-            (Join-Path $script:repoRoot "functions\private\Start-WinUtilUserInterface.ps1"),
+            (Join-Path $script:repoRoot "functions\UI\Start-WinUtilUserInterface.ps1"),
             [ref]$tokens,
             [ref]$errors
         )

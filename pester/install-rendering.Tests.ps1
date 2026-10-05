@@ -15,8 +15,8 @@ Describe "Install app rendering startup contract" {
     It "drains queued app batches on the WPF dispatcher without timer scope errors" {
         Add-Type -AssemblyName WindowsBase
         function global:Test-WinUtilUIAlive { $null -ne $sync.Form -and $null -ne $sync.Form.Dispatcher }
-        . (Join-Path $script:repoRoot "functions\private\Start-WinUtilBackgroundQueue.ps1")
-        . (Join-Path $script:repoRoot "functions\private\Start-WinUtilInstallAppRendering.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Start-WinUtilBackgroundQueue.ps1")
+        . (Join-Path $script:repoRoot "functions\Apps\Start-WinUtilInstallAppRendering.ps1")
 
         $previousSync = Get-Variable -Name sync -Scope Global -ErrorAction SilentlyContinue
         $previousInitializeAppEntry = Get-Item -Path Function:\Initialize-InstallAppEntry -ErrorAction SilentlyContinue
@@ -73,7 +73,7 @@ Describe "Install app rendering startup contract" {
             $global:sync.InstallAppRenderQueue.Count | Should -Be 0
             @($renderedApps) | Should -Be @("AppA", "AppB", "AppC")
             $global:Error.Count | Should -Be $errorCountBefore
-            (Get-Content (Join-Path $script:repoRoot "functions\private\Start-WinUtilInstallAppRendering.ps1") -Raw) |
+            (Get-Content (Join-Path $script:repoRoot "functions\Apps\Start-WinUtilInstallAppRendering.ps1") -Raw) |
                 Should -Not -Match 'Measure-WinUtilStep'
         } finally {
             if ($previousSync) {

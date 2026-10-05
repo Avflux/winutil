@@ -4,8 +4,8 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
-    . (Join-Path $script:repoRoot "functions\private\Write-WinUtilLog.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Measure-WinUtilStep.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Write-WinUtilLog.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Measure-WinUtilStep.ps1")
 }
 
 Describe "Write-WinUtilLog" {
@@ -61,7 +61,7 @@ Describe "Write-WinUtilLog" {
             logPath = $logPath
         })
 
-        $logFunction = Get-Content -Path (Join-Path $script:repoRoot "functions\private\Write-WinUtilLog.ps1") -Raw
+        $logFunction = Get-Content -Path (Join-Path $script:repoRoot "functions\Core\Write-WinUtilLog.ps1") -Raw
         $initialSessionState = [System.Management.Automation.Runspaces.InitialSessionState]::CreateDefault()
         $initialSessionState.Variables.Add(
             (New-Object System.Management.Automation.Runspaces.SessionStateVariableEntry -ArgumentList "sync", $script:sync, $null)

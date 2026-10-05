@@ -4,10 +4,10 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Measure-WinUtilStep.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilTweaks.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFtweaksbutton.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFundoall.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Measure-WinUtilStep.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WinUtilTweaks.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFtweaksbutton.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFundoall.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

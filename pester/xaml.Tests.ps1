@@ -7,8 +7,8 @@ BeforeAll {
     $script:functionRoot = Join-Path $script:repoRoot "functions"
     $script:scriptsRoot = Join-Path $script:repoRoot "scripts"
     $script:xamlPath = Join-Path $script:repoRoot "xaml\inputXML.xaml"
-    $script:uiScriptPath = Join-Path $script:functionRoot "private\Start-WinUtilUserInterface.ps1"
-    $script:buttonScriptPath = Join-Path $script:functionRoot "public\Invoke-WPFButton.ps1"
+    $script:uiScriptPath = Join-Path $script:functionRoot "UI\Start-WinUtilUserInterface.ps1"
+    $script:buttonScriptPath = Join-Path $script:functionRoot "UI\Invoke-WPFButton.ps1"
     $script:xamlText = Get-Content -Path $script:xamlPath -Raw
     $script:xaml = [xml]$script:xamlText
     $script:xamlNamespace = New-Object System.Xml.XmlNamespaceManager -ArgumentList $script:xaml.NameTable

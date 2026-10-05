@@ -38,8 +38,8 @@ BeforeAll {
     }
     function Clear-DnsClientCache { }
 
-    . (Join-Path $script:repoRoot "functions\private\Set-WinUtilDNS.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilDNSBenchmark.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Set-WinUtilDNS.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilDNSBenchmark.ps1")
 }
 
 Describe "Set-WinUtilDNS" {

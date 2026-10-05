@@ -4,9 +4,9 @@
 Describe "Win11 Creator setup media" {
     BeforeAll {
         $script:repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-        $script:isoWorkflowPath = Join-Path $script:repoRoot "functions\private\Invoke-WinUtilISO.ps1"
-        $script:isoUsbWorkflowPath = Join-Path $script:repoRoot "functions\private\Invoke-WinUtilISOUSB.ps1"
-        $script:isoScriptPath = Join-Path $script:repoRoot "functions\private\Invoke-WinUtilISOScript.ps1"
+        $script:isoWorkflowPath = Join-Path $script:repoRoot "functions\ISO\Invoke-WinUtilISO.ps1"
+        $script:isoUsbWorkflowPath = Join-Path $script:repoRoot "functions\ISO\Invoke-WinUtilISOUSB.ps1"
+        $script:isoScriptPath = Join-Path $script:repoRoot "functions\ISO\Invoke-WinUtilISOScript.ps1"
         $script:autoUnattendPath = Join-Path $script:repoRoot "tools\autounattend.xml"
 
     function Get-WinUtilTranslation {
@@ -187,7 +187,7 @@ Describe "Win11 Creator setup media" {
     }
 
     It "ISO script accepts selected edition and driver-only WIM servicing metadata" {
-        $isoScriptPath = Join-Path $PSScriptRoot "..\functions\private\Invoke-WinUtilISOScript.ps1"
+        $isoScriptPath = Join-Path $PSScriptRoot "..\functions\ISO\Invoke-WinUtilISOScript.ps1"
         $content = Get-Content -Path $isoScriptPath -Raw
 
         foreach ($pattern in @(

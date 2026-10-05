@@ -7,7 +7,7 @@ $configRoot = Join-Path $PSScriptRoot "..\config"
 $functionRoot = Join-Path $repoRoot "functions"
 $xamlPath = Join-Path $repoRoot "xaml\inputXML.xaml"
 $mainScriptPath = Join-Path $repoRoot "scripts\main.ps1"
-$buttonScriptPath = Join-Path $repoRoot "functions\public\Invoke-WPFButton.ps1"
+$buttonScriptPath = Join-Path $repoRoot "functions\UI\Invoke-WPFButton.ps1"
 $configCases = @(
     Get-ChildItem -Path $configRoot -Filter *.json | ForEach-Object {
         @{
@@ -23,7 +23,7 @@ BeforeAll {
     $script:functionRoot = Join-Path $script:repoRoot "functions"
     $script:xamlPath = Join-Path $script:repoRoot "xaml\inputXML.xaml"
     $script:mainScriptPath = Join-Path $script:repoRoot "scripts\main.ps1"
-    $script:buttonScriptPath = Join-Path $script:repoRoot "functions\public\Invoke-WPFButton.ps1"
+    $script:buttonScriptPath = Join-Path $script:repoRoot "functions\UI\Invoke-WPFButton.ps1"
 
 function script:Get-WinUtilConfigObject {
     param([string]$Name)
@@ -343,8 +343,8 @@ Describe "Preset config" {
 Describe "App navigation config" {
     It "is wired to an existing XAML target grid" {
         $mainScript = Get-Content -Path $script:mainScriptPath -Raw
-        $tabInitializerScript = Get-Content -Path (Join-Path $script:repoRoot "functions/private/Initialize-WinUtilTabContent.ps1") -Raw
-        $uiInitializerScript = Get-Content -Path (Join-Path $script:repoRoot "functions/public/Initialize-WPFUI.ps1") -Raw
+        $tabInitializerScript = Get-Content -Path (Join-Path $script:repoRoot "functions/UI/Initialize-WinUtilTabContent.ps1") -Raw
+        $uiInitializerScript = Get-Content -Path (Join-Path $script:repoRoot "functions/UI/Initialize-WPFUI.ps1") -Raw
         $targetGridMatch = [regex]::Match(
             "$mainScript`n$tabInitializerScript`n$uiInitializerScript",
             'Invoke-WPFUIElements\s+-configVariable\s+\$sync\.configs\.appnavigation\s+-targetGridName\s+"([^"]+)"'

@@ -4,11 +4,11 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Measure-WinUtilStep.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Measure-WinUtilStep.ps1")
 
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilPackageLogSummary.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFInstall.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUnInstall.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Get-WinUtilPackageLogSummary.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFInstall.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFUnInstall.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

@@ -4,14 +4,14 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Write-WinUtilLog.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilToggleStatus.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilCurrentSystem.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilTweaksStateReport.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Test-WinUtilPackageManager.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilEnvironmentReport.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilEnvironmentReportLogsPath.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Write-WinUtilEnvironmentReportExport.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Write-WinUtilLog.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Get-WinUtilToggleStatus.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Invoke-WinUtilCurrentSystem.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Get-WinUtilTweaksStateReport.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Test-WinUtilPackageManager.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Get-WinUtilEnvironmentReport.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Get-WinUtilEnvironmentReportLogsPath.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Write-WinUtilEnvironmentReportExport.ps1")
 }
 
 Describe "Get-WinUtilEnvironmentReport" {
@@ -190,13 +190,13 @@ Describe "Get-WinUtilEnvironmentReportLogsPath" {
 
 Describe "Invoke-WPFExportEnvironmentReport overwrite protection" {
     It "checks the derived logs path literally" {
-        $source = Get-Content -LiteralPath (Join-Path $script:repoRoot "functions\public\Invoke-WPFExportEnvironmentReport.ps1") -Raw
+        $source = Get-Content -LiteralPath (Join-Path $script:repoRoot "functions\Features\Invoke-WPFExportEnvironmentReport.ps1") -Raw
 
         $source | Should -Match 'Test-Path\s+-LiteralPath\s+\$logsPath'
     }
 
     It "aborts rather than retaining a stale companion when logs are excluded" {
-        $source = Get-Content -LiteralPath (Join-Path $script:repoRoot "functions\public\Invoke-WPFExportEnvironmentReport.ps1") -Raw
+        $source = Get-Content -LiteralPath (Join-Path $script:repoRoot "functions\Features\Invoke-WPFExportEnvironmentReport.ps1") -Raw
 
         $source | Should -Match 'if \(-not \$includeLogs\) \{[\s\S]*Choose another report filename[\s\S]*return'
         $source | Should -Match 'if \(-not \$replaceLogs\) \{\s*return\s*\}'

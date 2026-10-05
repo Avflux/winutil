@@ -110,8 +110,8 @@ namespace Windows.Controls
 "@
     }
 
-    . (Join-Path $script:repoRoot "functions\private\Find-AppsByNameOrDescription.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Find-TweaksByNameOrDescription.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Find-AppsByNameOrDescription.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Find-TweaksByNameOrDescription.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

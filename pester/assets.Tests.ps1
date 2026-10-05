@@ -3,7 +3,7 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Register-WinUtilRunspaceCleanup.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Register-WinUtilRunspaceCleanup.ps1")
 }
 
 Describe "Taskbar overlay rendering" {
@@ -40,7 +40,7 @@ public static class WinUtilRunspaceCleanup
 
     It "serializes speculative and fallback rendering through one shared lock" {
         $startSource = Get-Content -Path (Join-Path $script:repoRoot "scripts\start.ps1") -Raw
-        $initializerSource = Get-Content -Path (Join-Path $script:repoRoot "functions\private\Initialize-WinUtilTaskbarOverlayAssets.ps1") -Raw
+        $initializerSource = Get-Content -Path (Join-Path $script:repoRoot "functions\Core\Initialize-WinUtilTaskbarOverlayAssets.ps1") -Raw
 
         $startSource | Should -Match '\$sync\.AssetRenderLock = \[object\]::new\(\)'
         $startSource | Should -Match '\$sync\.RenderedAssetCache = \[Hashtable\]::Synchronized'

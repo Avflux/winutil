@@ -136,7 +136,7 @@ namespace System.Windows
 "@
     }
 
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinutilThemeChange.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WinutilThemeChange.ps1")
 
     function Test-WinUtilUIAlive { $null -ne $sync.Form -and $null -ne $sync.Form.Dispatcher }
 

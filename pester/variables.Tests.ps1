@@ -17,7 +17,7 @@ BeforeAll {
     $global:sync["WPFTestButton"] = [System.Version]::new("1.0.0.0")
     $global:sync["OtherVar"] = "Not a WPF variable"
 
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilVariables.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilVariables.ps1")
 }
 
 AfterAll {

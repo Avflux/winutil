@@ -5,7 +5,7 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFSystemRepair.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFSystemRepair.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

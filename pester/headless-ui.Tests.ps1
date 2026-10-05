@@ -18,7 +18,7 @@ namespace Windows
 "@
     }
 
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFUIThread.ps1")
+    . (Join-Path $script:repoRoot "functions\UI\Invoke-WPFUIThread.ps1")
 
     function script:New-WinUtilFakeForm {
         $dispatcher = New-Object psobject

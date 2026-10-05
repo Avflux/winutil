@@ -5,9 +5,9 @@ BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
     $script:config = Get-Content (Join-Path $script:repoRoot "config\tweaks.json") -Raw | ConvertFrom-Json
     $script:states = $script:config.WPFMultiplaneOverlay.registry
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilRegistryComboState.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilRegistryComboValue.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Set-WinUtilRegistryComboState.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Get-WinUtilRegistryComboState.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Get-WinUtilRegistryComboValue.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Set-WinUtilRegistryComboState.ps1")
 
     function Set-WinUtilRegistry {
         param($Name, $Path, $Type, $Value)

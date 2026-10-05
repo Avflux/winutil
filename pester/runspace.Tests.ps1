@@ -3,12 +3,12 @@
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Get-WinUtilRunspacePoolLock.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Close-WinUtilRunspacePool.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Stop-WinUtilActiveWork.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Initialize-WinUtilRunspacePool.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Register-WinUtilRunspaceCleanup.ps1")
-        . (Join-Path $script:repoRoot "functions\public\Invoke-WPFRunspace.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilRunspacePoolLock.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Close-WinUtilRunspacePool.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Stop-WinUtilActiveWork.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Initialize-WinUtilRunspacePool.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Register-WinUtilRunspaceCleanup.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Invoke-WPFRunspace.ps1")
     function Get-WinUtilTranslation {
         param([string]$Text)
         return $Text
@@ -20,9 +20,9 @@ BeforeAll {
     function Show-WinUtilMessage {
         param($Message, $Title, $Button, $Icon)
     }
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFFeatureInstall.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFAppxRemoval.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFundoall.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFFeatureInstall.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Invoke-WPFAppxRemoval.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFundoall.ps1")
 
     function script:New-WinUtilRunspaceTestContext {
         param([hashtable]$InitialSync = @{})
@@ -95,7 +95,7 @@ Describe "Invoke-WPFRunspace behavior" {
             function Initialize-WinUtilRunspacePool {
                 $PoolInitializationEntered.Set()
             }
-            . (Join-Path $RepoRoot "functions\public\Invoke-WPFRunspace.ps1")
+            . (Join-Path $RepoRoot "functions\Core\Invoke-WPFRunspace.ps1")
             $workHandle = Invoke-WPFRunspace -ScriptBlock { }
             [pscustomobject]@{ Scheduled = $null -ne $workHandle }
         }).AddArgument($script:sync).AddArgument($script:repoRoot).AddArgument($poolLock).AddArgument($lockRequested).AddArgument($poolInitializationEntered)
@@ -315,20 +315,19 @@ Describe "Public runspace callers" {
     }
 
     It "keeps every long workflow entrypoint on the job layer" {
-        $publicRoot = Join-Path $script:repoRoot "functions\public"
-        $privateRoot = Join-Path $script:repoRoot "functions\private"
+        $functionsRoot = Join-Path $script:repoRoot "functions"
         $entrypoints = @(
-            (Join-Path $publicRoot "Invoke-WPFInstall.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFUnInstall.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFAppxInstall.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFAppxRemoval.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFFeatureInstall.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFGetInstalled.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFOOSU.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFtweaksbutton.ps1"),
-            (Join-Path $publicRoot "Invoke-WPFundoall.ps1"),
-            (Join-Path $privateRoot "Invoke-WinUtilISO.ps1"),
-            (Join-Path $privateRoot "Invoke-WinUtilISOUSB.ps1")
+            (Join-Path $functionsRoot "Apps\Invoke-WPFInstall.ps1"),
+            (Join-Path $functionsRoot "Apps\Invoke-WPFUnInstall.ps1"),
+            (Join-Path $functionsRoot "Apps\Invoke-WPFAppxInstall.ps1"),
+            (Join-Path $functionsRoot "Apps\Invoke-WPFAppxRemoval.ps1"),
+            (Join-Path $functionsRoot "Features\Invoke-WPFFeatureInstall.ps1"),
+            (Join-Path $functionsRoot "Apps\Invoke-WPFGetInstalled.ps1"),
+            (Join-Path $functionsRoot "Tweaks\Invoke-WPFOOSU.ps1"),
+            (Join-Path $functionsRoot "Tweaks\Invoke-WPFtweaksbutton.ps1"),
+            (Join-Path $functionsRoot "Tweaks\Invoke-WPFundoall.ps1"),
+            (Join-Path $functionsRoot "ISO\Invoke-WinUtilISO.ps1"),
+            (Join-Path $functionsRoot "ISO\Invoke-WinUtilISOUSB.ps1")
         )
 
         foreach ($entrypoint in $entrypoints) {

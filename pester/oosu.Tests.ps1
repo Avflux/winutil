@@ -5,8 +5,8 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
-    . (Join-Path $script:repoRoot "functions\private\Save-WinUtilFile.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFOOSU.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Save-WinUtilFile.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Invoke-WPFOOSU.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)

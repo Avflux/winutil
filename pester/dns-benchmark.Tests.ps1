@@ -1,5 +1,5 @@
 BeforeAll {
-    . "$PSScriptRoot/../functions/private/Get-WinUtilDNSBenchmark.ps1"
+    . "$PSScriptRoot/../functions/Core/Get-WinUtilDNSBenchmark.ps1"
     function Write-WinUtilLog { param($Message, $Level, $Component) }
 }
 

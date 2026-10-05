@@ -6,11 +6,11 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilCurrentSystem.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Set-WinUtilRegistry.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Set-WinUtilService.ps1")
-    . (Join-Path $script:repoRoot "functions\public\Invoke-WPFPanelAutologin.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilInstallPSProfile.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Invoke-WinUtilCurrentSystem.ps1")
+    . (Join-Path $script:repoRoot "functions\Tweaks\Set-WinUtilRegistry.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Set-WinUtilService.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WPFPanelAutologin.ps1")
+    . (Join-Path $script:repoRoot "functions\Features\Invoke-WinUtilInstallPSProfile.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)
@@ -53,7 +53,7 @@ Describe "Get-WinUtilPowerShell7Path" {
     }
 
     It "is also used by profile removal so a stale process PATH is supported" {
-        $source = Get-Content (Join-Path $script:repoRoot "functions\private\Invoke-WinUtilUninstallPSProfile.ps1") -Raw
+        $source = Get-Content (Join-Path $script:repoRoot "functions\Features\Invoke-WinUtilUninstallPSProfile.ps1") -Raw
 
         $source | Should -Match '\$pwshPath = Get-WinUtilPowerShell7Path'
         $source | Should -Match '& \$pwshPath -NoProfile'

@@ -5,9 +5,9 @@
 BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
-    . (Join-Path $script:repoRoot "functions\private\Install-WinUtilProgramWinget.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Install-WinUtilProgramChoco.ps1")
-    . (Join-Path $script:repoRoot "functions\private\Complete-WinUtilPackageRun.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramWinget.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramChoco.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Complete-WinUtilPackageRun.ps1")
 
     function Get-WinUtilTranslation {
         param([string]$Text)
