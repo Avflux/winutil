@@ -1660,6 +1660,9 @@
                                 <Style TargetType="Button" BasedOn="{StaticResource HoverButtonStyle}">
                                     <Setter Property="Visibility" Value="Hidden"/>
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected, ElementName=WPFWin11ISOAppsSection}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding IsSelected, ElementName=WPFWin11ISOModifySection}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
@@ -1685,6 +1688,13 @@
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
                                                 <Condition Binding="{Binding IsSelected, ElementName=WPFWin11ISOSelectSection}" Value="True"/>
+                                                <Condition Binding="{Binding IsEnabled, ElementName=WPFWin11ISOAppsSection}" Value="True"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding IsSelected, ElementName=WPFWin11ISOAppsSection}" Value="True"/>
                                                 <Condition Binding="{Binding IsEnabled, ElementName=WPFWin11ISOModifySection}" Value="True"/>
                                             </MultiDataTrigger.Conditions>
                                             <Setter Property="Visibility" Value="Visible"/>
@@ -1943,8 +1953,71 @@
                                 </StackPanel>
                             </TabItem>
 
-                            <!-- ─── STEP 2 : Modify install.wim ───────────────────── -->
-                            <TabItem Name="WPFWin11ISOModifySection" IsEnabled="False" Tag="&#xE713;" Header="2   Modify Image">
+                            <!-- ─── STEP 2 : Select Apps ─────────────────────────── -->
+                            <TabItem Name="WPFWin11ISOAppsSection" IsEnabled="False" Tag="&#xE71D;" Header="2   Select Apps">
+                                <StackPanel Style="{StaticResource Win11StepColumn}" VerticalAlignment="Top" Margin="0,8,0,16">
+                                    <TextBlock Text="&#xE71D;" Style="{StaticResource Win11StepHero}" Margin="0,0,0,10"/>
+                                    <TextBlock Style="{StaticResource Win11StepTitle}" Text="Choose apps to keep or remove" Margin="0,0,0,4"/>
+                                    <TextBlock Style="{StaticResource Win11StepSubtitle}" Margin="0,0,0,12">
+                                        Select which preinstalled Windows apps to remove. The recommended preset keeps essential tools like Calculator, Notepad, Paint, and Photos.
+                                    </TextBlock>
+
+                                    <!-- Removal Method -->
+                                    <Border Style="{StaticResource Win11FormPanel}" Margin="0,0,0,10" Padding="14,8">
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource Win11StepLabel}" Text="Removal method" Margin="0,0,0,4"/>
+                                            <StackPanel Orientation="Vertical">
+                                                <RadioButton Name="WPFWin11ISOMethodXml"
+                                                             GroupName="Win11RemovalMethod"
+                                                             Content="Answer File (autounattend.xml) - Fast &amp; safe, removed at first logon"
+                                                             Foreground="{DynamicResource MainForegroundColor}"
+                                                             FontSize="{DynamicResource FontSize}"
+                                                             IsChecked="True"
+                                                             Cursor="Hand"
+                                                             Margin="0,2,0,3"/>
+                                                <RadioButton Name="WPFWin11ISOMethodDism"
+                                                             GroupName="Win11RemovalMethod"
+                                                             Content="Direct from ISO (DISM Offline) - Stripped from install.wim before install"
+                                                             Foreground="{DynamicResource MainForegroundColor}"
+                                                             FontSize="{DynamicResource FontSize}"
+                                                             IsChecked="False"
+                                                             Cursor="Hand"
+                                                             Margin="0,2,0,2"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Presets & Counter -->
+                                    <StackPanel Margin="0,0,0,6">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                            <Button Name="WPFWin11ISOPresetRecommended" Content=" Recommended " Margin="0,0,6,0" Height="28" Padding="12,0"/>
+                                            <Button Name="WPFWin11ISOPresetAll" Content=" Remove All " Margin="0,0,6,0" Height="28" Padding="12,0"/>
+                                            <Button Name="WPFWin11ISOPresetNone" Content=" Keep All " Margin="0,0,0,0" Height="28" Padding="12,0"/>
+                                        </StackPanel>
+                                        <TextBlock Name="WPFWin11ISOAppsCountLabel"
+                                                   Style="{StaticResource Win11StepBody}"
+                                                   TextWrapping="NoWrap"
+                                                   Margin="2,0,0,0"
+                                                   Text="0 of 34 apps selected to remove"/>
+                                    </StackPanel>
+
+                                    <!-- App Checkboxes Container -->
+                                    <Border Style="{StaticResource Win11InfoPanel}" Padding="12,8" Margin="0,0,0,12">
+                                        <ScrollViewer MaxHeight="230" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                            <StackPanel Name="WPFWin11ISOAppsListPanel">
+                                                <!-- Populated dynamically from config/appx.json -->
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Border>
+
+                                    <Button Name="WPFWin11ISOGoToModifyButton" Margin="0,0,0,10"
+                                            Style="{StaticResource Win11StepButton}" Tag="&#xE76C;"
+                                            Content="Next: Options &amp; Drivers"/>
+                                </StackPanel>
+                            </TabItem>
+
+                            <!-- ─── STEP 3 : Modify install.wim ───────────────────── -->
+                            <TabItem Name="WPFWin11ISOModifySection" IsEnabled="False" Tag="&#xE713;" Header="3   Modify Image">
                                 <StackPanel Style="{StaticResource Win11StepColumn}">
                                     <TextBlock Text="&#xE713;" Style="{StaticResource Win11StepHero}"/>
                                     <TextBlock Style="{StaticResource Win11StepTitle}" Text="Modify the image"/>
@@ -1954,10 +2027,10 @@
                                     </TextBlock>
 
                                     <Border Name="WPFWin11ISOVerifyResultPanel"
-                                            Style="{StaticResource Win11InfoPanel}"
-                                            Padding="14,10"
-                                            Margin="0,0,0,14"
-                                            Visibility="Collapsed">
+                                             Style="{StaticResource Win11InfoPanel}"
+                                             Padding="14,10"
+                                             Margin="0,0,0,14"
+                                             Visibility="Collapsed">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -1993,6 +2066,14 @@
                                                       IsChecked="False"
                                                       Cursor="Hand"
                                                       ToolTip="Stages boot-storage drivers for Setup and adds all exported drivers to the selected install.wim edition in one DISM pass."/>
+                                            <CheckBox Name="WPFWin11ISORemoveCapabilities"
+                                                      Content="Remove optional legacy capabilities (WordPad, IE, etc.)"
+                                                      FontSize="{DynamicResource FontSize}"
+                                                      Foreground="{DynamicResource MainForegroundColor}"
+                                                      IsChecked="True"
+                                                      Cursor="Hand"
+                                                      Margin="0,8,0,0"
+                                                      ToolTip="Removes optional capabilities such as WordPad, Internet Explorer, and Windows Media Player."/>
                                         </StackPanel>
                                     </Border>
 
@@ -2033,8 +2114,8 @@
                                 </StackPanel>
                             </TabItem>
 
-                            <!-- ─── STEP 3 : Output Options ───────────────────────── -->
-                            <TabItem Name="WPFWin11ISOOutputSection" IsEnabled="False" Tag="&#xE88E;" Header="3   Output">
+                            <!-- ─── STEP 4 : Output Options ───────────────────────── -->
+                            <TabItem Name="WPFWin11ISOOutputSection" IsEnabled="False" Tag="&#xE88E;" Header="4   Output">
                                 <StackPanel Style="{StaticResource Win11StepColumn}">
                                     <TextBlock Text="&#xE88E;" Style="{StaticResource Win11StepHero}"/>
                                     <TextBlock Style="{StaticResource Win11StepTitle}" Text="Your image is ready"/>

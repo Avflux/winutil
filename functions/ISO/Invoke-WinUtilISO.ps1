@@ -71,7 +71,7 @@ function Set-WinUtilISOStep {
             Selects a page of the Win11 Creator wizard and sets which pages can be navigated back to
 
         .PARAMETER Step
-            Select, Modify, Working or Output
+            Select, Apps, Modify, Working or Output
 
         .PARAMETER Label
             Headline shown on the working page while a long operation runs
@@ -81,7 +81,7 @@ function Set-WinUtilISOStep {
     #>
     param(
         [Parameter(Mandatory)]
-        [ValidateSet("Select", "Modify", "Working", "Output")]
+        [ValidateSet("Select", "Apps", "Modify", "Working", "Output")]
         [string]$Step,
 
         [string]$Label,
@@ -92,18 +92,239 @@ function Set-WinUtilISOStep {
     Invoke-WPFUIThread -Parameters @{ Step = $Step; Label = $Label; Reverse = [bool]$Reverse } -ScriptBlock {
         param($Step, $Label, $Reverse)
 
-        if ($Label) {
+        if ($Label -and $sync["WPFWin11ISOWorkingLabel"]) {
             $labelControl = $sync["WPFWin11ISOWorkingLabel"]
             Set-WinUtilTranslatedText -Control $labelControl -Kind "Text" -English $Label
         }
 
-        $sync["WPFWin11ISOWorkingSpinner"].Tag = if ($Reverse) { "Reverse" } else { "Forward" }
+        if ($sync["WPFWin11ISOWorkingSpinner"]) {
+            $sync["WPFWin11ISOWorkingSpinner"].Tag = if ($Reverse) { "Reverse" } else { "Forward" }
+        }
 
-        $sync["WPFWin11ISOSelectSection"].IsEnabled = $Step -in @("Select", "Modify")
-        $sync["WPFWin11ISOModifySection"].IsEnabled = $Step -eq "Modify"
-        $sync["WPFWin11ISOOutputSection"].IsEnabled = $Step -eq "Output"
+        if ($sync["WPFWin11ISOSelectSection"]) {
+            $sync["WPFWin11ISOSelectSection"].IsEnabled = $Step -in @("Select", "Apps", "Modify")
+        }
+        if ($sync["WPFWin11ISOAppsSection"]) {
+            $sync["WPFWin11ISOAppsSection"].IsEnabled = $Step -in @("Apps", "Modify")
+        }
+        if ($sync["WPFWin11ISOModifySection"]) {
+            $sync["WPFWin11ISOModifySection"].IsEnabled = $Step -in @("Apps", "Modify")
+        }
+        if ($sync["WPFWin11ISOOutputSection"]) {
+            $sync["WPFWin11ISOOutputSection"].IsEnabled = $Step -eq "Output"
+        }
 
-        $sync["WPFWin11ISO$($Step)Section"].IsSelected = $true
+        if ($sync["WPFWin11ISO$($Step)Section"]) {
+            $sync["WPFWin11ISO$($Step)Section"].IsSelected = $true
+        }
+
+        if ($Step -eq "Apps" -and $sync["WPFWin11ISOAppsListPanel"] -and $sync["WPFWin11ISOAppsListPanel"].Children.Count -eq 0) {
+            Initialize-WinUtilISOAppsPanel
+        }
+    }
+}
+
+function Get-WinUtilISOAppCheckBoxes {
+    <#
+        .SYNOPSIS
+            Discovers all AppX checkboxes inside the specified container.
+    #>
+    param($Container)
+
+    $result = [System.Collections.Generic.List[System.Windows.Controls.CheckBox]]::new()
+    if ($null -eq $Container) { return $result }
+
+    $queue = [System.Collections.Queue]::new()
+    $queue.Enqueue($Container)
+
+    while ($queue.Count -gt 0) {
+        $curr = $queue.Dequeue()
+        if ($curr -is [System.Windows.Controls.CheckBox] -and $curr.Tag) {
+            $result.Add($curr)
+        }
+        if ($curr.Children) {
+            foreach ($child in $curr.Children) {
+                $queue.Enqueue($child)
+            }
+        }
+        if ($curr -is [System.Windows.Controls.Decorator] -and $curr.Child) {
+            $queue.Enqueue($curr.Child)
+        }
+    }
+    return $result
+}
+
+function Update-WinUtilISOAppsCount {
+    <#
+        .SYNOPSIS
+            Updates the status label with count of selected packages to remove.
+    #>
+    Invoke-WPFUIThread -ScriptBlock {
+        $panel = $sync["WPFWin11ISOAppsListPanel"]
+        $label = $sync["WPFWin11ISOAppsCountLabel"]
+        if (-not $panel -or -not $label) { return }
+
+        $checkBoxes = Get-WinUtilISOAppCheckBoxes -Container $panel
+        $total = $checkBoxes.Count
+        $selected = ($checkBoxes | Where-Object { $_.IsChecked -eq $true }).Count
+
+        $suffix = Get-WinUtilTranslation -Text "apps selected to remove"
+        $label.Text = "$selected of $total $suffix"
+    }
+}
+
+function Set-WinUtilISOAppsPreset {
+    <#
+        .SYNOPSIS
+            Applies an AppX selection preset (Recommended, All, or None).
+    #>
+    param(
+        [Parameter(Mandatory)]
+        [ValidateSet("Recommended", "All", "None")]
+        [string]$Preset
+    )
+
+    $essentialPackages = @(
+        "Microsoft.WindowsCalculator",
+        "Microsoft.WindowsNotepad",
+        "Microsoft.Paint",
+        "Microsoft.Windows.Photos",
+        "Microsoft.ScreenSketch",
+        "Microsoft.WindowsCamera",
+        "Microsoft.WindowsSoundRecorder",
+        "Microsoft.WindowsAlarms",
+        "Microsoft.MicrosoftStickyNotes"
+    )
+
+    Invoke-WPFUIThread -Parameters @{ Preset = $Preset; Essential = $essentialPackages } -ScriptBlock {
+        param($Preset, $Essential)
+
+        $panel = $sync["WPFWin11ISOAppsListPanel"]
+        if (-not $panel) { return }
+
+        $checkBoxes = Get-WinUtilISOAppCheckBoxes -Container $panel
+        foreach ($cb in $checkBoxes) {
+            $pkgId = [string]$cb.Tag
+            switch ($Preset) {
+                "All" {
+                    $cb.IsChecked = $true
+                }
+                "None" {
+                    $cb.IsChecked = $false
+                }
+                "Recommended" {
+                    $cb.IsChecked = ($pkgId -notin $Essential)
+                }
+            }
+        }
+        Update-WinUtilISOAppsCount
+    }
+}
+
+function Get-WinUtilISOSelectedAppxPackages {
+    <#
+        .SYNOPSIS
+            Returns an array of package IDs currently checked for removal in the UI.
+    #>
+    $selected = [System.Collections.Generic.List[string]]::new()
+    Invoke-WPFUIThread -ScriptBlock {
+        $panel = $sync["WPFWin11ISOAppsListPanel"]
+        if ($panel) {
+            $checkBoxes = Get-WinUtilISOAppCheckBoxes -Container $panel
+            foreach ($cb in $checkBoxes) {
+                if ($cb.IsChecked -eq $true -and $cb.Tag) {
+                    $selected.Add([string]$cb.Tag)
+                }
+            }
+        }
+    }
+    return @($selected)
+}
+
+function Initialize-WinUtilISOAppsPanel {
+    <#
+        .SYNOPSIS
+            Populates the Win11 Creator AppX selection panel with category groups and checkboxes.
+    #>
+    Invoke-WPFUIThread -ScriptBlock {
+        $panel = $sync["WPFWin11ISOAppsListPanel"]
+        if (-not $panel) { return }
+
+        if ($panel.Children.Count -gt 0) {
+            return
+        }
+
+        $panel.Children.Clear()
+
+        $appxConfig = if ($sync.configs.appx) {
+            $sync.configs.appx
+        } else {
+            $appxFile = Join-Path $PSScriptRoot "..\..\config\appx.json"
+            if (Test-Path $appxFile) {
+                Get-Content $appxFile -Raw | ConvertFrom-Json
+            } else {
+                $null
+            }
+        }
+
+        if (-not $appxConfig) {
+            Write-WinUtilISOLog -Level "WARN" -Message "Unable to load AppX configuration for ISO Creator."
+            return
+        }
+
+        $entries = @()
+        foreach ($prop in $appxConfig.PSObject.Properties) {
+            $val = $prop.Value
+            $entries += [PSCustomObject]@{
+                Key         = $prop.Name
+                Category    = if ($val.Category) { $val.Category } else { "Other Apps" }
+                Content     = if ($val.Content) { $val.Content } else { $prop.Name }
+                Description = if ($val.Description) { $val.Description } else { "" }
+                PackageId   = if ($val.PackageId) { $val.PackageId } else { $prop.Name }
+            }
+        }
+
+        $groups = $entries | Group-Object -Property Category
+
+        foreach ($grp in $groups) {
+            $catBorder = New-Object Windows.Controls.Border
+            $catBorder.Margin = New-Object Windows.Thickness(0, 0, 0, 10)
+
+            $catStack = New-Object Windows.Controls.StackPanel
+
+            $catHeader = New-Object Windows.Controls.TextBlock
+            $catHeader.Text = $grp.Name
+            $catHeader.FontWeight = [System.Windows.FontWeights]::SemiBold
+            $catHeader.FontSize = 13
+            $catHeader.SetResourceReference([Windows.Controls.Control]::ForegroundProperty, "MainForegroundColor")
+            $catHeader.Margin = New-Object Windows.Thickness(2, 0, 0, 3)
+            $catStack.Children.Add($catHeader) | Out-Null
+
+            $grid = New-Object System.Windows.Controls.Primitives.UniformGrid
+            $grid.Columns = 2
+
+            foreach ($item in ($grp.Group | Sort-Object Content)) {
+                $cb = New-Object Windows.Controls.CheckBox
+                $cb.Content = $item.Content
+                $cb.Tag = $item.PackageId
+                $cb.ToolTip = $item.Description
+                $cb.SetResourceReference([Windows.Controls.Control]::ForegroundProperty, "MainForegroundColor")
+                $cb.SetResourceReference([Windows.Controls.Control]::FontSizeProperty, "FontSize")
+                $cb.Margin = New-Object Windows.Thickness(4, 2, 8, 2)
+                $cb.Cursor = [System.Windows.Input.Cursors]::Hand
+
+                $cb.Add_Checked({ Update-WinUtilISOAppsCount })
+                $cb.Add_Unchecked({ Update-WinUtilISOAppsCount })
+
+                $grid.Children.Add($cb) | Out-Null
+            }
+
+            $catStack.Children.Add($grid) | Out-Null
+            $catBorder.Child = $catStack
+            $panel.Children.Add($catBorder) | Out-Null
+        }
+
+        Set-WinUtilISOAppsPreset -Preset "Recommended"
     }
 }
 
@@ -280,7 +501,8 @@ function Invoke-WinUtilISOMountAndVerify {
                     $sync["WPFWin11ISOEditionComboBox"].SelectedIndex = if ($proIndex -ge 0) { $proIndex } else { 0 }
                 }
                 $sync["WPFWin11ISOVerifyResultPanel"].Visibility = "Visible"
-                Set-WinUtilISOStep -Step "Modify"
+                Initialize-WinUtilISOAppsPanel
+                Set-WinUtilISOStep -Step "Apps"
             }
 
             $verified = $true
@@ -345,6 +567,15 @@ function Invoke-WinUtilISOModify {
         if (Test-Path $toolsXml) { Get-Content $toolsXml -Raw } else { "" }
     }
 
+    $injectDrivers      = ($sync["WPFWin11ISOInjectDrivers"] -and $sync["WPFWin11ISOInjectDrivers"].IsChecked -eq $true)
+    $removeCapabilities = ($sync["WPFWin11ISORemoveCapabilities"] -and $sync["WPFWin11ISORemoveCapabilities"].IsChecked -eq $true)
+    $removalMethod      = if ($sync["WPFWin11ISOMethodDism"] -and $sync["WPFWin11ISOMethodDism"].IsChecked -eq $true) { "Dism" } else { "Xml" }
+    $appxPackages       = if ($sync["WPFWin11ISOAppsListPanel"] -and $sync["WPFWin11ISOAppsListPanel"].Children.Count -gt 0) {
+        Get-WinUtilISOSelectedAppxPackages
+    } else {
+        $null
+    }
+
     Start-WinUtilJob -Name "ISO modify" -Description "Modifying ISO" -Parameters @{
         IsoPath             = $isoPath
         DriveLetter         = $driveLetter
@@ -353,9 +584,12 @@ function Invoke-WinUtilISOModify {
         SelectedWimIndex    = $selectedWimIndex
         SelectedEditionName = $selectedEditionName
         AutounattendContent = $autounattendContent
-        InjectDrivers       = $sync["WPFWin11ISOInjectDrivers"].IsChecked -eq $true
+        InjectDrivers       = $injectDrivers
+        RemoveCapabilities  = $removeCapabilities
+        RemovalMethod       = $removalMethod
+        AppxPackages        = $appxPackages
     } -ScriptBlock {
-        param($isoPath, $DriveLetter, $WimPath, $workDir, $SelectedWimIndex, $SelectedEditionName, $AutounattendContent, $InjectDrivers)
+        param($isoPath, $DriveLetter, $WimPath, $workDir, $SelectedWimIndex, $SelectedEditionName, $AutounattendContent, $InjectDrivers, $RemoveCapabilities, $RemovalMethod, $AppxPackages)
 
         Invoke-WPFUIThread -ScriptBlock {
             $sync["WPFWin11ISOModifyButton"].IsEnabled = $false
@@ -387,6 +621,9 @@ function Invoke-WinUtilISOModify {
             Invoke-WinUtilISOScript -ISOContentsDir $isoContents `
                 -AutoUnattendXml $AutounattendContent `
                 -InjectCurrentSystemDrivers $InjectDrivers `
+                -AppxPackagesToRemove $AppxPackages `
+                -RemovalMethod $RemovalMethod `
+                -RemoveCapabilities $RemoveCapabilities `
                 -InstallImagePath $localWim `
                 -InstallImageIndex $SelectedWimIndex `
                 -InstallEditionId (Get-WinUtilEditionIdFromName -EditionName $SelectedEditionName) `
@@ -405,10 +642,10 @@ function Invoke-WinUtilISOModify {
 
             if ($driversInjected.Value) {
                 Step-WinUtilJob -Status "Finalizing install image..." -Percent 70
-                Write-WinUtilISOLog "Added current-system drivers to $sourceImageFileName index $SelectedWimIndex with one mount and commit."
-            } elseif ($InjectDrivers) {
+                Write-WinUtilISOLog "Applied offline modifications (drivers and/or AppX removal) to $sourceImageFileName index $SelectedWimIndex with one mount and commit."
+            } elseif ($InjectDrivers -or ($RemovalMethod -eq 'Dism' -and $AppxPackages -and $AppxPackages.Count -gt 0)) {
                 Step-WinUtilJob -Status "Preserving install image..." -Percent 70
-                Write-WinUtilISOLog "No current-system drivers were injected into $sourceImageFileName index $SelectedWimIndex; install.wim was left unchanged. Review the warning log entries for details."
+                Write-WinUtilISOLog "No offline drivers or AppX packages were modified in $sourceImageFileName index $SelectedWimIndex; install.wim was left unchanged. Review the warning log entries for details."
             } else {
                 Step-WinUtilJob -Status "Preserving install image..." -Percent 70
                 Write-WinUtilISOLog "Preserved the original $sourceImageFileName without mounting, exporting, or modifying it."
@@ -605,6 +842,18 @@ function Invoke-WinUtilISOCleanAndReset {
                 $sync["WPFWin11ISODonePanel"].Visibility         = "Collapsed"
                 $sync["WPFWin11ISOModifyButton"].IsEnabled       = $true
                 $sync["WPFWin11ISOStatusLog"].Text               = Get-WinUtilTranslation -Text "Ready. Please select a Windows 11 ISO to begin."
+                if ($sync["WPFWin11ISOAppsListPanel"]) {
+                    $sync["WPFWin11ISOAppsListPanel"].Children.Clear()
+                }
+                if ($sync["WPFWin11ISOMethodXml"]) {
+                    $sync["WPFWin11ISOMethodXml"].IsChecked = $true
+                }
+                if ($sync["WPFWin11ISOMethodDism"]) {
+                    $sync["WPFWin11ISOMethodDism"].IsChecked = $false
+                }
+                if ($sync["WPFWin11ISORemoveCapabilities"]) {
+                    $sync["WPFWin11ISORemoveCapabilities"].IsChecked = $true
+                }
                 Set-WinUtilISOStep -Step "Select"
             }
             Step-WinUtilJob -Hide
