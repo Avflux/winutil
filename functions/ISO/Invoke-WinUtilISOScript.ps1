@@ -37,6 +37,9 @@ function Invoke-WinUtilISOScript {
         [string]$InstallEditionId = "",
         [string]$InstallImagePath = "",
         [int]$InstallImageIndex = 1,
+        [AllowEmptyCollection()][string[]]$AppxPackagesToRemove = $null,
+        [string]$RemovalMethod = "Xml",
+        [bool]$RemoveCapabilities = $true,
         [scriptblock]$Log = { param($m) Write-Output $m },
         [ref]$DriversInjected = [ref]$false
     )
@@ -46,6 +49,8 @@ function Invoke-WinUtilISOScript {
             [Parameter(Mandatory)][string]$ContentRoot,
             [Parameter(Mandatory)][string]$InstallImagePath,
             [Parameter(Mandatory)][int]$InstallImageIndex,
+            [bool]$InjectDrivers = $true,
+            [AllowEmptyCollection()][string[]]$AppxPackagesToRemove = @(),
             [scriptblock]$Logger,
             [ref]$DriversInjected = [ref]$false
         )
@@ -267,156 +272,240 @@ function Invoke-WinUtilISOScript {
             return @(& dism.exe /English /Get-MountedImageInfo 2>$null) -match [regex]::Escape($Path)
         }
 
+        function Remove-WinUtilISOOfflineAppxPackages {
+            param (
+                [Parameter(Mandatory)][string]$MountPath,
+                [Parameter(Mandatory)][string[]]$PackagesToRemove,
+                [scriptblock]$Logger
+            )
+
+            if (-not $PackagesToRemove -or $PackagesToRemove.Count -eq 0) {
+                return 0
+            }
+
+            & $Logger "Querying provisioned AppX packages in mounted install.wim..."
+            $dismOutput = Invoke-WinUtilISODism -Arguments @('/English', "/Image:$MountPath", '/Get-ProvisionedAppxPackages') -Operation 'get-provisioned-appx'
+
+            $installedPackages = [System.Collections.Generic.List[pscustomobject]]::new()
+            $curDisplayName = ''
+            $curPackageName = ''
+            foreach ($line in $dismOutput) {
+                if ($line -match '^\s*Display Name\s*:\s*(.*?)\s*$') {
+                    $curDisplayName = $Matches[1].Trim()
+                } elseif ($line -match '^\s*Package Name\s*:\s*(.*?)\s*$') {
+                    $curPackageName = $Matches[1].Trim()
+                    if ($curDisplayName -and $curPackageName) {
+                        $installedPackages.Add([pscustomobject]@{
+                            DisplayName = $curDisplayName
+                            PackageName = $curPackageName
+                        })
+                        $curDisplayName = ''
+                        $curPackageName = ''
+                    }
+                }
+            }
+
+            & $Logger "Found $($installedPackages.Count) provisioned AppX packages in the image."
+            $removedCount = 0
+
+            foreach ($pkg in $PackagesToRemove) {
+                $matched = @($installedPackages | Where-Object {
+                    $_.DisplayName -like "*$pkg*" -or $_.PackageName -like "*$pkg*"
+                })
+
+                foreach ($target in $matched) {
+                    try {
+                        & $Logger "Removing provisioned package '$($target.DisplayName)' from install.wim..."
+                        Invoke-WinUtilISODism -Arguments @('/English', "/Image:$MountPath", '/Remove-ProvisionedAppxPackage', "/PackageName:$($target.PackageName)") -Operation "remove-appx:$($target.DisplayName)" | Out-Null
+                        $removedCount++
+                    } catch {
+                        & $Logger "Warning: failed to remove provisioned AppX package '$($target.DisplayName)': $_"
+                    }
+                }
+            }
+
+            & $Logger "Removed $removedCount provisioned AppX packages directly from install.wim."
+            return $removedCount
+        }
+
         if ([IO.Path]::GetExtension($InstallImagePath) -ne '.wim') {
-            throw 'Current-system driver injection requires install.wim; install.esd cannot be serviced in place.'
+            throw 'Offline WIM servicing requires install.wim; install.esd cannot be serviced in place.'
         }
         if (-not (Test-Path -LiteralPath $InstallImagePath)) {
             throw "install.wim was not found: $InstallImagePath"
         }
         if ($InstallImageIndex -lt 1) {
-            throw 'Current-system driver injection requires a valid install.wim image index.'
+            throw 'Offline WIM servicing requires a valid install.wim image index.'
         }
 
-        $driverExportRoot = Join-Path $env:TEMP "WinUtil_DriverExport_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$(([guid]::NewGuid()).ToString('N').Substring(0, 8))"
+        $driverExportRoot = $null
         $mountDir = Join-Path (Split-Path -Path $ContentRoot -Parent) 'wim_mount'
-        New-Item -Path $driverExportRoot -ItemType Directory -Force | Out-Null
-
-        # %TEMP% can be an 8.3 alias, but Get-ChildItem below reports long paths, so the
-        # exported folders would not share this prefix unless it is expanded first.
-        $driverExportRoot = (Get-Item -LiteralPath $driverExportRoot).FullName
         $imageMounted = $false
 
         try {
-            & $Logger "Exporting current system drivers before modifying install.wim..."
-            $dismLog = Join-Path $env:TEMP "WinUtil_DismDriverExport_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
-            Invoke-WinUtilISODism -Arguments @('/English', '/Online', '/Export-Driver', "/Destination:$driverExportRoot", "/LogPath:$dismLog") -Operation 'export-driver' | Out-Null
+            $rootPackageFolders = @()
+            if ($InjectDrivers) {
+                $driverExportRoot = Join-Path $env:TEMP "WinUtil_DriverExport_$(Get-Date -Format 'yyyyMMdd_HHmmss')_$(([guid]::NewGuid()).ToString('N').Substring(0, 8))"
+                New-Item -Path $driverExportRoot -ItemType Directory -Force | Out-Null
 
-            $driverInfs = @(Get-ChildItem -LiteralPath $driverExportRoot -Filter '*.inf' -Recurse -File)
-            if ($driverInfs.Count -eq 0) {
-                throw 'DISM exported no driver INF files.'
-            }
-            $driverFolders = @($driverInfs | Group-Object { $_.Directory.FullName })
-            $winpeDriverDir = Join-Path $ContentRoot '$WinpeDriver$'
-            $storageCount = 0
-            $copyFailures = 0
+                # %TEMP% can be an 8.3 alias, but Get-ChildItem below reports long paths, so the
+                # exported folders would not share this prefix unless it is expanded first.
+                $driverExportRoot = (Get-Item -LiteralPath $driverExportRoot).FullName
 
-            foreach ($driverFolderGroup in $driverFolders) {
-                $driverFolder = [string]$driverFolderGroup.Name
-                $storageInfs = @($driverFolderGroup.Group | Where-Object { Test-WinUtilISOStorageDriver -InfFile $_ })
-                if ($storageInfs.Count -eq 0) {
-                    continue
+                & $Logger "Exporting current system drivers before modifying install.wim..."
+                $dismLog = Join-Path $env:TEMP "WinUtil_DismDriverExport_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+                Invoke-WinUtilISODism -Arguments @('/English', '/Online', '/Export-Driver', "/Destination:$driverExportRoot", "/LogPath:$dismLog") -Operation 'export-driver' | Out-Null
+
+                $driverInfs = @(Get-ChildItem -LiteralPath $driverExportRoot -Filter '*.inf' -Recurse -File)
+                if ($driverInfs.Count -eq 0) {
+                    throw 'DISM exported no driver INF files.'
                 }
+                $driverFolders = @($driverInfs | Group-Object { $_.Directory.FullName })
+                $winpeDriverDir = Join-Path $ContentRoot '$WinpeDriver$'
+                $storageCount = 0
+                $copyFailures = 0
 
-                try {
-                    New-Item -Path $winpeDriverDir -ItemType Directory -Force | Out-Null
-                    $winpeTarget = Copy-WinUtilISODriverFolder -Source $driverFolder -Destination $winpeDriverDir
-                    $storageCount++
-                    & $Logger "Staged boot-storage package '$driverFolder' for WinPE as '$winpeTarget'."
-                } catch {
-                    $copyFailures++
-                    & $Logger "Warning: failed to stage boot-storage package '$driverFolder': $_"
-                }
-            }
-
-            if ($copyFailures -gt 0) {
-                throw "Failed to stage $copyFailures boot-storage driver package folders."
-            }
-
-            $stagedDriverFolders = @(Select-WinUtilISOStagedDriverPackages -DriverFolderGroups $driverFolders -Logger $Logger)
-            $metadataBefore = Get-WinUtilISOWimMetadata -ImagePath $InstallImagePath -Index $InstallImageIndex
-            Assert-WinUtilISOWimMetadata -Before $metadataBefore
-
-            $excludedDriverFolderGroups = @($driverFolders | Where-Object { $_.Name -notin $stagedDriverFolders })
-            foreach ($excludedDriverFolderGroup in $excludedDriverFolderGroups) {
-                $excludedFolder = [string]$excludedDriverFolderGroup.Name
-                $hasRetainedDescendant = [bool]@($stagedDriverFolders | Where-Object {
-                    $_.StartsWith("$excludedFolder\", [System.StringComparison]::OrdinalIgnoreCase)
-                }).Count
-                if ($hasRetainedDescendant) {
-                    try {
-                        foreach ($excludedInf in $excludedDriverFolderGroup.Group) {
-                            Remove-Item -LiteralPath $excludedInf.FullName -Force -ErrorAction Stop
-                        }
-                    } catch {
-                        throw "Failed to remove excluded driver INF files from package '$excludedFolder' before injection: $_"
+                foreach ($driverFolderGroup in $driverFolders) {
+                    $driverFolder = [string]$driverFolderGroup.Name
+                    $storageInfs = @($driverFolderGroup.Group | Where-Object { Test-WinUtilISOStorageDriver -InfFile $_ })
+                    if ($storageInfs.Count -eq 0) {
+                        continue
                     }
 
-                    & $Logger "Keeping excluded driver package directory '$excludedFolder' because it contains a retained nested package, after removing its excluded INF files."
-                    continue
+                    try {
+                        New-Item -Path $winpeDriverDir -ItemType Directory -Force | Out-Null
+                        $winpeTarget = Copy-WinUtilISODriverFolder -Source $driverFolder -Destination $winpeDriverDir
+                        $storageCount++
+                        & $Logger "Staged boot-storage package '$driverFolder' for WinPE as '$winpeTarget'."
+                    } catch {
+                        $copyFailures++
+                        & $Logger "Warning: failed to stage boot-storage package '$driverFolder': $_"
+                    }
                 }
 
-                try {
-                    Remove-Item -LiteralPath $excludedFolder -Recurse -Force -ErrorAction Stop
-                } catch {
-                    throw "Failed to remove excluded driver package '$excludedFolder' before injection: $_"
+                if ($copyFailures -gt 0) {
+                    throw "Failed to stage $copyFailures boot-storage driver package folders."
                 }
+
+                $stagedDriverFolders = @(Select-WinUtilISOStagedDriverPackages -DriverFolderGroups $driverFolders -Logger $Logger)
+
+                $excludedDriverFolderGroups = @($driverFolders | Where-Object { $_.Name -notin $stagedDriverFolders })
+                foreach ($excludedDriverFolderGroup in $excludedDriverFolderGroups) {
+                    $excludedFolder = [string]$excludedDriverFolderGroup.Name
+                    $hasRetainedDescendant = [bool]@($stagedDriverFolders | Where-Object {
+                        $_.StartsWith("$excludedFolder\", [System.StringComparison]::OrdinalIgnoreCase)
+                    }).Count
+                    if ($hasRetainedDescendant) {
+                        try {
+                            foreach ($excludedInf in $excludedDriverFolderGroup.Group) {
+                                Remove-Item -LiteralPath $excludedInf.FullName -Force -ErrorAction Stop
+                            }
+                        } catch {
+                            throw "Failed to remove excluded driver INF files from package '$excludedFolder' before injection: $_"
+                        }
+
+                        & $Logger "Keeping excluded driver package directory '$excludedFolder' because it contains a retained nested package, after removing its excluded INF files."
+                        continue
+                    }
+
+                    try {
+                        Remove-Item -LiteralPath $excludedFolder -Recurse -Force -ErrorAction Stop
+                    } catch {
+                        throw "Failed to remove excluded driver package '$excludedFolder' before injection: $_"
+                    }
+                }
+
+                & $Logger "Exported $($stagedDriverFolders.Count) of $($driverFolders.Count) driver packages ($storageCount staged for WinPE, $($excludedDriverFolderGroups.Count) excluded)."
+
+                # Add each package separately so one bad driver cannot fail the rest. Because
+                # /Recurse covers descendants, only the highest surviving folder in each tree
+                # needs its own DISM call.
+                $rootPackageFolders = @($stagedDriverFolders | Where-Object {
+                    $candidate = $_
+                    -not ($stagedDriverFolders | Where-Object { $candidate.StartsWith("$_\", [System.StringComparison]::OrdinalIgnoreCase) })
+                })
             }
 
-            & $Logger "Exported $($stagedDriverFolders.Count) of $($driverFolders.Count) driver packages ($storageCount staged for WinPE, $($excludedDriverFolderGroups.Count) excluded)."
+            $metadataBefore = Get-WinUtilISOWimMetadata -ImagePath $InstallImagePath -Index $InstallImageIndex
+            Assert-WinUtilISOWimMetadata -Before $metadataBefore
 
             Set-ItemProperty -LiteralPath $InstallImagePath -Name IsReadOnly -Value $false
             New-Item -Path $mountDir -ItemType Directory -Force | Out-Null
 
-            # Add each package separately so one bad driver cannot fail the rest. Because
-            # /Recurse covers descendants, only the highest surviving folder in each tree
-            # needs its own DISM call.
-            $rootPackageFolders = @($stagedDriverFolders | Where-Object {
-                $candidate = $_
-                -not ($stagedDriverFolders | Where-Object { $candidate.StartsWith("$_\", [System.StringComparison]::OrdinalIgnoreCase) })
-            })
+            if ($rootPackageFolders.Count -gt 0) {
+                & $Logger "Adding $($rootPackageFolders.Count) root driver packages to install.wim."
+                $remainingDriverFolders = @($rootPackageFolders)
+                $appxRemovedThisMount = $false
+                while ($remainingDriverFolders.Count -gt 0) {
+                    & $Logger "Mounting install.wim index $InstallImageIndex for driver injection..."
+                    Invoke-WinUtilISODism -Arguments @('/English', '/Mount-Image', "/ImageFile:$InstallImagePath", "/Index:$InstallImageIndex", "/MountDir:$mountDir") -Operation 'mount' | Out-Null
+                    $imageMounted = $true
 
-            & $Logger "Adding $($rootPackageFolders.Count) root driver packages to install.wim."
-            $remainingDriverFolders = @($rootPackageFolders)
-            while ($remainingDriverFolders.Count -gt 0) {
-                & $Logger "Mounting install.wim index $InstallImageIndex for driver injection..."
+                    if (-not $appxRemovedThisMount -and $AppxPackagesToRemove -and $AppxPackagesToRemove.Count -gt 0) {
+                        $null = Remove-WinUtilISOOfflineAppxPackages -MountPath $mountDir -PackagesToRemove $AppxPackagesToRemove -Logger $Logger
+                        $appxRemovedThisMount = $true
+                    }
+
+                    $failedDriverFolder = $null
+                    foreach ($driverFolder in $remainingDriverFolders) {
+                        $driverName = $driverFolder
+                        if ($driverExportRoot -and $driverFolder.StartsWith($driverExportRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                            $driverName = $driverFolder.Substring($driverExportRoot.Length).TrimStart('\')
+                        }
+
+                        try {
+                            Invoke-WinUtilISODism -Arguments @('/English', "/Image:$mountDir", '/Add-Driver', "/Driver:$driverFolder", '/Recurse') -Operation "add-driver:$driverName" | Out-Null
+                        } catch {
+                            & $Logger "Warning: failed to add driver package '$driverName': $_"
+                            $failedDriverFolder = $driverFolder
+                            break
+                        }
+                    }
+
+                    if (-not $failedDriverFolder) {
+                        break
+                    }
+
+                    & $Logger "Discarding the potentially partial install.wim mount before continuing without '$driverName'."
+                    try {
+                        Invoke-WinUtilISODism -Arguments @('/English', '/Unmount-Image', "/MountDir:$mountDir", '/Discard') -Operation 'discard' | Out-Null
+                        $imageMounted = $false
+                    } catch {
+                        throw "Failed to discard the potentially partial install.wim mount after driver package '$driverName' failed: $_"
+                    }
+
+                    $remainingDriverFolders = @($remainingDriverFolders | Where-Object { $_ -ne $failedDriverFolder })
+                }
+
+                $addedCount = $remainingDriverFolders.Count
+                if ($addedCount -eq 0) {
+                    # Boot-storage drivers staged for WinPE remain available to Windows Setup.
+                    & $Logger "Warning: none of the $($rootPackageFolders.Count) exported driver packages could be added; continuing with an unmodified install.wim."
+                } else {
+                    & $Logger "Added $addedCount of $($rootPackageFolders.Count) driver packages to install.wim."
+                    & $Logger 'Committing the driver-only install.wim change...'
+                    Invoke-WinUtilISODism -Arguments @('/English', '/Unmount-Image', "/MountDir:$mountDir", '/Commit') -Operation 'commit' | Out-Null
+                    $imageMounted = $false
+
+                    $metadataAfter = Get-WinUtilISOWimMetadata -ImagePath $InstallImagePath -Index $InstallImageIndex
+                    Assert-WinUtilISOWimMetadata -Before $metadataBefore -After $metadataAfter
+                    & $Logger 'Driver injection complete; install.wim metadata validation passed.'
+                    $DriversInjected.Value = $true
+                }
+            } elseif ($AppxPackagesToRemove -and $AppxPackagesToRemove.Count -gt 0) {
+                & $Logger "Mounting install.wim index $InstallImageIndex for offline AppX removal..."
                 Invoke-WinUtilISODism -Arguments @('/English', '/Mount-Image', "/ImageFile:$InstallImagePath", "/Index:$InstallImageIndex", "/MountDir:$mountDir") -Operation 'mount' | Out-Null
                 $imageMounted = $true
 
-                $failedDriverFolder = $null
-                foreach ($driverFolder in $remainingDriverFolders) {
-                    $driverName = $driverFolder
-                    if ($driverFolder.StartsWith($driverExportRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-                        $driverName = $driverFolder.Substring($driverExportRoot.Length).TrimStart('\')
-                    }
+                $null = Remove-WinUtilISOOfflineAppxPackages -MountPath $mountDir -PackagesToRemove $AppxPackagesToRemove -Logger $Logger
 
-                    try {
-                        Invoke-WinUtilISODism -Arguments @('/English', "/Image:$mountDir", '/Add-Driver', "/Driver:$driverFolder", '/Recurse') -Operation "add-driver:$driverName" | Out-Null
-                    } catch {
-                        & $Logger "Warning: failed to add driver package '$driverName': $_"
-                        $failedDriverFolder = $driverFolder
-                        break
-                    }
-                }
-
-                if (-not $failedDriverFolder) {
-                    break
-                }
-
-                & $Logger "Discarding the potentially partial install.wim mount before continuing without '$driverName'."
-                try {
-                    Invoke-WinUtilISODism -Arguments @('/English', '/Unmount-Image', "/MountDir:$mountDir", '/Discard') -Operation 'discard' | Out-Null
-                    $imageMounted = $false
-                } catch {
-                    throw "Failed to discard the potentially partial install.wim mount after driver package '$driverName' failed: $_"
-                }
-
-                $remainingDriverFolders = @($remainingDriverFolders | Where-Object { $_ -ne $failedDriverFolder })
-            }
-
-            $addedCount = $remainingDriverFolders.Count
-            if ($addedCount -eq 0) {
-                # Boot-storage drivers staged for WinPE remain available to Windows Setup.
-                & $Logger "Warning: none of the $($rootPackageFolders.Count) exported driver packages could be added; continuing with an unmodified install.wim."
-            } else {
-                & $Logger "Added $addedCount of $($rootPackageFolders.Count) driver packages to install.wim."
-                & $Logger 'Committing the driver-only install.wim change...'
+                & $Logger 'Committing the AppX-serviced install.wim change...'
                 Invoke-WinUtilISODism -Arguments @('/English', '/Unmount-Image', "/MountDir:$mountDir", '/Commit') -Operation 'commit' | Out-Null
                 $imageMounted = $false
 
                 $metadataAfter = Get-WinUtilISOWimMetadata -ImagePath $InstallImagePath -Index $InstallImageIndex
                 Assert-WinUtilISOWimMetadata -Before $metadataBefore -After $metadataAfter
-                & $Logger 'Driver injection complete; install.wim metadata validation passed.'
-                $DriversInjected.Value = $true
+                & $Logger 'install.wim metadata validation passed.'
             }
         } finally {
             if ($imageMounted -or (Test-WinUtilISOMountedImage -Path $mountDir)) {
@@ -427,7 +516,9 @@ function Invoke-WinUtilISOScript {
                 }
             }
             Remove-Item -LiteralPath $mountDir -Recurse -Force -ErrorAction SilentlyContinue
-            Remove-Item -LiteralPath $driverExportRoot -Recurse -Force -ErrorAction SilentlyContinue
+            if ($driverExportRoot) {
+                Remove-Item -LiteralPath $driverExportRoot -Recurse -Force -ErrorAction SilentlyContinue
+            }
         }
     }
 
@@ -470,13 +561,15 @@ Retail
         param (
             [Parameter(Mandatory)][string]$XmlContent,
             [Parameter(Mandatory)][int]$InstallImageIndex,
+            [AllowEmptyCollection()][string[]]$AppxPackages = $null,
+            [bool]$RemoveCapabilities = $true,
             [scriptblock]$Logger
         )
 
         # Every package listed in config/appx.json. The generated script runs on the freshly
         # installed image, which has no WinUtil config of its own, so the list is embedded here
         # rather than read from the JSON at run time.
-        $appxPackages = @(
+        $defaultAppxPackages = @(
             # Microsoft Apps
             'Microsoft.GetHelp', 'Microsoft.MicrosoftOfficeHub', 'Microsoft.OutlookForWindows',
             'Microsoft.WindowsFeedbackHub', 'MSTeams',
@@ -497,13 +590,11 @@ Retail
             'Microsoft.Windows.DevHome', 'Microsoft.YourPhone', 'MicrosoftWindows.CrossDevice'
         )
 
-        $appxList = ($appxPackages | ForEach-Object { "    '$_'" }) -join "`r`n"
-        $postInstallScript = @"
-`$ErrorActionPreference = 'Continue'
-`$logPath = 'C:\Windows\Setup\Scripts\WinUtil-PostInstall.log'
-Start-Transcript -Path `$logPath -Append -ErrorAction SilentlyContinue
+        $targetPackages = if ($null -ne $AppxPackages) { ,$AppxPackages } else { ,$defaultAppxPackages }
 
-try {
+        $appxRemovalBlock = if ($targetPackages.Count -gt 0) {
+            $appxList = ($targetPackages | ForEach-Object { "    '$_'" }) -join "`r`n"
+@"
     Write-Host 'WinUtil: Removing provisioned AppX packages...'
     `$packages = @(
 $appxList
@@ -516,7 +607,13 @@ $appxList
             Where-Object { `$_.Name -like "*`$package*" } |
             ForEach-Object { Remove-AppxPackage -AllUsers -Package `$_.PackageFullName -ErrorAction SilentlyContinue | Out-Null }
     }
+"@
+        } else {
+            "    Write-Host 'WinUtil: No AppX packages marked for removal.'"
+        }
 
+        $capabilitiesBlock = if ($RemoveCapabilities) {
+@"
     Write-Host 'WinUtil: Removing optional Windows capabilities...'
     `$capabilities = @(
         'Browser.InternetExplorer',
@@ -535,6 +632,20 @@ $appxList
             Where-Object { `$_.Name -like "`$capability*" } |
             ForEach-Object { Remove-WindowsCapability -Online -Name `$_.Name -ErrorAction SilentlyContinue | Out-Null }
     }
+"@
+        } else {
+            "    Write-Host 'WinUtil: Skipping optional Windows capabilities removal.'"
+        }
+
+        $postInstallScript = @"
+`$ErrorActionPreference = 'Continue'
+`$logPath = 'C:\Windows\Setup\Scripts\WinUtil-PostInstall.log'
+Start-Transcript -Path `$logPath -Append -ErrorAction SilentlyContinue
+
+try {
+$appxRemovalBlock
+
+$capabilitiesBlock
 
     function Set-WinUtilRegistryValue([string]`$Path, [string]`$Name, [string]`$Type, [string]`$Value) {
         reg.exe add `$Path /v `$Name /t `$Type /d `$Value /f 2>&1 | Out-Null
@@ -765,7 +876,12 @@ $appxList
         throw "autounattend.xml content is required to prepare setup media."
     }
 
-    $preparedAutoUnattendXml = Add-WinUtilISOSetupCustomizations -XmlContent $AutoUnattendXml -InstallImageIndex $InstallImageIndex -Logger $Log
+    $xmlPackages = if ($RemovalMethod -eq 'Dism') { ,@() } elseif ($null -ne $AppxPackagesToRemove) { ,$AppxPackagesToRemove } else { $null }
+    $preparedAutoUnattendXml = Add-WinUtilISOSetupCustomizations -XmlContent $AutoUnattendXml `
+        -InstallImageIndex $InstallImageIndex `
+        -AppxPackages $xmlPackages `
+        -RemoveCapabilities $RemoveCapabilities `
+        -Logger $Log
     $unattendPath = Join-Path $ISOContentsDir "autounattend.xml"
     [System.IO.File]::WriteAllText($unattendPath, $preparedAutoUnattendXml, [System.Text.UTF8Encoding]::new($false))
     & $Log "Written autounattend.xml with WinUtil setup customizations to ISO root ($unattendPath)."
@@ -773,7 +889,19 @@ $appxList
 
     Write-WinUtilISOEditionConfig -ContentRoot $ISOContentsDir -EditionId $InstallEditionId -Logger $Log
 
-    if ($InjectCurrentSystemDrivers) {
-        Add-WinUtilISOStagedDrivers -ContentRoot $ISOContentsDir -Logger $Log -InstallImagePath $InstallImagePath -InstallImageIndex $InstallImageIndex -DriversInjected $DriversInjected
+    $dismPackages = if ($RemovalMethod -in @('Dism', 'Both')) {
+        if ($null -ne $AppxPackagesToRemove) { $AppxPackagesToRemove } else { @() }
+    } else {
+        @()
+    }
+
+    if (($InjectCurrentSystemDrivers -or $dismPackages.Count -gt 0) -and -not [string]::IsNullOrWhiteSpace($InstallImagePath)) {
+        Add-WinUtilISOStagedDrivers -ContentRoot $ISOContentsDir `
+            -InstallImagePath $InstallImagePath `
+            -InstallImageIndex $InstallImageIndex `
+            -InjectDrivers $InjectCurrentSystemDrivers `
+            -AppxPackagesToRemove $dismPackages `
+            -Logger $Log `
+            -DriversInjected $DriversInjected
     }
 }

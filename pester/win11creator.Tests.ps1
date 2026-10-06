@@ -983,4 +983,77 @@ Describe "Win11 Creator setup media" {
             Remove-Item -Path $contentRoot -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
+
+    It "stages customized debloat script when selective AppX packages are provided" {
+        $contentRoot = Join-Path ([IO.Path]::GetTempPath()) "WinUtilIsoSelectiveAppx_$([guid]::NewGuid())"
+
+        try {
+            New-Item -Path $contentRoot -ItemType Directory -Force | Out-Null
+            . $script:isoScriptPath
+            Invoke-WinUtilISOScript -ISOContentsDir $contentRoot `
+                -AutoUnattendXml (Get-Content -Path $script:autoUnattendPath -Raw) `
+                -InstallEditionId 'Core' `
+                -AppxPackagesToRemove @('Microsoft.Copilot', 'Microsoft.BingNews') `
+                -RemovalMethod 'Xml'
+
+            [xml]$answerFile = Get-Content -Path (Join-Path $contentRoot 'autounattend.xml') -Raw
+            $nsMgr = New-Object System.Xml.XmlNamespaceManager($answerFile.NameTable)
+            $nsMgr.AddNamespace('sg', 'https://schneegans.de/windows/unattend-generator/')
+            $postInstall = $answerFile.SelectSingleNode('//sg:File[@path="C:\Windows\Setup\Scripts\WinUtil-PostInstall.ps1"]', $nsMgr).InnerText
+
+            $postInstall | Should -Match ([regex]::Escape("'Microsoft.Copilot'"))
+            $postInstall | Should -Match ([regex]::Escape("'Microsoft.BingNews'"))
+            $postInstall | Should -Not -Match ([regex]::Escape("'Microsoft.WindowsCalculator'"))
+            $postInstall | Should -Not -Match ([regex]::Escape("'Microsoft.Paint'"))
+        } finally {
+            Remove-Item -Path $contentRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It "skips post-install AppX removal when Dism removal method is selected" {
+        $contentRoot = Join-Path ([IO.Path]::GetTempPath()) "WinUtilIsoDismMethod_$([guid]::NewGuid())"
+
+        try {
+            New-Item -Path $contentRoot -ItemType Directory -Force | Out-Null
+            . $script:isoScriptPath
+            Invoke-WinUtilISOScript -ISOContentsDir $contentRoot `
+                -AutoUnattendXml (Get-Content -Path $script:autoUnattendPath -Raw) `
+                -InstallEditionId 'Core' `
+                -AppxPackagesToRemove @('Microsoft.Copilot') `
+                -RemovalMethod 'Dism'
+
+            [xml]$answerFile = Get-Content -Path (Join-Path $contentRoot 'autounattend.xml') -Raw
+            $nsMgr = New-Object System.Xml.XmlNamespaceManager($answerFile.NameTable)
+            $nsMgr.AddNamespace('sg', 'https://schneegans.de/windows/unattend-generator/')
+            $postInstall = $answerFile.SelectSingleNode('//sg:File[@path="C:\Windows\Setup\Scripts\WinUtil-PostInstall.ps1"]', $nsMgr).InnerText
+
+            $postInstall | Should -Match ([regex]::Escape("No AppX packages marked for removal"))
+            $postInstall | Should -Not -Match ([regex]::Escape("'Microsoft.Copilot'"))
+        } finally {
+            Remove-Item -Path $contentRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    It "skips post-install AppX removal when empty package list is provided" {
+        $contentRoot = Join-Path ([IO.Path]::GetTempPath()) "WinUtilIsoKeepAll_$([guid]::NewGuid())"
+
+        try {
+            New-Item -Path $contentRoot -ItemType Directory -Force | Out-Null
+            . $script:isoScriptPath
+            Invoke-WinUtilISOScript -ISOContentsDir $contentRoot `
+                -AutoUnattendXml (Get-Content -Path $script:autoUnattendPath -Raw) `
+                -InstallEditionId 'Core' `
+                -AppxPackagesToRemove @() `
+                -RemovalMethod 'Xml'
+
+            [xml]$answerFile = Get-Content -Path (Join-Path $contentRoot 'autounattend.xml') -Raw
+            $nsMgr = New-Object System.Xml.XmlNamespaceManager($answerFile.NameTable)
+            $nsMgr.AddNamespace('sg', 'https://schneegans.de/windows/unattend-generator/')
+            $postInstall = $answerFile.SelectSingleNode('//sg:File[@path="C:\Windows\Setup\Scripts\WinUtil-PostInstall.ps1"]', $nsMgr).InnerText
+
+            $postInstall | Should -Match ([regex]::Escape("No AppX packages marked for removal"))
+        } finally {
+            Remove-Item -Path $contentRoot -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
 }
