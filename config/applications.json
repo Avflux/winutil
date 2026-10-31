@@ -764,6 +764,14 @@
         "winget": "IrfanSkiljan.IrfanView",
         "foss": false
     },
+    "irpf2026": {
+        "category": "Document",
+        "content": "IRPF 2026",
+        "description": "IRPF 2026 is the Brazilian Federal Revenue Service application for preparing the 2026 annual income tax return.",
+        "link": "https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda",
+        "winget": "ReceitaFederaldoBrasil.IRPF2026",
+        "foss": false
+    },
     "itch": {
         "category": "Games",
         "choco": "itch",

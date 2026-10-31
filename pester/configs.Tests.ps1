@@ -142,6 +142,14 @@ Describe "Applications config" {
         }
     }
 
+    It "includes the Receita Federal IRPF 2026 WinGet package" -TestCases $testCase {
+        param([string]$Path)
+
+        $applications = Get-Content -Path $Path -Raw | ConvertFrom-Json
+        $applications.irpf2026.content | Should -Be "IRPF 2026"
+        $applications.irpf2026.winget | Should -Be "ReceitaFederaldoBrasil.IRPF2026"
+    }
+
     It "contains required display fields and at least one install source" -TestCases $testCase {
         param([string]$Path)
 

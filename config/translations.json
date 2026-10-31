@@ -880,6 +880,7 @@
         "TFTP Client - Enable": "Cliente TFTP - Ativar",
         "Enables the Trivial File Transfer Protocol (TFTP) client for transferring files to and from remote hosts.": "Ativa o cliente do Protocolo Trivial de Transferência de Arquivos (TFTP) para transferir arquivos de e para hosts remotos.",
 
-        "Synchronizes text messages, phone notifications, photos, and calls from a mobile device to the desktop.": "Sincroniza mensagens de texto, notificações do telefone, fotos e chamadas de um dispositivo móvel com o computador."
+        "Synchronizes text messages, phone notifications, photos, and calls from a mobile device to the desktop.": "Sincroniza mensagens de texto, notificações do telefone, fotos e chamadas de um dispositivo móvel com o computador.",
+        "IRPF 2026 is the Brazilian Federal Revenue Service application for preparing the 2026 annual income tax return.": "O IRPF 2026 é o aplicativo da Receita Federal do Brasil para preencher a declaração anual do Imposto de Renda de 2026."
     }
 }
