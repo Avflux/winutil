@@ -43,6 +43,71 @@ Describe "Translation config" {
         }
     }
 
+    It "covers interface and accessibility strings found without a Portuguese translation" {
+        $json = Get-Content -Path $script:translationsPath -Raw -Encoding utf8 | ConvertFrom-Json
+        $pt = $json.'pt-BR'
+        $keys = @(
+            'Cut',
+            'Copy',
+            'Paste',
+            (([char]0x26A0) + ' Offline Mode - No Internet Connection'),
+            'Install and upgrade applications',
+            'Apply Windows tweaks',
+            'Import and export configurations',
+            'Manage Windows Update profiles',
+            'Create a customized Windows 11 ISO or USB',
+            '- Notifies when downloaded updates are ready to install',
+            ' Select Installed ',
+            ' Select Installed Tweaks ',
+            'Injects boot-storage drivers for Setup and adds exported drivers to the selected install.wim edition individually, skipping incompatible packages.',
+            'Working...',
+            'This can take several minutes. Progress is written to the status log.',
+            'Install tab',
+            'Tweaks tab',
+            'Config tab',
+            'Updates tab',
+            'Win11 Creator tab',
+            'Search',
+            'Clear Search',
+            'Theme',
+            'Previous Step',
+            'Next Step',
+            'Progress',
+            'Free and Open Source Software',
+            "This will uninstall the following applications:`n{0}",
+            'No modified ISO content found. Please run the modification step first.',
+            'AB Download Manager is an open-source download accelerator and manager with multi-threaded downloads, queue scheduling, speed limiting, and browser integration.',
+            'DBeaver Community is a free, open-source universal database tool for developers, SQL programmers, database administrators, and analysts.',
+            'Krita is a free and open-source painting tool designed for concept artists, illustrators, matte and texture artists, and the VFX industry.',
+            'ImHex is a free and open-source hex editor for reverse engineers and programmers, featuring a custom pattern language for decoding binary formats, a disassembler, and data analysis tools.',
+            'Kiro is an agentic IDE from AWS that turns prompts into specs, then into working code, docs, and tests through spec-driven development workflows.',
+            'RStudio is an integrated development environment (IDE) for R, with a console, syntax-highlighting editor, and tools for plotting, history, debugging, and workspace management.',
+            'opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.',
+            'Microsoft Sysinternals PsTools provides utilities for managing local and remote Windows systems and monitoring processes. PsExec can run processes under the SYSTEM account when the user has local administrative rights on the target system.',
+            'SyncTrayzor is a Windows tray utility that bundles and wraps Syncthing, making it behave like a native application to easily manage and monitor file synchronization.',
+            'Syncthing is a decentralized, peer-to-peer file synchronization tool that securely syncs files directly across devices without cloud servers, managed via a local web interface.',
+            'CurseForge is a desktop application for managing mods and modpacks across multiple games, powered by Overwolf.',
+            'Sets some services to Manual startup.',
+            'svchost.exe Splitting - Disable',
+            'Disables service-host splitting to reduce the number of svchost.exe processes and modestly lower memory overhead. Recommended for low-performance systems with 12 GB of RAM or less. Can interfere with Xbox services. Restart Windows after changing this setting.',
+            'Downloads O&O ShutUp10++ (about 82 MB) from oo-software.com on every click and launches it. Nothing is installed; the file is saved under %LocalAppData%\winutil.',
+            'Fast Startup - Disable',
+            'Disables Windows Fast Startup (hybrid shutdown). This helps dual-boot setups and avoids stale hardware state between sessions.',
+            'File Explorer Sync Provider Notifications - Disable',
+            'Stops File Explorer from displaying sync-provider notifications and promotional suggestions, such as OneDrive or Office ads.',
+            'Virtual Machine Platform - Enable',
+            'Enables the Virtual Machine Platform, a required component for WSL 2 and other virtualization-based workloads.',
+            'Telnet Client - Enable',
+            'Enables the Telnet client command-line tool for connecting to remote hosts over the Telnet protocol.',
+            'TFTP Client - Enable',
+            'Enables the Trivial File Transfer Protocol (TFTP) client for transferring files to and from remote hosts.',
+            'Synchronizes text messages, phone notifications, photos, and calls from a mobile device to the desktop.'
+        )
+        foreach ($key in $keys) {
+            $pt.PSObject.Properties[$key].Value | Should -Not -BeNullOrEmpty -Because "The translation for '$key' should be present."
+        }
+    }
+
     It "preserves Portuguese accented characters without ANSI double encoding" {
         $json = Get-Content -Path $script:translationsPath -Raw -Encoding utf8 | ConvertFrom-Json
         $pt = $json.'pt-BR'
@@ -220,6 +285,26 @@ Describe "Invoke-WinUtilTranslation ToolTip handling" {
         $btn.ToolTip | Should -Be "Clear Selection"
     }
 
+    It "translates and restores an AutomationProperties.Name label" {
+        $btn = New-Object Windows.Controls.Button
+        [System.Windows.Automation.AutomationProperties]::SetName($btn, "Install tab")
+        $ptTable = [pscustomobject]@{ "Install tab" = "Aba Instalar" }
+
+        $global:sync = @{
+            Form = New-Object Windows.Window
+            preferences = @{ language = "en-US" }
+            configs = @{ translations = @{ "pt-BR" = $ptTable; "en-US" = [pscustomobject]@{} } }
+            TextBaselines = [System.Runtime.CompilerServices.ConditionalWeakTable[object, object]]::new()
+        }
+        $global:sync.Form.Content = $btn
+
+        Invoke-WinUtilTranslation -Language "pt-BR"
+        [System.Windows.Automation.AutomationProperties]::GetName($btn) | Should -Be "Aba Instalar"
+
+        Invoke-WinUtilTranslation -Language "en-US"
+        [System.Windows.Automation.AutomationProperties]::GetName($btn) | Should -Be "Install tab"
+    }
+
     It "leaves key-only tooltips unchanged" {
         $cb = New-Object Windows.Controls.CheckBox
         $cb.ToolTip = "Preset key: WPFTweaksTele"
@@ -281,4 +366,3 @@ Describe "Invoke-WinUtilTranslation ToolTip handling" {
         $lbl.Content | Should -Be "- Communications"
     }
 }
-

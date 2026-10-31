@@ -663,7 +663,7 @@ function Invoke-WinUtilISOExport {
     $contentsDir = $sync["Win11ISOContentsDir"]
 
     if (-not $contentsDir -or -not (Test-Path $contentsDir)) {
-        Show-WinUtilMessage -Message "No modified ISO content found.  Please run the modification step first." -Title "Not Ready" -Button "OK" -Icon "Warning" | Out-Null
+        Show-WinUtilMessage -Message "No modified ISO content found. Please run the modification step first." -Title "Not Ready" -Button "OK" -Icon "Warning" | Out-Null
         return
     }
 

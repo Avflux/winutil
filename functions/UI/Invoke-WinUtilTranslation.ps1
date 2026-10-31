@@ -164,6 +164,18 @@ function Invoke-WinUtilTranslation {
                 $queue.Enqueue($element.ToolTip)
             }
 
+            if ($element -is [System.Windows.DependencyObject]) {
+                $automationName = [System.Windows.Automation.AutomationProperties]::GetName($element)
+                if ($automationName) {
+                    $english = Get-WinUtilTextBaseline -Control $element -Kind "AutomationName" -Current $automationName
+                    $value = & $resolveValue $english
+                    if ($null -ne $value) {
+                        [System.Windows.Automation.AutomationProperties]::SetName($element, $value)
+                        $changed++
+                    }
+                }
+            }
+
             # Static XAML TextBlocks with a Text property, e.g. the updates bullets and the
             # offline banner.
             if ($element -is [Windows.Controls.TextBlock]) {

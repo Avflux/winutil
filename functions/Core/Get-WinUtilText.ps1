@@ -60,7 +60,8 @@ function Get-WinUtilTextBaseline {
         The translated control, or an individual text Run.
 
     .PARAMETER Kind
-        Which property the baseline is for: "Content", "Text", "ToolTip", or "Header".
+        Which property the baseline is for: "Content", "Text", "ToolTip", "Header", or
+        "AutomationName".
 
     .PARAMETER Current
         The value to record when no baseline exists yet.
@@ -117,7 +118,8 @@ function Set-WinUtilTextBaseline {
         The translated control, or an individual text Run.
 
     .PARAMETER Kind
-        Which property the baseline is for: "Content", "Text", "ToolTip", or "Header".
+        Which property the baseline is for: "Content", "Text", "ToolTip", "Header", or
+        "AutomationName".
 
     .PARAMETER English
         The English string to record.
