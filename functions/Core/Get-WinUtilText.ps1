@@ -206,6 +206,9 @@ function Get-WinUtilSelectedAppsCountText {
     }
     if ([string]::IsNullOrWhiteSpace($template)) {
         $template = $sync.configs.appnavigation.WPFselectedAppsButton.Content
+        if ($template -match '^(?<label>.*?:\s*)\d+$') {
+            $template = "$($matches['label']){0}"
+        }
     }
     if ([string]::IsNullOrWhiteSpace($template)) {
         $template = "Selected Apps: {0}"

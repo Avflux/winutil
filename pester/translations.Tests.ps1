@@ -167,15 +167,15 @@ Describe "Get-WinUtilSelectedAppsCountText" {
         Get-WinUtilSelectedAppsCountText -Count 3 | Should -Be "Aplicativos Selecionados: 3"
     }
 
-    It "falls back to English when the template is missing" {
+    It "formats the configured counter label when the translation template is missing" {
         $global:sync = @{
-            preferences = @{ language = "pt-BR" }
+            preferences = @{ language = "en-US" }
             configs = @{
-                translations = @{ "pt-BR" = [pscustomobject]@{} }
+                translations = @{ "en-US" = [pscustomobject]@{} }
                 appnavigation = @{ WPFselectedAppsButton = [pscustomobject]@{ Content = "Selected Apps: 0" } }
             }
         }
-        Get-WinUtilSelectedAppsCountText -Count 7 | Should -Be "Selected Apps: 0"
+        Get-WinUtilSelectedAppsCountText -Count 7 | Should -Be "Selected Apps: 7"
     }
 
     It "falls back to the default template when no config is loaded" {
