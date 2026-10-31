@@ -525,36 +525,12 @@ Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sy
         Invoke-WinUtilISOCleanAndReset
     })
 
-    $sync["WPFWin11ISOPresetRecommended"].Add_Click({
-        Set-WinUtilISOAppsPreset -Preset "Recommended"
-    })
-
-    $sync["WPFWin11ISOPresetAll"].Add_Click({
-        Set-WinUtilISOAppsPreset -Preset "All"
-    })
-
-    $sync["WPFWin11ISOPresetNone"].Add_Click({
-        Set-WinUtilISOAppsPreset -Preset "None"
-    })
-
-    $sync["WPFWin11ISOGoToModifyButton"].Add_Click({
-        Set-WinUtilISOStep -Step "Modify"
-    })
-
     $sync["WPFWin11ISOBackButton"].Add_Click({
-        if ($sync["WPFWin11ISOModifySection"].IsSelected) {
-            Set-WinUtilISOStep -Step "Apps"
-        } else {
-            Set-WinUtilISOStep -Step "Select"
-        }
+        $sync["WPFWin11ISOSelectSection"].IsSelected = $true
     })
 
     $sync["WPFWin11ISOForwardButton"].Add_Click({
-        if ($sync["WPFWin11ISOSelectSection"].IsSelected) {
-            Set-WinUtilISOStep -Step "Apps"
-        } else {
-            Set-WinUtilISOStep -Step "Modify"
-        }
+        $sync["WPFWin11ISOModifySection"].IsSelected = $true
     })
 
     $buildClock.Stop()

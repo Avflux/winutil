@@ -105,9 +105,6 @@ function Find-AppsByNameOrDescription {
             return
         }
 
-        # Escape wildcard characters for literal matching
-        $escapedSearchString = [System.Management.Automation.WildcardPattern]::Escape($SearchString)
-
         $sync.ItemsControl.Items | ForEach-Object {
             # Each item is a StackPanel container with Children[0] = label, Children[1] = WrapPanel
             if ($_.Children.Count -ge 2) {
@@ -135,9 +132,9 @@ function Find-AppsByNameOrDescription {
                             if ($null -ne $appEntry) {
                                 $categoryMatch = -not $hasCategories -or $activeCategories -contains $appEntry.Category
                                 $textMatch = -not $hasSearch -or
-                                    $appEntry.Content -like "*$escapedSearchString*" -or
-                                    $appEntry.Description -like "*$escapedSearchString*" -or
-                                    $appTag -like "*$escapedSearchString*"
+                                    ([string]$appEntry.Content).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+                                    ([string]$appEntry.Description).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+                                    ([string]$appTag).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
 
                                 if ($categoryMatch -and $textMatch) {
                                     $appControl.Visibility = [Windows.Visibility]::Visible
@@ -176,9 +173,9 @@ function Find-AppsByNameOrDescription {
                         if ($null -ne $appEntry) {
                             $categoryMatch = -not $hasCategories -or $activeCategories -contains $appEntry.Category
                             $textMatch = -not $hasSearch -or
-                                $appEntry.Content -like "*$escapedSearchString*" -or
-                                $appEntry.Description -like "*$escapedSearchString*" -or
-                                $appTag -like "*$escapedSearchString*"
+                                ([string]$appEntry.Content).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+                                ([string]$appEntry.Description).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+                                ([string]$appTag).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
 
                             if ($categoryMatch -and $textMatch) {
                                 $child.Visibility = [Windows.Visibility]::Visible

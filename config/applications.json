@@ -533,7 +533,7 @@
     },
     "flux": {
         "category": "Utilities",
-        "choco": "flux",
+        "choco": "f.lux",
         "content": "F.lux",
         "description": "f.lux adjusts the color temperature of your screen to reduce eye strain during nighttime use.",
         "link": "https://justgetflux.com/",
@@ -727,6 +727,15 @@
         "link": "https://www.cpuid.com/softwares/hwmonitor.html",
         "winget": "CPUID.HWMonitor",
         "foss": false
+    },
+    "imhex": {
+        "category": "Pro Tools",
+        "choco": "imhex",
+        "content": "ImHex",
+        "description": "ImHex is a free and open-source hex editor for reverse engineers and programmers, featuring a custom pattern language for decoding binary formats, a disassembler, and data analysis tools.",
+        "link": "https://imhex.werwolv.net/",
+        "winget": "WerWolv.ImHex",
+        "foss": true
     },
     "imageglass": {
         "category": "Multimedia Tools",
@@ -925,7 +934,7 @@
     },
     "mpc-qt": {
         "category": "Multimedia Tools",
-        "choco": "mediainfo",
+        "choco": "mpc-qt",
         "content": "mpc-qt",
         "description": "Media Player Classic Qute Theater",
         "link": "https://mpc-qt.github.io",
@@ -951,7 +960,7 @@
     },
     "minitoolpartitionwizard": {
         "category": "Utilities",
-        "choco": "minitoolpartitionwizard",
+        "choco": "partitionwizard",
         "content": "MiniTool Partition Wizard",
         "description": "Comprehensive free partition manager that performs advanced operations Windows natively cannot, such as merging partitions, converting file systems, and organizing disk capacity.",
         "link": "https://www.partitionwizard.com/",
@@ -995,7 +1004,7 @@
         "foss": true
     },
     "msiafterburner": {
-        "category": "Utilities",
+        "category": "Pro Tools",
         "choco": "msiafterburner",
         "content": "MSI Afterburner",
         "description": "MSI Afterburner is a graphics card overclocking utility with advanced features.",
@@ -1214,6 +1223,15 @@
         "link": "https://www.opautoclicker.com",
         "winget": "OPAutoClicker.OPAutoClicker",
         "foss": false
+    },
+    "opencode": {
+        "category": "Development",
+        "choco": "opencode",
+        "content": "OpenCode",
+        "description": "OpenCode is an open-source AI coding agent built for the terminal. It is provider-agnostic and supports local and hosted AI models.",
+        "link": "https://opencode.ai/",
+        "winget": "SST.opencode",
+        "foss": true
     },
     "openrgb": {
         "category": "Utilities",
@@ -1488,6 +1506,15 @@
         "winget": "Microsoft.Sysinternals.ProcessMonitor",
         "foss": false
     },
+    "pstools": {
+        "category": "Microsoft Tools",
+        "choco": "pstools",
+        "content": "PsTools",
+        "description": "Microsoft Sysinternals PsTools provides utilities for managing local and remote Windows systems and monitoring processes. PsExec can run processes under the SYSTEM account when the user has local administrative rights on the target system.",
+        "link": "https://learn.microsoft.com/en-us/sysinternals/downloads/pstools",
+        "winget": "Microsoft.Sysinternals.PsTools",
+        "foss": false
+    },
     "putty": {
         "category": "Pro Tools",
         "choco": "putty",
@@ -1553,7 +1580,7 @@
         "foss": false
     },
     "rufus": {
-        "category": "Utilities",
+        "category": "Pro Tools",
         "choco": "rufus",
         "content": "Rufus Imager",
         "description": "Rufus is a utility that helps format and create bootable USB drives, such as USB keys or pen drives.",
@@ -1599,7 +1626,7 @@
         "foss": false
     },
     "systeminformer": {
-        "category": "Utilities",
+        "category": "Pro Tools",
         "choco": "systeminformer",
         "content": "System Informer",
         "description": "A free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware.",
@@ -1754,7 +1781,7 @@
     },
     "teamviewer": {
         "category": "Utilities",
-        "choco": "teamviewer9",
+        "choco": "teamviewer",
         "content": "TeamViewer",
         "description": "TeamViewer is a popular remote access and support software that allows you to connect to and control remote devices.",
         "link": "https://www.teamviewer.com/",
@@ -1871,7 +1898,7 @@
     },
     "unity": {
         "category": "Development",
-        "choco": "unityhub",
+        "choco": "unity-hub",
         "content": "Unity Game Engine",
         "description": "Unity is a powerful game development platform for creating 2D, 3D, augmented reality, and virtual reality games.",
         "link": "https://unity.com/",
@@ -2166,7 +2193,7 @@
     },
     "ZenBrowser": {
         "category": "Browsers",
-        "choco": "zen-browser",
+        "choco": "na",
         "content": "Zen Browser",
         "description": "The modern, privacy-focused, performance-driven browser built on Firefox.",
         "link": "https://zen-browser.app/",

@@ -16,4 +16,5 @@ __pycache__/
 .poolside/
 scratch/
 .vscode/
+.vs/
 .idea/
