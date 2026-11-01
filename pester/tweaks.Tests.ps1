@@ -94,6 +94,7 @@ Describe "Invoke-WinUtilTweaks" {
                 tweaks = New-WinUtilTweaksConfig
             }
         })
+        $script:registryCalls = [System.Collections.Generic.List[object]]::new()
 
         Mock Get-Service {
             [pscustomobject]@{
@@ -102,7 +103,14 @@ Describe "Invoke-WinUtilTweaks" {
             }
         }
         Mock Set-WinUtilService { }
-        Mock Set-WinUtilRegistry { }
+        Mock Set-WinUtilRegistry {
+            $script:registryCalls.Add([pscustomobject]@{
+                Name = $Name
+                Path = $Path
+                Type = $Type
+                Value = $Value
+            }) | Out-Null
+        }
         Mock Invoke-WinUtilScript { }
         Mock Remove-WinUtilAPPX { }
         Mock Remove-WinUtilProvisionedAPPX { }
@@ -137,6 +145,42 @@ Describe "Invoke-WinUtilTweaks" {
         }
         Should -Invoke -CommandName Remove-WinUtilProvisionedAPPX -Times 1 -Exactly -ParameterFilter {
             $PackageList.Count -eq 1 -and $PackageList[0] -eq "Microsoft.ExampleApp"
+        }
+    }
+
+    It "applies and undoes every configured registry toggle" {
+        $tweaksPath = Join-Path $script:repoRoot "config\tweaks.json"
+        $tweaks = Get-Content -Path $tweaksPath -Raw | ConvertFrom-Json
+        $toggleEntries = @($tweaks.PSObject.Properties | Where-Object { $_.Value.Type -eq "Toggle" })
+        $toggleEntries.Count | Should -BeGreaterThan 0
+        $sync.configs.tweaks = $tweaks
+
+        foreach ($toggle in $toggleEntries) {
+            $registryEntries = @($toggle.Value.registry)
+
+            $script:registryCalls.Clear()
+            Invoke-WinUtilTweaks -CheckBox $toggle.Name
+            $applyCalls = @($script:registryCalls)
+            $applyCalls.Count | Should -Be $registryEntries.Count
+
+            for ($index = 0; $index -lt $registryEntries.Count; $index++) {
+                $applyCalls[$index].Name | Should -Be $registryEntries[$index].Name
+                $applyCalls[$index].Path | Should -Be $registryEntries[$index].Path
+                $applyCalls[$index].Type | Should -Be $registryEntries[$index].Type
+                $applyCalls[$index].Value | Should -Be $registryEntries[$index].Value
+            }
+
+            $script:registryCalls.Clear()
+            Invoke-WinUtilTweaks -CheckBox $toggle.Name -undo $true
+            $undoCalls = @($script:registryCalls)
+            $undoCalls.Count | Should -Be $registryEntries.Count
+
+            for ($index = 0; $index -lt $registryEntries.Count; $index++) {
+                $undoCalls[$index].Name | Should -Be $registryEntries[$index].Name
+                $undoCalls[$index].Path | Should -Be $registryEntries[$index].Path
+                $undoCalls[$index].Type | Should -Be $registryEntries[$index].Type
+                $undoCalls[$index].Value | Should -Be $registryEntries[$index].OriginalValue
+            }
         }
     }
 
