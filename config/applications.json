@@ -2500,5 +2500,60 @@
         "githubType": "zip",
         "githubBin": "gzdoom.exe",
         "foss": true
+    },
+    "manuskript": {
+        "category": "Document",
+        "content": "Manuskript",
+        "description": "Manuskript is an open-source writing tool for planning novels and stories with an outliner, distraction-free editor, and plot timelines.",
+        "link": "https://github.com/olivierkes/manuskript",
+        "github": "olivierkes/manuskript",
+        "githubAsset": "^manuskript-.*-windows\\.zip$",
+        "githubType": "zip",
+        "githubBin": "manuskript.exe",
+        "foss": true
+    },
+    "szyszka": {
+        "category": "Utilities",
+        "content": "Szyszka",
+        "description": "Szyszka is a fast bulk file renamer with search-and-replace rules and a live preview.",
+        "link": "https://github.com/qarmin/szyszka",
+        "github": "qarmin/szyszka",
+        "githubAsset": "^szyszka_windows\\.zip$",
+        "githubType": "zip",
+        "githubBin": "szyszka_windows\\szyszka.exe",
+        "foss": true
+    },
+    "textgrab": {
+        "category": "Utilities",
+        "content": "Text Grab",
+        "description": "Text Grab extracts text from any part of the screen using OCR and copies it to the clipboard.",
+        "link": "https://github.com/TheJoeFin/Text-Grab",
+        "github": "TheJoeFin/Text-Grab",
+        "githubAsset": "^Text-Grab-x64-Self-Contained\\.zip$",
+        "githubType": "zip",
+        "githubBin": "Text-Grab.exe",
+        "foss": true
+    },
+    "tiddlydesktop": {
+        "category": "Document",
+        "content": "TiddlyDesktop",
+        "description": "TiddlyDesktop is a desktop application for editing and browsing TiddlyWiki files.",
+        "link": "https://github.com/Jermolene/TiddlyDesktop",
+        "github": "Jermolene/TiddlyDesktop",
+        "githubAsset": "^tiddlydesktop-win64-v.*\\.zip$",
+        "githubType": "zip",
+        "githubBin": "TiddlyDesktop-win64-v0.0.22\\nw.exe",
+        "foss": true
+    },
+    "treesheets": {
+        "category": "Document",
+        "content": "TreeSheets",
+        "description": "TreeSheets is a free-form data organizer that combines a spreadsheet, outliner, and mind map in one hierarchical grid.",
+        "link": "https://github.com/aardappel/treesheets",
+        "github": "aardappel/treesheets",
+        "githubAsset": "^TreeSheets-.*-winx64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "TreeSheets-2.24.5-winx64\\TreeSheets.exe",
+        "foss": true
     }
 }
