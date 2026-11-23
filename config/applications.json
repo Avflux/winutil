@@ -2456,5 +2456,27 @@
         "githubAsset": "-windows-x64\\.msi$",
         "githubType": "msi",
         "foss": true
+    },
+    "anythingllm": {
+        "category": "Selfhosted Tools",
+        "content": "AnythingLLM",
+        "description": "AnythingLLM is an open-source local-first agent and chat app that runs LLMs on your own machine with your own documents.",
+        "link": "https://github.com/Mintplex-Labs/anything-llm",
+        "github": "Mintplex-Labs/anything-llm",
+        "githubAsset": "^AnythingLLMDesktop\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
+    "librehardwaremonitor": {
+        "category": "Utilities",
+        "content": "Libre Hardware Monitor",
+        "description": "Libre Hardware Monitor is an open-source fork of Open Hardware Monitor that reads temperatures, fan speeds, voltages, and clock speeds.",
+        "link": "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor",
+        "github": "LibreHardwareMonitor/LibreHardwareMonitor",
+        "githubAsset": "^LibreHardwareMonitor\\.zip$",
+        "githubType": "zip",
+        "githubBin": "LibreHardwareMonitor.exe",
+        "foss": true
     }
 }
