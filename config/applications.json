@@ -2275,5 +2275,156 @@
         "content": "Cloudflare WARP",
         "link": "https://one.one.one.one",
         "foss": false
+    },
+    "artcraft": {
+        "category": "Multimedia Tools",
+        "content": "ArtCraft Studio",
+        "description": "ArtCraft Studio is an open-source IDE for interactive AI image and video creation, with 2D compositing and 3D scene staging.",
+        "link": "https://github.com/storytold/artcraft",
+        "github": "storytold/artcraft",
+        "githubAsset": "_x64_en-US\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "cadcraft": {
+        "category": "Pro Tools",
+        "content": "CADCraft",
+        "description": "CADCraft is an open-source computer-aided design and drafting application written in pure Rust.",
+        "link": "https://github.com/storytold/cadcraft",
+        "github": "storytold/cadcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "craftanything": {
+        "category": "Development",
+        "content": "Craft Anything",
+        "description": "Craft Anything is an open-source tool for exploring how software works and building your own version of it.",
+        "link": "https://github.com/storytold/craft-anything",
+        "github": "storytold/craft-anything",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true,
+        "subcategory": "Build & Game Dev"
+    },
+    "deckcraft": {
+        "category": "Document",
+        "content": "DeckCraft",
+        "description": "DeckCraft is an open-source presentation app for building and delivering slide shows.",
+        "link": "https://github.com/storytold/deckcraft",
+        "github": "storytold/deckcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "designcraft": {
+        "category": "Document",
+        "content": "DesignCraft",
+        "description": "DesignCraft is an open-source page layout and publishing editor written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/designcraft",
+        "github": "storytold/designcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "effectcraft": {
+        "category": "Multimedia Tools",
+        "content": "EffectCraft",
+        "description": "EffectCraft is an open-source motion graphics and visual effects tool written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/effectcraft",
+        "github": "storytold/effectcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "filmcraft": {
+        "category": "Multimedia Tools",
+        "content": "FilmCraft",
+        "description": "FilmCraft is an open-source non-linear video editor written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/filmcraft",
+        "github": "storytold/filmcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "gridcraft": {
+        "category": "Document",
+        "content": "GridCraft",
+        "description": "GridCraft is an open-source spreadsheet for data analysis written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/gridcraft",
+        "github": "storytold/gridcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "lightcraft": {
+        "category": "Multimedia Tools",
+        "content": "LightCraft",
+        "description": "LightCraft is an open-source photo library and raw developer written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/lightcraft",
+        "github": "storytold/lightcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "pdfcraft": {
+        "category": "Document",
+        "content": "PdfCraft",
+        "description": "PdfCraft is an open-source PDF workbench to read, organize, combine, split, and secure documents.",
+        "link": "https://github.com/storytold/pdfcraft",
+        "github": "storytold/pdfcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "photocraft": {
+        "category": "Multimedia Tools",
+        "content": "PhotoCraft",
+        "description": "PhotoCraft is an open-source image editor written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/photocraft",
+        "github": "storytold/photocraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "soundcraft": {
+        "category": "Multimedia Tools",
+        "content": "SoundCraft",
+        "description": "SoundCraft is an open-source digital audio workstation for recording, editing, and mixing.",
+        "link": "https://github.com/storytold/soundcraft",
+        "github": "storytold/soundcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "texturecraft": {
+        "category": "Multimedia Tools",
+        "content": "TextureCraft",
+        "description": "TextureCraft is an open-source 3D texture painting workflow written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/texturecraft",
+        "github": "storytold/texturecraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "vectorcraft": {
+        "category": "Multimedia Tools",
+        "content": "VectorCraft",
+        "description": "VectorCraft is an open-source vector illustration tool written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/vectorcraft",
+        "github": "storytold/vectorcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "wordcraft": {
+        "category": "Document",
+        "content": "WordCraft",
+        "description": "WordCraft is an open-source word processor written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/wordcraft",
+        "github": "storytold/wordcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
     }
 }
