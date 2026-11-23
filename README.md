@@ -6,6 +6,8 @@
 
 A curated compilation of Windows system tasks to streamline **installs**, debloat with **tweaks**, troubleshoot with **config**, and configure **Windows updates**. Run it fresh on every new Windows install.
 
+This repository is a fork of the original project by Chris Titus Tech: https://github.com/ChrisTitusTech/winutil
+
 ![Title Screen](docs/src/assets/branding/title-screen.png)
 
 
