@@ -2478,5 +2478,27 @@
         "githubType": "zip",
         "githubBin": "LibreHardwareMonitor.exe",
         "foss": true
+    },
+    "devilutionx": {
+        "category": "Games",
+        "content": "DevilutionX",
+        "description": "DevilutionX is an open-source reconstruction of Diablo and Hellfire for modern Windows.",
+        "link": "https://github.com/diasurgical/DevilutionX",
+        "github": "diasurgical/DevilutionX",
+        "githubAsset": "windows-x86_64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "devilutionx\\devilutionx.exe",
+        "foss": true
+    },
+    "gzdoom": {
+        "category": "Games",
+        "content": "GZDoom",
+        "description": "GZDoom is a Doom engine port with an OpenGL renderer and ZScript scripting for Doom and compatible games.",
+        "link": "https://github.com/ZDoom/gzdoom",
+        "github": "ZDoom/gzdoom",
+        "githubAsset": "-windows\\.zip$",
+        "githubType": "zip",
+        "githubBin": "gzdoom.exe",
+        "foss": true
     }
 }
