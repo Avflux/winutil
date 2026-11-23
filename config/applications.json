@@ -97,7 +97,7 @@
         "link": "https://dbeaver.io/",
         "winget": "DBeaver.DBeaver.Community",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "API & Databases"
     },
     "krita": {
         "category": "Multimedia Tools",
@@ -170,7 +170,7 @@
         "link": "https://www.usebruno.com/",
         "winget": "Bruno.Bruno",
         "foss": true,
-        "subcategory": "API"
+        "subcategory": "API & Databases"
     },
     "bulkcrapuninstaller": {
         "category": "Utilities",
@@ -216,7 +216,7 @@
         "link": "https://openai.com/chatgpt/download/",
         "winget": "msstore:9NT1R1C2HH7J",
         "foss": false,
-        "subcategory": "AI"
+        "subcategory": "AI & Agents"
     },
     "chatterino": {
         "category": "Communications",
@@ -262,7 +262,7 @@
         "link": "https://claude.ai/download",
         "winget": "Anthropic.Claude",
         "foss": false,
-        "subcategory": "AI"
+        "subcategory": "AI & Agents"
     },
     "claude-code": {
         "category": "Development",
@@ -272,7 +272,7 @@
         "link": "https://code.claude.com/",
         "winget": "Anthropic.ClaudeCode",
         "foss": false,
-        "subcategory": "API"
+        "subcategory": "AI & Agents"
     },
     "cmake": {
         "category": "Development",
@@ -282,7 +282,7 @@
         "link": "https://cmake.org/",
         "winget": "Kitware.CMake",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Build & Game Dev"
     },
     "codex": {
         "category": "Development",
@@ -292,7 +292,7 @@
         "link": "https://developers.openai.com/codex/cli",
         "winget": "OpenAI.Codex",
         "foss": true,
-        "subcategory": "API"
+        "subcategory": "AI & Agents"
     },
     "cpuz": {
         "category": "Pro Tools",
@@ -329,7 +329,7 @@
         "link": "https://cursor.com/",
         "winget": "Anysphere.Cursor",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "ddu": {
         "category": "Pro Tools",
@@ -384,7 +384,7 @@
         "link": "https://www.docker.com/products/docker-desktop/",
         "winget": "Docker.DockerDesktop",
         "foss": false,
-        "subcategory": "SDK"
+        "subcategory": "Containers & Virtualization"
     },
     "dotnet6": {
         "category": "Microsoft Tools",
@@ -557,7 +557,7 @@
         "link": "https://github.com/Schniz/fnm",
         "winget": "Schniz.fnm",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "foxpdfreader": {
         "category": "Document",
@@ -594,7 +594,7 @@
         "link": "https://git-scm.com/",
         "winget": "Git.Git",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Git & Version Control"
     },
     "gitextensions": {
         "category": "Development",
@@ -604,7 +604,7 @@
         "link": "https://gitextensions.github.io/",
         "winget": "GitExtensionsTeam.GitExtensions",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Git & Version Control"
     },
     "githubcli": {
         "category": "Development",
@@ -614,7 +614,7 @@
         "link": "https://cli.github.com/",
         "winget": "GitHub.cli",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Git & Version Control"
     },
     "githubdesktop": {
         "category": "Development",
@@ -624,7 +624,7 @@
         "link": "https://desktop.github.com/",
         "winget": "GitHub.GitHubDesktop",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Git & Version Control"
     },
     "gog": {
         "category": "Games",
@@ -643,7 +643,7 @@
         "link": "https://go.dev/",
         "winget": "GoLang.Go",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "googledrive": {
         "category": "Utilities",
@@ -671,7 +671,7 @@
         "link": "https://github.com/gerardog/gsudo",
         "winget": "gerardog.gsudo",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "CLI Tools & Prompts"
     },
     "helium": {
         "category": "Browsers",
@@ -690,7 +690,7 @@
         "link": "https://gohugo.io",
         "winget": "Hugo.Hugo.Extended",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Build & Game Dev"
     },
     "handbrake": {
         "category": "Multimedia Tools",
@@ -798,7 +798,7 @@
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.8.JDK",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "java21": {
         "category": "Development",
@@ -808,7 +808,7 @@
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.21.JDK",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "java25": {
         "category": "Development",
@@ -818,7 +818,7 @@
         "link": "https://aws.amazon.com/corretto",
         "winget": "Amazon.Corretto.25.JDK",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "jellyfinmediaplayer": {
         "category": "Selfhosted Tools",
@@ -846,7 +846,7 @@
         "link": "https://www.jetbrains.com/toolbox/",
         "winget": "JetBrains.Toolbox",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "jpegview": {
         "category": "Utilities",
@@ -883,7 +883,7 @@
         "link": "https://kiro.dev/",
         "winget": "Amazon.Kiro",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "klite": {
         "category": "Multimedia Tools",
@@ -911,7 +911,7 @@
         "link": "https://github.com/jesseduffield/lazygit/",
         "winget": "JesseDuffield.lazygit",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Git & Version Control"
     },
     "libreoffice": {
         "category": "Document",
@@ -1073,7 +1073,7 @@
         "link": "https://posit.co/products/open-source/rstudio/",
         "winget": "Posit.RStudio",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "tailscale": {
         "category": "Pro Tools",
@@ -1101,7 +1101,7 @@
         "link": "https://neovim.io/",
         "winget": "Neovim.Neovim",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "nextclouddesktop": {
         "category": "Selfhosted Tools",
@@ -1129,7 +1129,7 @@
         "link": "https://nodejs.org/",
         "winget": "OpenJS.NodeJS",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "nodejslts": {
         "category": "Development",
@@ -1139,7 +1139,7 @@
         "link": "https://nodejs.org/",
         "winget": "OpenJS.NodeJS.LTS",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "pnpm": {
         "category": "Development",
@@ -1148,7 +1148,7 @@
         "link": "https://pnpm.io/",
         "winget": "pnpm.pnpm",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "notepadplus": {
         "category": "Development",
@@ -1158,7 +1158,7 @@
         "link": "https://notepad-plus-plus.org/",
         "winget": "Notepad++.Notepad++",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "nuget": {
         "category": "Microsoft Tools",
@@ -1276,7 +1276,7 @@
         "link": "https://opencode.ai/",
         "winget": "SST.opencode",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "AI & Agents"
     },
     "OpenVPN": {
         "category": "Pro Tools",
@@ -1412,7 +1412,7 @@
         "link": "https://ohmyposh.dev/",
         "winget": "JanDeDobbeleer.OhMyPosh",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "CLI Tools & Prompts"
     },
     "postman": {
         "category": "Development",
@@ -1422,7 +1422,7 @@
         "link": "https://www.postman.com/downloads/",
         "winget": "Postman.Postman",
         "foss": false,
-        "subcategory": "API"
+        "subcategory": "API & Databases"
     },
     "powershell": {
         "category": "Microsoft Tools",
@@ -1540,7 +1540,7 @@
         "link": "https://www.python.org/",
         "winget": "Python.Python.3.14",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "qbittorrent": {
         "category": "Utilities",
@@ -1604,7 +1604,7 @@
         "link": "https://www.rust-lang.org/",
         "winget": "Rustlang.Rust.MSVC",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "sdio": {
         "category": "Utilities",
@@ -1704,7 +1704,7 @@
         "link": "https://starship.rs/",
         "winget": "Starship.Starship",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "CLI Tools & Prompts"
     },
     "steam": {
         "category": "Games",
@@ -1732,7 +1732,7 @@
         "link": "https://www.sublimetext.com/",
         "winget": "SublimeHQ.SublimeText.4",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "sumatra": {
         "category": "Document",
@@ -1912,7 +1912,7 @@
         "link": "https://unity.com/",
         "winget": "Unity.UnityHub",
         "foss": false,
-        "subcategory": "Tools"
+        "subcategory": "Build & Game Dev"
     },
     "vagrant": {
         "category": "Development",
@@ -1922,7 +1922,7 @@
         "link": "https://developer.hashicorp.com/vagrant",
         "winget": "Hashicorp.Vagrant",
         "foss": false,
-        "subcategory": "SDK"
+        "subcategory": "Containers & Virtualization"
     },
     "everything": {
         "category": "Utilities",
@@ -1986,7 +1986,7 @@
         "link": "https://visualstudio.microsoft.com/",
         "winget": "Microsoft.VisualStudio.2022.Community",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "visualstudio2026": {
         "category": "Development",
@@ -1996,7 +1996,7 @@
         "link": "https://visualstudio.microsoft.com/",
         "winget": "Microsoft.VisualStudio.Community",
         "foss": false,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "vivaldi": {
         "category": "Browsers",
@@ -2033,7 +2033,7 @@
         "link": "https://code.visualstudio.com/",
         "winget": "Microsoft.VisualStudioCode",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "vscodium": {
         "category": "Development",
@@ -2043,7 +2043,7 @@
         "link": "https://vscodium.com/",
         "winget": "VSCodium.VSCodium",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "waterfox": {
         "category": "Browsers",
@@ -2143,7 +2143,7 @@
         "link": "https://yarnpkg.com/",
         "winget": "Yarn.Yarn",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "zoom": {
         "category": "Communications",
@@ -2162,7 +2162,7 @@
         "link": "https://docs.astral.sh/uv/getting-started/installation/",
         "winget": "astral-sh.uv",
         "foss": true,
-        "subcategory": "CLI"
+        "subcategory": "Runtimes & Package Managers"
     },
     "tightvnc": {
         "category": "Utilities",
@@ -2216,7 +2216,7 @@
         "link": "https://zed.dev/",
         "winget": "ZedIndustries.Zed",
         "foss": true,
-        "subcategory": "IDE"
+        "subcategory": "Editors & IDEs"
     },
     "zotero": {
         "category": "Document",
@@ -2244,7 +2244,7 @@
         "content": "Ruby",
         "link": "https://rubyinstaller.org/",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "Lua": {
         "category": "Development",
@@ -2254,7 +2254,7 @@
         "content": "Lua",
         "link": "https://github.com/rjpcomputing/luaforwindows",
         "foss": true,
-        "subcategory": "SDK"
+        "subcategory": "Runtimes & Package Managers"
     },
     "CloudflareWARP": {
         "category": "Utilities",
