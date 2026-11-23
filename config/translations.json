@@ -47,6 +47,7 @@
         "Use WinGet for package management": "Usar o WinGet para gerenciamento de pacotes",
         "Use Chocolatey for package management": "Usar o Chocolatey para gerenciamento de pacotes",
         "Use GitHub Releases for package management": "Usar as versões (Releases) do GitHub para gerenciamento de pacotes",
+        "RoundedTB adds rounded corners, margins, and split segments to the Windows taskbar.": "O RoundedTB adiciona cantos arredondados, margens e segmentos divididos à barra de tarefas do Windows.",
         "Package Manager": "Gerenciador de Pacotes",
         "Clear Selection": "Limpar Seleção",
         "Clear the selection of applications": "Limpar a seleção de aplicativos",

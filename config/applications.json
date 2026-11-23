@@ -1715,6 +1715,17 @@
         "winget": "Valve.Steam",
         "foss": false
     },
+    "roundedtb": {
+        "category": "Utilities",
+        "content": "RoundedTB",
+        "description": "RoundedTB adds rounded corners, margins, and split segments to the Windows taskbar.",
+        "link": "https://github.com/RoundedTB/RoundedTB",
+        "github": "RoundedTB/RoundedTB",
+        "githubAsset": "RoundedTB_.*\\.zip$",
+        "githubType": "zip",
+        "githubBin": "RoundedTB.exe",
+        "foss": true
+    },
     "roblox": {
         "category": "Games",
         "choco": "na",
