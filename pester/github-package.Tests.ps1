@@ -7,6 +7,10 @@ BeforeAll {
 
     . (Join-Path $script:repoRoot "functions\Apps\Resolve-WinUtilGitHubRelease.ps1")
     . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramGitHub.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Get-WinUtilGitHubPackageState.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Get-WinUtilGitHubUninstallEntry.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Uninstall-WinUtilGitHubPackage.ps1")
+    . (Join-Path $script:repoRoot "functions\Core\Invoke-WinUtilCurrentSystem.ps1")
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
 
@@ -434,5 +438,220 @@ Describe "Install-WinUtilProgramGitHub" {
         $results = @(Install-WinUtilProgramGitHub -Action Install -Packages @([pscustomobject]@{ github = "" }))
 
         $results.Count | Should -Be 0
+    }
+
+    It "records the installed package in the state file" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+        Mock Get-WinUtilGitHubUninstallSnapshot { @{} }
+        Mock Get-WinUtilGitHubNewUninstallEntry {
+            [pscustomobject]@{
+                UninstallKey         = "Registry::HKLM\SOFTWARE\Test\Uninstall\{GUID}"
+                UninstallString      = "MsiExec.exe /X{GUID}"
+                QuietUninstallString = ""
+            }
+        }
+
+        $null = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $state = Get-WinUtilGitHubPackageState
+        $state["owner/repo"].Type | Should -Be "msi"
+        $state["owner/repo"].Version | Should -Be "v1.0.0"
+        $state["owner/repo"].UninstallCommand | Should -Be "MsiExec.exe /X{GUID}"
+    }
+}
+
+Describe "GitHub package state" {
+    BeforeEach {
+        $script:savedLocalAppData = $env:LOCALAPPDATA
+        $env:LOCALAPPDATA = $TestDrive
+    }
+
+    AfterEach {
+        $env:LOCALAPPDATA = $script:savedLocalAppData
+    }
+
+    It "starts empty when no state file exists" {
+        Remove-Item -LiteralPath (Get-WinUtilGitHubStatePath) -Force -ErrorAction SilentlyContinue
+
+        (Get-WinUtilGitHubPackageState).Count | Should -Be 0
+    }
+
+    It "round-trips a record" {
+        Set-WinUtilGitHubPackageRecord -Repository "owner/roundtrip" -Record ([pscustomobject]@{
+            Repository = "owner/roundtrip"
+            Version    = "v1.0.0"
+            Type       = "zip"
+        })
+
+        $state = Get-WinUtilGitHubPackageState
+
+        $state["owner/roundtrip"].Version | Should -Be "v1.0.0"
+        $state["owner/roundtrip"].Type | Should -Be "zip"
+    }
+
+    It "treats a damaged state file as empty" {
+        $path = Get-WinUtilGitHubStatePath
+        New-Item -ItemType Directory -Path (Split-Path -Parent $path) -Force | Out-Null
+        Set-Content -LiteralPath $path -Value "not json"
+
+        (Get-WinUtilGitHubPackageState).Count | Should -Be 0
+    }
+
+    It "removes a record" {
+        Set-WinUtilGitHubPackageRecord -Repository "owner/keep" -Record ([pscustomobject]@{ Type = "zip" })
+        Set-WinUtilGitHubPackageRecord -Repository "owner/drop" -Record ([pscustomobject]@{ Type = "zip" })
+
+        Remove-WinUtilGitHubPackageRecord -Repository "owner/drop"
+
+        $state = Get-WinUtilGitHubPackageState
+        $state.ContainsKey("owner/drop") | Should -BeFalse
+        $state.ContainsKey("owner/keep") | Should -BeTrue
+    }
+
+    It "reports a zip package as installed while its install directory exists" {
+        $directory = Join-Path (Join-Path $TestDrive "winutil\github") "owner_repo"
+        New-Item -ItemType Directory -Path $directory -Force | Out-Null
+        $record = [pscustomobject]@{ InstallDirectory = $directory }
+
+        Test-WinUtilGitHubPackageInstalled -Record $record | Should -BeTrue
+
+        Remove-Item -LiteralPath $directory -Recurse -Force
+        Test-WinUtilGitHubPackageInstalled -Record $record | Should -BeFalse
+    }
+}
+
+Describe "Uninstall-WinUtilGitHubPackage" {
+    BeforeEach {
+        $script:savedLocalAppData = $env:LOCALAPPDATA
+        $env:LOCALAPPDATA = $TestDrive
+    }
+
+    AfterEach {
+        $env:LOCALAPPDATA = $script:savedLocalAppData
+    }
+
+    It "removes a zip install directory and its record" {
+        $directory = Join-Path (Join-Path $TestDrive "winutil\github") "owner_ziptest"
+        New-Item -ItemType Directory -Path $directory -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $directory "tool.exe") -Value "binary" -NoNewline
+        Set-WinUtilGitHubPackageRecord -Repository "owner/ziptest" -Record ([pscustomobject]@{ Type = "zip"; InstallDirectory = $directory })
+
+        $result = Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @([pscustomobject]@{ github = "owner/ziptest" })
+
+        $result.Outcome | Should -Be "Succeeded"
+        $result.Manager | Should -Be "github"
+        Test-Path -LiteralPath $directory | Should -BeFalse
+        (Get-WinUtilGitHubPackageState).ContainsKey("owner/ziptest") | Should -BeFalse
+    }
+
+    It "runs the recorded uninstall command and clears the record" {
+        Set-WinUtilGitHubPackageRecord -Repository "owner/exetest" -Record ([pscustomobject]@{
+            Type             = "exe"
+            UninstallCommand = "C:\Tool\uninstall.exe /S"
+        })
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @([pscustomobject]@{ github = "owner/exetest" })
+
+        $result.Outcome | Should -Be "Succeeded"
+        Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter { $FilePath -eq $env:ComSpec }
+        (Get-WinUtilGitHubPackageState).ContainsKey("owner/exetest") | Should -BeFalse
+    }
+
+    It "runs msiexec for a recorded MSI uninstall string" {
+        Set-WinUtilGitHubPackageRecord -Repository "owner/msitest" -Record ([pscustomobject]@{
+            Type             = "msi"
+            UninstallCommand = "MsiExec.exe /X{11111111-2222-3333-4444-555555555555}"
+        })
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $null = Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @([pscustomobject]@{ github = "owner/msitest" })
+
+        Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter {
+            $FilePath -eq "msiexec.exe" -and $ArgumentList -like "/x {11111111*"
+        }
+    }
+
+    It "skips a package that has no record" {
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @([pscustomobject]@{ github = "owner/missing" })
+
+        $result.Outcome | Should -Be "Skipped"
+        Should -Invoke Start-Process -Times 0 -Exactly
+    }
+
+    It "fails when a non-zip record has no uninstall command" {
+        Set-WinUtilGitHubPackageRecord -Repository "owner/nouninstaller" -Record ([pscustomobject]@{ Type = "exe" })
+
+        $result = Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @([pscustomobject]@{ github = "owner/nouninstaller" })
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Detail | Should -BeLike "*No uninstall command*"
+    }
+}
+
+Describe "Invoke-WinUtilCurrentSystem github detection" {
+    BeforeEach {
+        $script:savedLocalAppData = $env:LOCALAPPDATA
+        $env:LOCALAPPDATA = $TestDrive
+        $script:savedSync = $global:sync
+        $global:sync = [pscustomobject]@{
+            configs = [pscustomobject]@{
+                applicationsHashtable = @{
+                    "Tool App"  = [pscustomobject]@{ github = "owner/repo" }
+                    "Other App" = [pscustomobject]@{ github = "owner/other" }
+                }
+            }
+        }
+    }
+
+    AfterEach {
+        $env:LOCALAPPDATA = $script:savedLocalAppData
+        $global:sync = $script:savedSync
+    }
+
+    It "reports apps whose install directory still exists" {
+        $directory = Join-Path (Join-Path $TestDrive "winutil\github") "owner_repo"
+        New-Item -ItemType Directory -Path $directory -Force | Out-Null
+        Set-WinUtilGitHubPackageRecord -Repository "owner/repo" -Record ([pscustomobject]@{ Type = "zip"; InstallDirectory = $directory })
+
+        @(Invoke-WinUtilCurrentSystem -CheckBox "github") | Should -Be @("Tool App")
+    }
+
+    It "reports nothing when no package is recorded" {
+        Remove-Item -LiteralPath (Get-WinUtilGitHubStatePath) -Force -ErrorAction SilentlyContinue
+
+        @(Invoke-WinUtilCurrentSystem -CheckBox "github").Count | Should -Be 0
+    }
+}
+
+Describe "Get-WinUtilGitHubNewUninstallEntry" {
+    It "finds the entry an installer added" {
+        Mock Get-ChildItem { [pscustomobject]@{ PSPath = "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Test\Uninstall\{GUID}" } }
+        Mock Get-ItemProperty { [pscustomobject]@{ UninstallString = "MsiExec.exe /X{GUID}"; QuietUninstallString = ""; DisplayName = "Tool" } }
+
+        $entry = Get-WinUtilGitHubNewUninstallEntry -Before @{}
+
+        $entry.DisplayName | Should -Be "Tool"
+        $entry.UninstallKey | Should -Be "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Test\Uninstall\{GUID}"
+    }
+
+    It "ignores entries that were already there" {
+        Mock Get-ChildItem { [pscustomobject]@{ PSPath = "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Test\Uninstall\{GUID}" } }
+        Mock Get-ItemProperty { [pscustomobject]@{ UninstallString = "MsiExec.exe /X{GUID}" } }
+
+        $before = @{ "Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Test\Uninstall\{GUID}" = $true }
+
+        Get-WinUtilGitHubNewUninstallEntry -Before $before | Should -BeNullOrEmpty
+    }
+
+    It "ignores a new key that has no uninstall command" {
+        Mock Get-ChildItem { [pscustomobject]@{ PSPath = "Registry::HKLM\Software\Test\Uninstall\{EMPTY}" } }
+        Mock Get-ItemProperty { [pscustomobject]@{ DisplayName = "No Uninstaller" } }
+
+        Get-WinUtilGitHubNewUninstallEntry -Before @{} | Should -BeNullOrEmpty
     }
 }

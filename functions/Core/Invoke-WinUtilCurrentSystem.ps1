@@ -39,6 +39,23 @@ Function Invoke-WinUtilCurrentSystem {
         }
     }
 
+    if ($CheckBox -eq "github") {
+        $githubState = Get-WinUtilGitHubPackageState
+        if ($githubState.Count -gt 0) {
+            foreach ($app in $sync.configs.applicationsHashtable.GetEnumerator()) {
+                $repository = [string]$app.Value.github
+                if ([string]::IsNullOrWhiteSpace($repository)) {
+                    continue
+                }
+
+                $record = $githubState[$repository]
+                if ($record -and (Test-WinUtilGitHubPackageInstalled -Record $record)) {
+                    Write-Output $app.Key
+                }
+            }
+        }
+    }
+
     if ($checkbox -eq "winget") {
         $originalEncoding = [Console]::OutputEncoding
         try {

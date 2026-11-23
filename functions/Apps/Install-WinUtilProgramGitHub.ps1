@@ -52,6 +52,7 @@ function Install-WinUtilProgramGitHub {
         $detail = "no result"
         $downloadPath = $null
         $installDirectory = $null
+        $uninstallSnapshot = $null
 
         try {
             $release = Resolve-WinUtilGitHubRelease -Repository $repository -AssetPattern $package.githubAsset
@@ -78,6 +79,12 @@ function Install-WinUtilProgramGitHub {
                 }
             } else {
                 Write-WinUtilLog -Level "WARN" -Component "Package" -Message "$repository $($release.Version) publishes no SHA256 digest; installing the download unverified."
+            }
+
+            # An msi registers its product code and an exe its own uninstall command; neither is
+            # knowable before the installer runs, so the uninstall keys are diffed around it
+            if ($type -in @("msi", "exe")) {
+                $uninstallSnapshot = Get-WinUtilGitHubUninstallSnapshot
             }
 
             switch ($type) {
@@ -124,6 +131,42 @@ function Install-WinUtilProgramGitHub {
                 $detail = $rebootExitCodes[$exitCode]
             } else {
                 $detail = "installer exited with code $exitCode"
+            }
+
+            if ($outcome -eq "Succeeded") {
+                $uninstallKey = $null
+                $uninstallCommand = $null
+                $recordDirectory = $null
+                if ($type -eq "zip") {
+                    $recordDirectory = $installDirectory
+                }
+                if ($uninstallSnapshot) {
+                    $uninstallEntry = Get-WinUtilGitHubNewUninstallEntry -Before $uninstallSnapshot
+                    if ($uninstallEntry) {
+                        $uninstallKey = $uninstallEntry.UninstallKey
+                        $uninstallCommand = if ([string]::IsNullOrWhiteSpace($uninstallEntry.QuietUninstallString)) {
+                            $uninstallEntry.UninstallString
+                        } else {
+                            $uninstallEntry.QuietUninstallString
+                        }
+                    }
+                }
+
+                try {
+                    Set-WinUtilGitHubPackageRecord -Repository $repository -Record ([pscustomobject]@{
+                        Repository       = $repository
+                        Version          = $release.Version
+                        AssetName        = $release.AssetName
+                        Digest           = $release.Digest
+                        Type             = $type
+                        InstallDirectory = $recordDirectory
+                        UninstallKey     = $uninstallKey
+                        UninstallCommand = $uninstallCommand
+                        InstalledAt      = (Get-Date).ToString("o")
+                    })
+                } catch {
+                    Write-WinUtilLog -Level "WARN" -Component "Package" -Message "Installed $repository but could not record it: $($_.Exception.Message)"
+                }
             }
         } catch {
             $detail = $_.Exception.Message
