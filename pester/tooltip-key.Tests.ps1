@@ -39,7 +39,7 @@ BeforeAll {
     }
     $script:rendererClauses["default"] = [bool]($typeSwitch.Default.Extent.Text -match 'Get-WinUtil(Entry|Translated)ToolTip')
 
-    $appRendererPath = Join-Path $script:repoRoot "functions\Apps\Initialize-InstallAppEntry.ps1"
+    $appRendererPath = Join-Path $script:repoRoot "functions\Apps\Initialize-InstallAppEntries.ps1"
     $script:appRenderer = Get-Content $appRendererPath -Raw
 
     # Every entry the renderer draws, with the branch that draws it
@@ -91,7 +91,7 @@ Describe "Preset key tooltips" {
     }
 
     It "labels entries created by the application renderer" {
-        $script:appRenderer | Should -Match '\$border\.ToolTip\s*=\s*Get-WinUtil(Entry|Translated)ToolTip\s+-Description\s+\$app\.description\s+-Key\s+\$appKey'
+        $script:appRenderer | Should -Match '\$tooltip\s*=\s*\[Security\.SecurityElement\]::Escape\(\(Get-WinUtil(Entry|Translated)ToolTip\s+-Description\s+\$app\.description\s+-Key\s+\$appKey\)\)'
     }
 
     It "labels every entry with a key the preset importer accepts" {

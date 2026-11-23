@@ -68,6 +68,7 @@ Because the final script is concatenated, code cannot rely on runtime module imp
 - WinUtil runs in PowerShell on Windows and uses WPF for the UI.
 - Shared mutable state is stored in `$sync`, including configs, UI element references, runspace state, selections, and progress.
 - Long-running operations use runspaces or existing async patterns so the UI remains responsive.
+- User actions that opt into the job queue run one at a time with their selected inputs. Queued work can be reordered or cancelled, pauses during close confirmation, and is discarded when the window closes. ISO and USB jobs still refuse to queue.
 - UI updates from background work are dispatched back to the WPF UI thread.
 - Every runspace logs to the timestamped `%LocalAppData%\winutil\logs` session file through `Write-WinUtilLog`, which shares one writer through `$sync`. Job output and the UI runspace's warnings, errors and `Write-Host` output are collected into it; console-only output such as banners and progress uses `Write-WinUtilHost`.
 - Declarative features such as apps, tweaks, presets, DNS providers, and navigation stay in `config/*.json` unless code is required.
@@ -76,6 +77,7 @@ Because the final script is concatenated, code cannot rely on runtime module imp
 
 - UI layout lives in `xaml/inputXML.xaml`.
 - Named WPF controls are discovered and stored in `$sync`.
+- Maximized window content is inset to the current monitor work area by `Update-WinUtilWindowInsets`, using native bounds converted to WPF units. Interface events coalesce updates on the dispatcher after window or DPI changes.
 - Button/action wiring follows a naming convention: an element named like `WPFThingButton` maps to a function named like `Invoke-WPFThingButton`.
 
 ## Configuration Contract
@@ -83,6 +85,7 @@ Because the final script is concatenated, code cannot rely on runtime module imp
 - Config files must remain valid JSON and compile cleanly through `ConvertFrom-Json`.
 - `config/dns.json` opts unfiltered providers into Fastest selection with `BenchmarkEligible: true`; missing or false values exclude a provider from the TCP latency benchmark.
 - `config/applications.json` defines installable applications; each entry includes the fields expected by tests and UI code, such as package manager IDs, category, display content, description, and link.
+- `config/icons/<key>.png` holds one 48x48 icon per application, named after its key in `config/applications.json` (without the `WPFInstall` prefix). `Compile.ps1` embeds the folder as `$sync.configs.icons`, and the Install tab draws the icons without any network access (`Get-WinUtilAppIcon`); an app with no icon file falls back to the online favicon lookup. Add or replace one with `tools/New-WinUtilIcon.ps1`; a Pester test requires an icon of at most 8 KB for every application.
 - `config/tweaks.json` defines Windows tweaks; registry and service changes include original values or original states when applicable so undo workflows can restore user systems.
 - Preset and navigation files reference valid config keys. Renaming a config key requires updating all presets, UI references, docs, and code paths together.
 - Adding or renaming a preset, adding a selection key prefix, or adding a new kind of tweak change also requires updating the docs Tools pages (see Docs Site).
