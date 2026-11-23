@@ -57,11 +57,23 @@ function Find-AppsByNameOrDescription {
         $activeCategories = @($Categories | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
         $hasSearch = -not [string]::IsNullOrWhiteSpace($SearchString)
         $hasCategories = $activeCategories.Count -gt 0
+        $managerPreference = [string]$sync.preferences.packagemanager
 
-        # Nothing is filtered, so put every entry back and leave the collapsed categories collapsed
+        # No text or category filter, but the selected manager still applies: showing every
+        # entry here would put back apps that manager cannot install at all
         if (-not $hasSearch -and -not $hasCategories) {
+            $isManagerMatch = {
+                param($AppControl)
+
+                $appTag = [string]$AppControl.Tag
+                if ([string]::IsNullOrWhiteSpace($appTag)) { return $false }
+                $appEntry = $sync.configs.applicationsHashtable[$appTag]
+                if ($null -eq $appEntry) { return $false }
+                return (Test-WinUtilAppMatchesPackageManager -App $appEntry -Preference $managerPreference)
+            }
+
             $sync.ItemsControl.Items | ForEach-Object {
-                $_.Visibility = [Windows.Visibility]::Visible
+                $categoryHasMatch = $false
 
                 if ($_.Children.Count -ge 2) {
                     $categoryLabel = $_.Children[0]
@@ -85,22 +97,30 @@ function Find-AppsByNameOrDescription {
 
                     $wrapPanel.Children | ForEach-Object {
                         if ($_ -is [System.Windows.Controls.StackPanel] -and $_.Tag -eq "SubCategoryContainer") {
-                            $_.Visibility = [Windows.Visibility]::Visible
-                            $subHeader = $_.Children[0]
                             $subWrapPanel = $_.Children[1]
-                            if ($subHeader.Content -like "+*") {
-                                $subWrapPanel.Visibility = [Windows.Visibility]::Collapsed
-                            } else {
-                                $subWrapPanel.Visibility = [Windows.Visibility]::Visible
-                                $subWrapPanel.Children | ForEach-Object {
+                            $subHasMatch = $false
+                            $subWrapPanel.Children | ForEach-Object {
+                                if (& $isManagerMatch $_) {
                                     $_.Visibility = [Windows.Visibility]::Visible
+                                    $subHasMatch = $true
+                                } else {
+                                    $_.Visibility = [Windows.Visibility]::Collapsed
                                 }
                             }
+                            $_.Visibility = if ($subHasMatch) { [Windows.Visibility]::Visible } else { [Windows.Visibility]::Collapsed }
+                            if ($subHasMatch) { $categoryHasMatch = $true }
                         } else {
-                            $_.Visibility = [Windows.Visibility]::Visible
+                            if (& $isManagerMatch $_) {
+                                $_.Visibility = [Windows.Visibility]::Visible
+                                $categoryHasMatch = $true
+                            } else {
+                                $_.Visibility = [Windows.Visibility]::Collapsed
+                            }
                         }
                     }
                 }
+
+                $_.Visibility = if ($categoryHasMatch) { [Windows.Visibility]::Visible } else { [Windows.Visibility]::Collapsed }
             }
             return
         }
@@ -135,8 +155,9 @@ function Find-AppsByNameOrDescription {
                                     ([string]$appEntry.Content).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
                                     ([string]$appEntry.Description).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
                                     ([string]$appTag).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+                                $managerMatch = Test-WinUtilAppMatchesPackageManager -App $appEntry -Preference $managerPreference
 
-                                if ($categoryMatch -and $textMatch) {
+                                if ($categoryMatch -and $textMatch -and $managerMatch) {
                                     $appControl.Visibility = [Windows.Visibility]::Visible
                                     $subHasMatch = $true
                                 }
@@ -176,8 +197,9 @@ function Find-AppsByNameOrDescription {
                                 ([string]$appEntry.Content).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
                                 ([string]$appEntry.Description).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
                                 ([string]$appTag).IndexOf($SearchString, [System.StringComparison]::OrdinalIgnoreCase) -ge 0
+                            $managerMatch = Test-WinUtilAppMatchesPackageManager -App $appEntry -Preference $managerPreference
 
-                            if ($categoryMatch -and $textMatch) {
+                            if ($categoryMatch -and $textMatch -and $managerMatch) {
                                 $child.Visibility = [Windows.Visibility]::Visible
                                 $categoryHasMatch = $true
                             }

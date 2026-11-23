@@ -75,6 +75,10 @@ If you have trouble finding an application, press `Ctrl + F` and search for its 
 :::
 
 :::note
+Selecting a package manager filters the list to the applications that manager can install, so a WinGet-only app disappears under Chocolatey and a GitHub-only app only appears under `GitHub`.
+:::
+
+:::note
 The `GitHub` package manager installs applications that only ship builds as GitHub Releases. WinUtil downloads the asset that matches the app and your architecture, verifies the SHA256 the release publishes, and records what it installed so the app can be uninstalled later. A release that publishes no digest is installed with a warning in the log; a digest that does not match aborts that install.
 :::
 

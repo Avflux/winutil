@@ -116,6 +116,7 @@ namespace Windows.Controls
     }
 
     . (Join-Path $script:repoRoot "functions\Apps\Find-AppsByNameOrDescription.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Update-WinUtilInstallManagerFilter.ps1")
     . (Join-Path $script:repoRoot "functions\Tweaks\Find-TweaksByNameOrDescription.ps1")
     . (Join-Path $script:repoRoot "functions\UI\Get-WinUtilEntryToolTip.ps1")
 
@@ -504,6 +505,46 @@ Describe "Find-AppsByNameOrDescription" {
 
         $category.Children[0].Content | Should -Be "- Tools"
         $category.Children[1].Visibility | Should -Be ([Windows.Visibility]::Visible)
+    }
+}
+
+Describe "Find-AppsByNameOrDescription package manager filter" {
+    AfterEach {
+        Remove-WinUtilSearchGlobals
+    }
+
+    It "shows only the apps the selected manager can install" {
+        $wingetItem = New-WinUtilAppSearchItem -Tag "WPFInstallWin"
+        $githubItem = New-WinUtilAppSearchItem -Tag "WPFInstallGh"
+        $wingetCategory = New-WinUtilAppCategory -Label "- Utilities" -Items @($wingetItem)
+        $githubCategory = New-WinUtilAppCategory -Label "- Tools" -Items @($githubItem)
+        New-WinUtilAppSearchContext -Categories @($wingetCategory, $githubCategory)
+        $script:sync.preferences = @{ packagemanager = "GitHub" }
+        $script:sync.configs.applicationsHashtable["WPFInstallWin"] = [pscustomobject]@{ Content = "Win"; Description = "winget app"; Category = "Utilities"; winget = "Vendor.Win" }
+        $script:sync.configs.applicationsHashtable["WPFInstallGh"] = [pscustomobject]@{ Content = "Gh"; Description = "github app"; Category = "Tools"; github = "owner/repo" }
+
+        Find-AppsByNameOrDescription -SearchString ""
+
+        $wingetItem.Visibility | Should -Be ([Windows.Visibility]::Collapsed)
+        $wingetCategory.Visibility | Should -Be ([Windows.Visibility]::Collapsed)
+        $githubItem.Visibility | Should -Be ([Windows.Visibility]::Visible)
+        $githubCategory.Visibility | Should -Be ([Windows.Visibility]::Visible)
+    }
+
+    It "keeps a search from revealing an app of another manager" {
+        $wingetItem = New-WinUtilAppSearchItem -Tag "WPFInstallWin"
+        $githubItem = New-WinUtilAppSearchItem -Tag "WPFInstallGh"
+        $category = New-WinUtilAppCategory -Label "- Utilities" -Items @($wingetItem, $githubItem)
+        New-WinUtilAppSearchContext -Categories @($category)
+        $script:sync.preferences = @{ packagemanager = "GitHub" }
+        $script:sync.configs.applicationsHashtable["WPFInstallWin"] = [pscustomobject]@{ Content = "Win"; Description = "winget app"; Category = "Utilities"; winget = "Vendor.Win" }
+        $script:sync.configs.applicationsHashtable["WPFInstallGh"] = [pscustomobject]@{ Content = "Gh"; Description = "github app"; Category = "Utilities"; github = "owner/repo" }
+
+        Find-AppsByNameOrDescription -SearchString "Win"
+
+        $wingetItem.Visibility | Should -Be ([Windows.Visibility]::Collapsed)
+        $githubItem.Visibility | Should -Be ([Windows.Visibility]::Collapsed)
+        $category.Visibility | Should -Be ([Windows.Visibility]::Collapsed)
     }
 }
 

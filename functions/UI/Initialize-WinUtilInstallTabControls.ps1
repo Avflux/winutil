@@ -14,16 +14,19 @@ function Initialize-WinUtilInstallTabControls {
     if ($sync.ChocoRadioButton) {
         $sync.ChocoRadioButton.Add_Checked({
             $sync.preferences.packagemanager = "Choco"
+            Update-WinUtilInstallManagerFilter
         })
     }
     if ($sync.WingetRadioButton) {
         $sync.WingetRadioButton.Add_Checked({
             $sync.preferences.packagemanager = "Winget"
+            Update-WinUtilInstallManagerFilter
         })
     }
     if ($sync.GitHubRadioButton) {
         $sync.GitHubRadioButton.Add_Checked({
             $sync.preferences.packagemanager = "GitHub"
+            Update-WinUtilInstallManagerFilter
         })
     }
 
@@ -32,6 +35,9 @@ function Initialize-WinUtilInstallTabControls {
         "Winget" { if ($sync.WingetRadioButton) { $sync.WingetRadioButton.IsChecked = $true }; break }
         "GitHub" { if ($sync.GitHubRadioButton) { $sync.GitHubRadioButton.IsChecked = $true }; break }
     }
+
+    # A restored preference that was already the checked radio raised no Checked event
+    Update-WinUtilInstallManagerFilter
 
     if ($PARAM_OFFLINE) {
         foreach ($name in "WPFInstall", "WPFUninstall", "WPFInstallUpgrade", "WPFGetInstalled") {

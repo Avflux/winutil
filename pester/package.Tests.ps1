@@ -6,6 +6,7 @@ BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
     . (Join-Path $script:repoRoot "functions\Apps\Get-WinUtilSelectedPackages.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Update-WinUtilInstallManagerFilter.ps1")
     . (Join-Path $script:repoRoot "functions\Apps\Test-WinUtilPackageManager.ps1")
     . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramWinget.ps1")
     . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramChoco.ps1")
@@ -21,6 +22,39 @@ BeforeAll {
     # The CLI path is what these tests cover; the module path is verified against real winget
     function Step-WinUtilJob { param([string]$Status, [int]$Percent, [string]$State, [string]$Overlay, [switch]$Hide) }
     function Write-WinUtilLog { }
+}
+
+Describe "Test-WinUtilAppMatchesPackageManager" {
+    It "matches an app that has an id for the selected manager" {
+        $app = [pscustomobject]@{ winget = "Git.Git"; choco = "git"; github = "owner/repo" }
+
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "Winget" | Should -BeTrue
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "Choco" | Should -BeTrue
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "GitHub" | Should -BeTrue
+    }
+
+    It "rejects an app that only has another manager's source" {
+        $app = [pscustomobject]@{ winget = "Git.Git"; choco = "na" }
+
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "Choco" | Should -BeFalse
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "GitHub" | Should -BeFalse
+    }
+
+    It "treats the na marker and blank ids as no source" {
+        $app = [pscustomobject]@{ winget = "na"; choco = ""; github = "   " }
+
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "Winget" | Should -BeFalse
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "Choco" | Should -BeFalse
+        Test-WinUtilAppMatchesPackageManager -App $app -Preference "GitHub" | Should -BeFalse
+    }
+
+    It "does not filter when no manager is selected" {
+        Test-WinUtilAppMatchesPackageManager -App ([pscustomobject]@{}) -Preference "" | Should -BeTrue
+    }
+
+    It "rejects a missing app entry" {
+        Test-WinUtilAppMatchesPackageManager -App $null -Preference "Winget" | Should -BeFalse
+    }
 }
 
 Describe "Get-WinUtilSelectedPackages" {
