@@ -6,6 +6,9 @@ BeforeAll {
     $script:repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 
     . (Join-Path $script:repoRoot "functions\Apps\Resolve-WinUtilGitHubRelease.ps1")
+    . (Join-Path $script:repoRoot "functions\Apps\Install-WinUtilProgramGitHub.ps1")
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
 
     function Write-WinUtilLog {
         param([string]$Level, [string]$Component, [string]$Message, [switch]$Detail)
@@ -38,6 +41,41 @@ BeforeAll {
                     size                 = $_.Size
                 }
             })
+        }
+    }
+
+    function New-GitHubInstallPackage {
+        param(
+            [string]$Repository = "owner/repo",
+            [string]$AssetPattern,
+            [string]$Type,
+            [string]$Arguments,
+            [string]$Bin
+        )
+
+        [pscustomobject]@{
+            github      = $Repository
+            githubAsset = $AssetPattern
+            githubType  = $Type
+            githubArgs  = $Arguments
+            githubBin   = $Bin
+        }
+    }
+
+    function New-GitHubInstallRelease {
+        param(
+            [string]$AssetName = "tool-x64.msi",
+            [string]$Digest,
+            [string]$Version = "v1.0.0"
+        )
+
+        [pscustomobject]@{
+            Repository  = "owner/repo"
+            Version     = $Version
+            AssetName   = $AssetName
+            DownloadUrl = "https://example.test/$AssetName"
+            Digest      = $Digest
+            Size        = 1
         }
     }
 }
@@ -206,5 +244,195 @@ Describe "Resolve-WinUtilGitHubRelease" {
 
     It "rejects a repository that is not an owner/repo pair" {
         { Resolve-WinUtilGitHubRelease -Repository "justaname" } | Should -Throw
+    }
+}
+
+Describe "Install-WinUtilProgramGitHub" {
+    BeforeEach {
+        $script:savedLocalAppData = $env:LOCALAPPDATA
+        $env:LOCALAPPDATA = $TestDrive
+    }
+
+    AfterEach {
+        $env:LOCALAPPDATA = $script:savedLocalAppData
+    }
+
+    It "installs an msi silently and removes the download" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+        Mock Remove-Item { }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Succeeded"
+        $result.Manager | Should -Be "github"
+        $result.Package | Should -Be "owner/repo"
+        $result.ExitCode | Should -Be 0
+        $result.Detail | Should -Be "exit code 0"
+        Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter {
+            $FilePath -eq "msiexec.exe" -and $ArgumentList -match "/qn"
+        }
+        Should -Invoke Remove-Item -Times 1 -Exactly -ParameterFilter {
+            $LiteralPath -like "*WinUtilGitHub-*"
+        }
+    }
+
+    It "refuses a download that does not match the published digest" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" -Digest ("0" * 64) }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Detail | Should -BeLike "*SHA256*"
+        Should -Invoke Start-Process -Times 0 -Exactly
+    }
+
+    It "accepts a download that matches the published digest" {
+        $source = Join-Path $TestDrive "verified-installer"
+        Set-Content -LiteralPath $source -Value "verified-installer" -NoNewline
+        $digest = (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash
+
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" -Digest $digest }
+        Mock Invoke-WebRequest { Copy-Item -LiteralPath $source -Destination $OutFile }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Succeeded"
+    }
+
+    It "warns but installs when the release publishes no digest" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+        Mock Write-WinUtilLog { }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Succeeded"
+        Should -Invoke Write-WinUtilLog -Times 1 -Exactly -ParameterFilter {
+            $Level -eq "WARN" -and $Message -like "*publishes no SHA256 digest*"
+        }
+    }
+
+    It "runs an executable with the configured arguments" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.exe" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage -Arguments "/S")
+
+        $result.Outcome | Should -Be "Succeeded"
+        Should -Invoke Start-Process -Times 1 -Exactly -ParameterFilter {
+            [System.IO.Path]::GetFileName($FilePath) -ne "msiexec.exe" -and $ArgumentList -eq "/S"
+        }
+    }
+
+    It "reports a failing installer exit code" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 5 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Failed"
+        $result.ExitCode | Should -Be 5
+        $result.Detail | Should -BeLike "*5*"
+    }
+
+    It "treats a reboot exit code as success" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 3010 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Succeeded"
+        $result.Detail | Should -BeLike "*restart*"
+    }
+
+    It "rejects an unsupported asset type" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool.tar.gz" }
+        Mock Invoke-WebRequest { }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage -Type "tar")
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Detail | Should -BeLike "*Unsupported*"
+        Should -Invoke Invoke-WebRequest -Times 0 -Exactly
+    }
+
+    It "extracts a zip into the per-user install directory and checks the binary" {
+        $payload = Join-Path $TestDrive "payload"
+        New-Item -ItemType Directory -Path $payload -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $payload "tool.exe") -Value "binary" -NoNewline
+        $zip = Join-Path $TestDrive "tool-x64.zip"
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($payload, $zip)
+
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.zip" }
+        Mock Invoke-WebRequest { Copy-Item -LiteralPath $zip -Destination $OutFile }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage -Bin "tool.exe")
+
+        $result.Outcome | Should -Be "Succeeded"
+        $installDir = Join-Path (Join-Path $TestDrive "winutil\github") "owner_repo"
+        Test-Path -LiteralPath (Join-Path $installDir "tool.exe") | Should -BeTrue
+    }
+
+    It "fails when the archive lacks the configured binary" {
+        $payload = Join-Path $TestDrive "payload-nobin"
+        New-Item -ItemType Directory -Path $payload -Force | Out-Null
+        Set-Content -LiteralPath (Join-Path $payload "other.exe") -Value "binary" -NoNewline
+        $zip = Join-Path $TestDrive "bundle-nobin.zip"
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($payload, $zip)
+
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.zip" }
+        Mock Invoke-WebRequest { Copy-Item -LiteralPath $zip -Destination $OutFile }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage -Repository "owner/other" -Bin "tool.exe")
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Detail | Should -BeLike "*configured binary*"
+    }
+
+    It "refuses an archive member that escapes the install directory" {
+        $zip = Join-Path $TestDrive "escape.zip"
+        $archive = [System.IO.Compression.ZipFile]::Open($zip, [System.IO.Compression.ZipArchiveMode]::Create)
+        try {
+            $entry = $archive.CreateEntry("../escaped.txt")
+            $writer = New-Object System.IO.StreamWriter($entry.Open())
+            $writer.Write("escaped")
+            $writer.Dispose()
+        } finally {
+            $archive.Dispose()
+        }
+
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.zip" }
+        Mock Invoke-WebRequest { Copy-Item -LiteralPath $zip -Destination $OutFile }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Detail | Should -BeLike "*outside the install directory*"
+        Test-Path -LiteralPath (Join-Path $TestDrive "winutil\github\escaped.txt") | Should -BeFalse
+    }
+
+    It "reports a resolver failure against the package" {
+        Mock Resolve-WinUtilGitHubRelease { throw "GitHub repository 'owner/repo' has no published release." }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Failed"
+        $result.Package | Should -Be "owner/repo"
+        $result.Detail | Should -BeLike "*has no published release*"
+    }
+
+    It "skips a package without a repository" {
+        $results = @(Install-WinUtilProgramGitHub -Action Install -Packages @([pscustomobject]@{ github = "" }))
+
+        $results.Count | Should -Be 0
     }
 }
