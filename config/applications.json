@@ -2426,5 +2426,35 @@
         "githubAsset": "-windows-x64\\.msi$",
         "githubType": "msi",
         "foss": true
+    },
+    "anicraft": {
+        "category": "Multimedia Tools",
+        "content": "AniCraft",
+        "description": "AniCraft is an open-source 2D vector animation tool written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/anicraft",
+        "github": "storytold/anicraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "figcraft": {
+        "category": "Document",
+        "content": "FigCraft",
+        "description": "FigCraft is an open-source interface design and prototyping tool written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/figcraft",
+        "github": "storytold/figcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "materialcraft": {
+        "category": "Multimedia Tools",
+        "content": "MaterialCraft",
+        "description": "MaterialCraft is an open-source node-based procedural materials tool written from scratch in pure Rust.",
+        "link": "https://github.com/storytold/materialcraft",
+        "github": "storytold/materialcraft",
+        "githubAsset": "-windows-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
     }
 }
