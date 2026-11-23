@@ -110,6 +110,23 @@ Describe "Get-WinUtilSelectedPackages" {
         (@($result[0]["Winget"]) -join "|") | Should -Be "Git.Git"
     }
 
+    It "queues whole app entries when GitHub releases are preferred" {
+        $app = [pscustomobject]@{ github = "owner/repo"; winget = "na"; choco = "na" }
+
+        $result = Get-WinUtilSelectedPackages -PackageList @($app, $app) -Preference "GitHub"
+
+        @($result["GitHub"]).Count | Should -Be 1
+        $result["GitHub"][0].github | Should -Be "owner/repo"
+        @($result["Winget"]).Count | Should -Be 0
+        @($result["Choco"]).Count | Should -Be 0
+    }
+
+    It "skips an app without a GitHub repository" {
+        $result = Get-WinUtilSelectedPackages -PackageList @([pscustomobject]@{ winget = "Git.Git" }) -Preference "GitHub"
+
+        @($result["GitHub"]).Count | Should -Be 0
+    }
+
     It "returns empty package lists for an empty selection" {
         $result = Get-WinUtilSelectedPackages -PackageList @() -Preference "Winget"
 

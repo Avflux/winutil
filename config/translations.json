@@ -46,6 +46,7 @@
         "Upgrade all applications to the latest version": "Atualizar todos os aplicativos para a versão mais recente",
         "Use WinGet for package management": "Usar o WinGet para gerenciamento de pacotes",
         "Use Chocolatey for package management": "Usar o Chocolatey para gerenciamento de pacotes",
+        "Use GitHub Releases for package management": "Usar as versões (Releases) do GitHub para gerenciamento de pacotes",
         "Package Manager": "Gerenciador de Pacotes",
         "Clear Selection": "Limpar Seleção",
         "Clear the selection of applications": "Limpar a seleção de aplicativos",

@@ -9,7 +9,8 @@ function Invoke-WPFGetInstalled {
     #>
     param($checkbox)
 
-    if (($sync.ChocoRadioButton.IsChecked -eq $false) -and ((Test-WinUtilPackageManager -winget) -eq "not-installed") -and $checkbox -eq "winget") {
+    $ManagerPreference = $sync.preferences.packagemanager
+    if (($sync.ChocoRadioButton.IsChecked -eq $false) -and $ManagerPreference -ne "GitHub" -and ((Test-WinUtilPackageManager -winget) -eq "not-installed") -and $checkbox -eq "winget") {
         return
     }
 
@@ -23,7 +24,11 @@ function Invoke-WPFGetInstalled {
 
         $found = @()
         if ($Checkbox -eq "winget") {
-            $source = if ($ManagerPreference -eq "Choco") { "choco" } else { $Checkbox }
+            $source = switch ($ManagerPreference) {
+                "Choco" { "choco" }
+                "GitHub" { "github" }
+                default { $Checkbox }
+            }
             $found = @(Invoke-WinUtilCurrentSystem -CheckBox $source)
         } elseif ($Checkbox -eq "tweaks") {
             $found = @(Invoke-WinUtilCurrentSystem -CheckBox $Checkbox)

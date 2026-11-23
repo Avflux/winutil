@@ -39,9 +39,10 @@ function Invoke-WPFUnInstall {
         $packagesSorted = Get-WinUtilSelectedPackages -PackageList $PackagesToUninstall -Preference $ManagerPreference -Action Uninstall
         $packagesWinget = $packagesSorted['Winget']
         $packagesChoco = $packagesSorted['Choco']
-        $totalPackages = @($packagesWinget).Count + @($packagesChoco).Count
+        $packagesGitHub = @($packagesSorted['GitHub'] | Where-Object { $null -ne $_ })
+        $totalPackages = @($packagesWinget).Count + @($packagesChoco).Count + @($packagesGitHub).Count
         $completedPackages = 0
-        Write-WinUtilLog -Component "Uninstall" -Message "Uninstall package manager split: winget=$(@($packagesWinget).Count), choco=$(@($packagesChoco).Count)"
+        Write-WinUtilLog -Component "Uninstall" -Message "Uninstall package manager split: winget=$(@($packagesWinget).Count), choco=$(@($packagesChoco).Count), github=$(@($packagesGitHub).Count)"
 
         if ($packagesWinget -contains "Microsoft.Edge") {
             New-Item -Path "$Env:SystemRoot\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe" -Force | Out-Null
@@ -73,6 +74,20 @@ function Invoke-WPFUnInstall {
             }
             $completedPackages += @($packagesChoco).Count
             Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Uninstalled Chocolatey packages ({0}/{1})") -f $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+        }
+
+        if ($packagesGitHub.Count -gt 0) {
+            foreach ($program in $packagesGitHub) {
+                $repository = [string]$program.github
+                $position = $completedPackages + 1
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Uninstalling {0} ({1}/{2})") -f $repository, $position, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+
+                $results += Measure-WinUtilStep -Scope "Uninstall" -Name "github $repository" -ScriptBlock {
+                    Uninstall-WinUtilGitHubPackage -Action Uninstall -Packages @($program)
+                }
+                $completedPackages++
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Uninstalled {0} ({1}/{2})") -f $repository, $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+            }
         }
 
         Complete-WinUtilPackageRun -Action "Uninstall" -Results $results

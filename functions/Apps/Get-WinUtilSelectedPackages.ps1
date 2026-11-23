@@ -18,9 +18,11 @@ function Get-WinUtilSelectedPackages {
 
     $packagesWinget = [System.Collections.ArrayList]::new()
     $packagesChoco = [System.Collections.ArrayList]::new()
+    $packagesGitHub = [System.Collections.ArrayList]::new()
     $packages = @{
         Winget = $packagesWinget
         Choco = $packagesChoco
+        GitHub = $packagesGitHub
     }
 
     function Add-PackageId {
@@ -59,6 +61,17 @@ function Get-WinUtilSelectedPackages {
             }
             "Winget" {
                 Add-PackageId -Target $packagesWinget -PackageId $package.winget
+            }
+            "GitHub" {
+                # A GitHub release has no package id to split: the installer reads the whole
+                # config entry, so the entry itself is what gets queued.
+                $repository = [string]$package.github
+                if (-not [string]::IsNullOrWhiteSpace($repository)) {
+                    $alreadyQueued = $packagesGitHub | Where-Object { [string]$_.github -eq $repository }
+                    if (-not $alreadyQueued) {
+                        $null = $packagesGitHub.Add($package)
+                    }
+                }
             }
         }
     }

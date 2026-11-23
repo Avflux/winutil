@@ -178,14 +178,14 @@ Describe "Applications config" {
             }
 
             $hasInstallSource = $false
-            foreach ($sourceField in @("winget", "choco")) {
+            foreach ($sourceField in @("winget", "choco", "github")) {
                 if ($entryFields -contains $sourceField -and -not [string]::IsNullOrWhiteSpace([string]$entry.Value.$sourceField)) {
                     $hasInstallSource = $true
                 }
             }
 
             if (-not $hasInstallSource) {
-                $invalidEntries.Add("$($entry.Name) missing winget/choco install source")
+                $invalidEntries.Add("$($entry.Name) missing winget/choco/github install source")
             }
         }
 
@@ -202,7 +202,7 @@ Describe "Applications config" {
         $sharedChoco = @("vcredist2015")
         $invalidEntries = New-Object System.Collections.Generic.List[string]
 
-        foreach ($source in @("winget", "choco")) {
+        foreach ($source in @("winget", "choco", "github")) {
             $owners = @{}
             foreach ($entry in $applications.PSObject.Properties) {
                 $id = [string]$entry.Value.$source

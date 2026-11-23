@@ -28,9 +28,10 @@ function Invoke-WPFInstall {
         $packagesSorted = Get-WinUtilSelectedPackages -PackageList $PackagesToInstall -Preference $ManagerPreference
         $packagesWinget = $packagesSorted['Winget']
         $packagesChoco = $packagesSorted['Choco']
-        $totalPackages = @($packagesWinget).Count + @($packagesChoco).Count
+        $packagesGitHub = @($packagesSorted['GitHub'] | Where-Object { $null -ne $_ })
+        $totalPackages = @($packagesWinget).Count + @($packagesChoco).Count + @($packagesGitHub).Count
         $completedPackages = 0
-        Write-WinUtilLog -Component "Install" -Message "Install package manager split: winget=$(@($packagesWinget).Count), choco=$(@($packagesChoco).Count)"
+        Write-WinUtilLog -Component "Install" -Message "Install package manager split: winget=$(@($packagesWinget).Count), choco=$(@($packagesChoco).Count), github=$(@($packagesGitHub).Count)"
 
         $results = @()
 
@@ -60,6 +61,20 @@ function Invoke-WPFInstall {
             }
             $completedPackages += @($packagesChoco).Count
             Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installed Chocolatey packages ({0}/{1})") -f $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+        }
+
+        if ($packagesGitHub.Count -gt 0) {
+            foreach ($program in $packagesGitHub) {
+                $repository = [string]$program.github
+                $position = $completedPackages + 1
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installing {0} ({1}/{2})") -f $repository, $position, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+
+                $results += Measure-WinUtilStep -Scope "Install" -Name "github $repository" -ScriptBlock {
+                    Install-WinUtilProgramGitHub -Action Install -Packages @($program)
+                }
+                $completedPackages++
+                Step-WinUtilJob -Status ((Get-WinUtilTranslation -Text "Installed {0} ({1}/{2})") -f $repository, $completedPackages, $totalPackages) -Percent ([int](($completedPackages / $totalPackages) * 100))
+            }
         }
 
         Complete-WinUtilPackageRun -Action "Install" -Results $results

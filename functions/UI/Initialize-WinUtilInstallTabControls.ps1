@@ -21,10 +21,16 @@ function Initialize-WinUtilInstallTabControls {
             $sync.preferences.packagemanager = "Winget"
         })
     }
+    if ($sync.GitHubRadioButton) {
+        $sync.GitHubRadioButton.Add_Checked({
+            $sync.preferences.packagemanager = "GitHub"
+        })
+    }
 
     switch ($sync.preferences.packagemanager) {
         "Choco" { if ($sync.ChocoRadioButton) { $sync.ChocoRadioButton.IsChecked = $true }; break }
         "Winget" { if ($sync.WingetRadioButton) { $sync.WingetRadioButton.IsChecked = $true }; break }
+        "GitHub" { if ($sync.GitHubRadioButton) { $sync.GitHubRadioButton.IsChecked = $true }; break }
     }
 
     if ($PARAM_OFFLINE) {

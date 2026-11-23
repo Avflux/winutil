@@ -38,6 +38,15 @@
         "Order": "2",
         "Description": "Use Chocolatey for package management"
     },
+    "GitHubRadioButton": {
+        "Content": "GitHub",
+        "Category": "__Package Manager",
+        "Type": "RadioButton",
+        "GroupName": "PackageManagerGroup",
+        "Checked": false,
+        "Order": "3",
+        "Description": "Use GitHub Releases for package management"
+    },
     "WPFCollapseAllCategories": {
         "Content": "Collapse All Categories",
         "Category": "__Selection",

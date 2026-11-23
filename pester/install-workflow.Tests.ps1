@@ -43,6 +43,12 @@ BeforeAll {
     function Install-WinUtilProgramChoco {
         param($Action, $Programs)
     }
+    function Install-WinUtilProgramGitHub {
+        param($Action, $Packages)
+    }
+    function Uninstall-WinUtilGitHubPackage {
+        param($Action, $Packages)
+    }
     function Complete-WinUtilPackageRun {
         param([string]$Action, [object[]]$Results)
     }
