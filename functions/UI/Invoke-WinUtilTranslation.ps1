@@ -123,6 +123,14 @@ function Invoke-WinUtilTranslation {
                 continue
             }
 
+            # The selected-apps counter is built from the selection count, not from a static key,
+            # so the walker has nothing to translate and would only record whichever count it
+            # happened to see as a baseline and put it back on the next pass. The counter is
+            # rebuilt in the selected language further down instead.
+            if ($element -eq $sync.WPFselectedAppsButton) {
+                continue
+            }
+
             # Popups are logical children of their placement button, the rest of the tree is
             # visual; walking both makes one code path cover everything.
             try {
@@ -330,6 +338,22 @@ function Invoke-WinUtilTranslation {
             $value = & $resolveValue $english
             if ($null -ne $value) {
                 $stepTab.Header = $value
+                $changed++
+            }
+        }
+    }
+
+    # The status log is a TextBox, so the walker above skips it as user-editable output. Its
+    # startup prompt is interface copy rather than output, so translate that single value
+    # while the box still holds it; once log lines replace the prompt no key applies and the
+    # box is left alone.
+    $statusLog = $sync.Form.FindName("WPFWin11ISOStatusLog")
+    if ($statusLog -and $statusLog.Text) {
+        $statusEnglish = Get-WinUtilTextBaseline -Control $statusLog -Kind "Text" -Current $statusLog.Text
+        if ($statusEnglish -eq "Ready. Please select a Windows 11 ISO to begin.") {
+            $statusValue = & $resolveValue $statusEnglish
+            if ($null -ne $statusValue) {
+                $statusLog.Text = $statusValue
                 $changed++
             }
         }

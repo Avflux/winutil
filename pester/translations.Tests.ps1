@@ -184,6 +184,40 @@ Describe "Get-WinUtilSelectedAppsCountText" {
     }
 }
 
+Describe "Invoke-WinUtilTranslation counter" {
+    BeforeAll {
+        Add-Type -AssemblyName PresentationFramework
+        . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
+        . (Join-Path $script:repoRoot "functions\Core\Write-WinUtilLog.ps1")
+        . (Join-Path $script:repoRoot "functions\UI\Invoke-WinUtilTranslation.ps1")
+    }
+
+    It "keeps the selected-apps counter out of the static text baseline" {
+        $button = New-Object System.Windows.Controls.Button
+        $button.Content = "Aplicativos Selecionados: 5"
+        $global:sync = @{
+            Form                  = New-Object System.Windows.Window
+            TextBaselines         = [System.Runtime.CompilerServices.ConditionalWeakTable[object, object]]::new()
+            preferences           = @{ language = "pt-BR" }
+            selectedApps          = [System.Collections.Generic.List[string]]::new([string[]]@("WPFInstallBrave", "WPFInstallFirefox", "WPFInstallLibreWolf", "WPFInstalltor", "WPFInstallZenBrowser"))
+            WPFselectedAppsButton = $button
+            LoggedErrors          = [System.Collections.ArrayList]::new()
+            logPath               = Join-Path $env:TEMP "winutil-translations-test.log"
+            configs               = @{
+                translations  = @{ "pt-BR" = [pscustomobject]@{ "Selected Apps: {0}" = "Aplicativos Selecionados: {0}" } }
+                appnavigation = @{ WPFselectedAppsButton = [pscustomobject]@{ Content = "Selected Apps: 0" } }
+            }
+        }
+        $global:sync.Form.Content = $button
+
+        Invoke-WinUtilTranslation -Language "pt-BR"
+
+        $entry = $null
+        $global:sync.TextBaselines.TryGetValue($button, [ref]$entry) | Should -BeFalse -Because "the counter is rebuilt from the selection count, so the walker must not record it as static text"
+        $button.Content | Should -Be "Aplicativos Selecionados: 5"
+    }
+}
+
 Describe "Get-WinUtilTranslatedToolTip and Get-WinUtilTranslatedDescription" {
     BeforeAll {
         . (Join-Path $script:repoRoot "functions\Core\Get-WinUtilText.ps1")
