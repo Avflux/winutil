@@ -78,6 +78,9 @@
         "description": "Audacity is a free and open-source audio editing software known for its powerful recording and editing capabilities.",
         "link": "https://www.audacityteam.org/",
         "winget": "Audacity.Audacity",
+        "github": "audacity/audacity",
+        "githubAsset": "-x86_64\\.msi$",
+        "githubType": "msi",
         "foss": true
     },
     "autoruns": {
@@ -873,6 +876,9 @@
         "description": "KeePassXC is a modern, secure, and open-source password manager that stores and manages your most sensitive information. You can run KeePassXC on Windows, macOS, and Linux systems. KeePassXC is for people with extremely high demands of secure personal data management. It saves many different types of information, such as usernames, passwords, URLs, attachments, and notes in an offline, encrypted file that can be stored in any location, including private and public cloud solutions. For easy identification and management, user-defined titles and icons can be specified for entries. In addition, entries are sorted into customizable groups. An integrated search function allows you to use advanced patterns to easily find any entry in your database. A customizable, fast, and easy-to-use password generator utility allows you to create passwords with any combination of characters or easy to remember passphrases.",
         "link": "https://keepassxc.org/",
         "winget": "KeePassXCTeam.KeePassXC",
+        "github": "keepassxreboot/keepassxc",
+        "githubAsset": "-x64\\.msi$",
+        "githubType": "msi",
         "foss": true
     },
     "kiro": {
@@ -2053,6 +2059,9 @@
         "description": "VSCodium is a community-driven, freely-licensed binary distribution of Microsoft's VS Code.",
         "link": "https://vscodium.com/",
         "winget": "VSCodium.VSCodium",
+        "github": "VSCodium/vscodium",
+        "githubAsset": "^VSCodium-x64-\\d.*\\.msi$",
+        "githubType": "msi",
         "foss": true,
         "subcategory": "Editors & IDEs"
     },
@@ -2554,6 +2563,78 @@
         "githubAsset": "^TreeSheets-.*-winx64\\.zip$",
         "githubType": "zip",
         "githubBin": "TreeSheets-2.24.5-winx64\\TreeSheets.exe",
+        "foss": true
+    },
+    "sqlitebrowser": {
+        "category": "Development",
+        "content": "DB Browser for SQLite",
+        "description": "DB Browser for SQLite is an open-source visual tool for creating, browsing, and editing SQLite database files.",
+        "link": "https://github.com/sqlitebrowser/sqlitebrowser",
+        "github": "sqlitebrowser/sqlitebrowser",
+        "githubAsset": "-win64\\.msi$",
+        "githubType": "msi",
+        "foss": true,
+        "subcategory": "API & Databases"
+    },
+    "grepwin": {
+        "category": "Utilities",
+        "content": "grepWin",
+        "description": "grepWin is an open-source search-and-replace tool for Windows with regular expression support across folders and file contents.",
+        "link": "https://github.com/stefankueng/grepWin",
+        "github": "stefankueng/grepWin",
+        "githubAsset": "-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "ilspy": {
+        "category": "Pro Tools",
+        "content": "ILSpy",
+        "description": "ILSpy is an open-source .NET assembly browser and decompiler for reading compiled C# and Visual Basic code.",
+        "link": "https://github.com/icsharpcode/ILSpy",
+        "github": "icsharpcode/ILSpy",
+        "githubAsset": "-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "mremoteng": {
+        "category": "Pro Tools",
+        "content": "mRemoteNG",
+        "description": "mRemoteNG is an open-source tabbed remote connections manager for RDP, VNC, SSH, Telnet, and other protocols.",
+        "link": "https://github.com/mRemoteNG/mRemoteNG",
+        "github": "mRemoteNG/mRemoteNG",
+        "githubAsset": "Installer-.*\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "handy": {
+        "category": "Utilities",
+        "content": "Handy",
+        "description": "Handy is an open-source speech-to-text app that transcribes dictation locally, entirely offline.",
+        "link": "https://github.com/cjpais/Handy",
+        "github": "cjpais/Handy",
+        "githubAsset": "_x64_en-US\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "airi": {
+        "category": "Selfhosted Tools",
+        "content": "AIRI",
+        "description": "AIRI is an open-source AI companion with realtime voice chat that runs on your own models and API keys.",
+        "link": "https://github.com/moeru-ai/airi",
+        "github": "moeru-ai/airi",
+        "githubAsset": "^AIRI-.*-windows-x64-setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
+    "veracrypt": {
+        "category": "Utilities",
+        "content": "VeraCrypt",
+        "description": "VeraCrypt is an open-source disk encryption tool for creating and mounting encrypted containers and encrypted drives.",
+        "link": "https://github.com/veracrypt/VeraCrypt",
+        "github": "veracrypt/VeraCrypt",
+        "githubAsset": "_x64_\\d.*\\.msi$",
+        "githubType": "msi",
         "foss": true
     }
 }
