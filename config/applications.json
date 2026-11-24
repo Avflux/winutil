@@ -78,9 +78,6 @@
         "description": "Audacity is a free and open-source audio editing software known for its powerful recording and editing capabilities.",
         "link": "https://www.audacityteam.org/",
         "winget": "Audacity.Audacity",
-        "github": "audacity/audacity",
-        "githubAsset": "-x86_64\\.msi$",
-        "githubType": "msi",
         "foss": true
     },
     "autoruns": {
@@ -876,9 +873,6 @@
         "description": "KeePassXC is a modern, secure, and open-source password manager that stores and manages your most sensitive information. You can run KeePassXC on Windows, macOS, and Linux systems. KeePassXC is for people with extremely high demands of secure personal data management. It saves many different types of information, such as usernames, passwords, URLs, attachments, and notes in an offline, encrypted file that can be stored in any location, including private and public cloud solutions. For easy identification and management, user-defined titles and icons can be specified for entries. In addition, entries are sorted into customizable groups. An integrated search function allows you to use advanced patterns to easily find any entry in your database. A customizable, fast, and easy-to-use password generator utility allows you to create passwords with any combination of characters or easy to remember passphrases.",
         "link": "https://keepassxc.org/",
         "winget": "KeePassXCTeam.KeePassXC",
-        "github": "keepassxreboot/keepassxc",
-        "githubAsset": "-x64\\.msi$",
-        "githubType": "msi",
         "foss": true
     },
     "kiro": {
@@ -2059,9 +2053,6 @@
         "description": "VSCodium is a community-driven, freely-licensed binary distribution of Microsoft's VS Code.",
         "link": "https://vscodium.com/",
         "winget": "VSCodium.VSCodium",
-        "github": "VSCodium/vscodium",
-        "githubAsset": "^VSCodium-x64-\\d.*\\.msi$",
-        "githubType": "msi",
         "foss": true,
         "subcategory": "Editors & IDEs"
     },
@@ -2290,9 +2281,7 @@
         "content": "ArtCraft Studio",
         "description": "ArtCraft Studio is an open-source IDE for interactive AI image and video creation, with 2D compositing and 3D scene staging.",
         "link": "https://github.com/storytold/artcraft",
-        "github": "storytold/artcraft",
-        "githubAsset": "_x64_en-US\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.ArtCraft",
         "foss": true
     },
     "cadcraft": {
@@ -2300,9 +2289,7 @@
         "content": "CADCraft",
         "description": "CADCraft is an open-source computer-aided design and drafting application written in pure Rust.",
         "link": "https://github.com/storytold/cadcraft",
-        "github": "storytold/cadcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.CadCraft",
         "foss": true
     },
     "craftanything": {
@@ -2310,9 +2297,7 @@
         "content": "Craft Anything",
         "description": "Craft Anything is an open-source tool for exploring how software works and building your own version of it.",
         "link": "https://github.com/storytold/craft-anything",
-        "github": "storytold/craft-anything",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.CraftAnything",
         "foss": true,
         "subcategory": "Build & Game Dev"
     },
@@ -2321,9 +2306,7 @@
         "content": "DeckCraft",
         "description": "DeckCraft is an open-source presentation app for building and delivering slide shows.",
         "link": "https://github.com/storytold/deckcraft",
-        "github": "storytold/deckcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.DeckCraft",
         "foss": true
     },
     "designcraft": {
@@ -2331,9 +2314,7 @@
         "content": "DesignCraft",
         "description": "DesignCraft is an open-source page layout and publishing editor written from scratch in pure Rust.",
         "link": "https://github.com/storytold/designcraft",
-        "github": "storytold/designcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.DesignCraft",
         "foss": true
     },
     "effectcraft": {
@@ -2341,9 +2322,7 @@
         "content": "EffectCraft",
         "description": "EffectCraft is an open-source motion graphics and visual effects tool written from scratch in pure Rust.",
         "link": "https://github.com/storytold/effectcraft",
-        "github": "storytold/effectcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.EffectCraft",
         "foss": true
     },
     "filmcraft": {
@@ -2351,9 +2330,7 @@
         "content": "FilmCraft",
         "description": "FilmCraft is an open-source non-linear video editor written from scratch in pure Rust.",
         "link": "https://github.com/storytold/filmcraft",
-        "github": "storytold/filmcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.FilmCraft",
         "foss": true
     },
     "gridcraft": {
@@ -2361,9 +2338,7 @@
         "content": "GridCraft",
         "description": "GridCraft is an open-source spreadsheet for data analysis written from scratch in pure Rust.",
         "link": "https://github.com/storytold/gridcraft",
-        "github": "storytold/gridcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.GridCraft",
         "foss": true
     },
     "lightcraft": {
@@ -2371,9 +2346,7 @@
         "content": "LightCraft",
         "description": "LightCraft is an open-source photo library and raw developer written from scratch in pure Rust.",
         "link": "https://github.com/storytold/lightcraft",
-        "github": "storytold/lightcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.LightCraft",
         "foss": true
     },
     "pdfcraft": {
@@ -2381,9 +2354,7 @@
         "content": "PdfCraft",
         "description": "PdfCraft is an open-source PDF workbench to read, organize, combine, split, and secure documents.",
         "link": "https://github.com/storytold/pdfcraft",
-        "github": "storytold/pdfcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.PdfCraft",
         "foss": true
     },
     "photocraft": {
@@ -2391,9 +2362,7 @@
         "content": "PhotoCraft",
         "description": "PhotoCraft is an open-source image editor written from scratch in pure Rust.",
         "link": "https://github.com/storytold/photocraft",
-        "github": "storytold/photocraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.PhotoCraft",
         "foss": true
     },
     "soundcraft": {
@@ -2401,9 +2370,7 @@
         "content": "SoundCraft",
         "description": "SoundCraft is an open-source digital audio workstation for recording, editing, and mixing.",
         "link": "https://github.com/storytold/soundcraft",
-        "github": "storytold/soundcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.SoundCraft",
         "foss": true
     },
     "texturecraft": {
@@ -2411,9 +2378,7 @@
         "content": "TextureCraft",
         "description": "TextureCraft is an open-source 3D texture painting workflow written from scratch in pure Rust.",
         "link": "https://github.com/storytold/texturecraft",
-        "github": "storytold/texturecraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.TextureCraft",
         "foss": true
     },
     "vectorcraft": {
@@ -2421,9 +2386,7 @@
         "content": "VectorCraft",
         "description": "VectorCraft is an open-source vector illustration tool written from scratch in pure Rust.",
         "link": "https://github.com/storytold/vectorcraft",
-        "github": "storytold/vectorcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.VectorCraft",
         "foss": true
     },
     "wordcraft": {
@@ -2431,9 +2394,7 @@
         "content": "WordCraft",
         "description": "WordCraft is an open-source word processor written from scratch in pure Rust.",
         "link": "https://github.com/storytold/wordcraft",
-        "github": "storytold/wordcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.WordCraft",
         "foss": true
     },
     "anicraft": {
@@ -2461,9 +2422,7 @@
         "content": "MaterialCraft",
         "description": "MaterialCraft is an open-source node-based procedural materials tool written from scratch in pure Rust.",
         "link": "https://github.com/storytold/materialcraft",
-        "github": "storytold/materialcraft",
-        "githubAsset": "-windows-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "ArtCraft.MaterialCraft",
         "foss": true
     },
     "anythingllm": {
@@ -2482,10 +2441,7 @@
         "content": "Libre Hardware Monitor",
         "description": "Libre Hardware Monitor is an open-source fork of Open Hardware Monitor that reads temperatures, fan speeds, voltages, and clock speeds.",
         "link": "https://github.com/LibreHardwareMonitor/LibreHardwareMonitor",
-        "github": "LibreHardwareMonitor/LibreHardwareMonitor",
-        "githubAsset": "^LibreHardwareMonitor\\.zip$",
-        "githubType": "zip",
-        "githubBin": "LibreHardwareMonitor.exe",
+        "winget": "LibreHardwareMonitor.LibreHardwareMonitor",
         "foss": true
     },
     "devilutionx": {
@@ -2537,10 +2493,7 @@
         "content": "Text Grab",
         "description": "Text Grab extracts text from any part of the screen using OCR and copies it to the clipboard.",
         "link": "https://github.com/TheJoeFin/Text-Grab",
-        "github": "TheJoeFin/Text-Grab",
-        "githubAsset": "^Text-Grab-x64-Self-Contained\\.zip$",
-        "githubType": "zip",
-        "githubBin": "Text-Grab.exe",
+        "winget": "JosephFinney.Text-Grab",
         "foss": true
     },
     "tiddlydesktop": {
@@ -2570,9 +2523,7 @@
         "content": "DB Browser for SQLite",
         "description": "DB Browser for SQLite is an open-source visual tool for creating, browsing, and editing SQLite database files.",
         "link": "https://github.com/sqlitebrowser/sqlitebrowser",
-        "github": "sqlitebrowser/sqlitebrowser",
-        "githubAsset": "-win64\\.msi$",
-        "githubType": "msi",
+        "winget": "DBBrowserForSQLite.DBBrowserForSQLite",
         "foss": true,
         "subcategory": "API & Databases"
     },
@@ -2581,9 +2532,7 @@
         "content": "grepWin",
         "description": "grepWin is an open-source search-and-replace tool for Windows with regular expression support across folders and file contents.",
         "link": "https://github.com/stefankueng/grepWin",
-        "github": "stefankueng/grepWin",
-        "githubAsset": "-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "StefansTools.grepWin",
         "foss": true
     },
     "ilspy": {
@@ -2591,9 +2540,7 @@
         "content": "ILSpy",
         "description": "ILSpy is an open-source .NET assembly browser and decompiler for reading compiled C# and Visual Basic code.",
         "link": "https://github.com/icsharpcode/ILSpy",
-        "github": "icsharpcode/ILSpy",
-        "githubAsset": "-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "icsharpcode.ILSpy",
         "foss": true
     },
     "mremoteng": {
@@ -2601,9 +2548,7 @@
         "content": "mRemoteNG",
         "description": "mRemoteNG is an open-source tabbed remote connections manager for RDP, VNC, SSH, Telnet, and other protocols.",
         "link": "https://github.com/mRemoteNG/mRemoteNG",
-        "github": "mRemoteNG/mRemoteNG",
-        "githubAsset": "Installer-.*\\.msi$",
-        "githubType": "msi",
+        "winget": "mRemoteNG.mRemoteNG",
         "foss": true
     },
     "handy": {
@@ -2611,9 +2556,7 @@
         "content": "Handy",
         "description": "Handy is an open-source speech-to-text app that transcribes dictation locally, entirely offline.",
         "link": "https://github.com/cjpais/Handy",
-        "github": "cjpais/Handy",
-        "githubAsset": "_x64_en-US\\.msi$",
-        "githubType": "msi",
+        "winget": "cjpais.Handy",
         "foss": true
     },
     "airi": {
@@ -2621,10 +2564,7 @@
         "content": "AIRI",
         "description": "AIRI is an open-source AI companion with realtime voice chat that runs on your own models and API keys.",
         "link": "https://github.com/moeru-ai/airi",
-        "github": "moeru-ai/airi",
-        "githubAsset": "^AIRI-.*-windows-x64-setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "MoeruAI.AIRI",
         "foss": true
     },
     "quicklook": {
@@ -2664,10 +2604,7 @@
         "content": "PixiEditor",
         "description": "PixiEditor is an open-source pixel art editor with animation, layers, and a customizable toolset for sprites and game graphics.",
         "link": "https://github.com/PixiEditor/PixiEditor",
-        "github": "PixiEditor/PixiEditor",
-        "githubAsset": "^PixiEditor\\.\\d.*x64-win\\.zip$",
-        "githubType": "zip",
-        "githubBin": "PixiEditor\\PixiEditor.exe",
+        "winget": "msstore:9NDDRHS8PBRN",
         "foss": true
     },
     "zettlr": {
@@ -2876,9 +2813,7 @@
         "content": "VeraCrypt",
         "description": "VeraCrypt is an open-source disk encryption tool for creating and mounting encrypted containers and encrypted drives.",
         "link": "https://github.com/veracrypt/VeraCrypt",
-        "github": "veracrypt/VeraCrypt",
-        "githubAsset": "_x64_\\d.*\\.msi$",
-        "githubType": "msi",
+        "winget": "IDRIX.VeraCrypt",
         "foss": true
     }
 }
