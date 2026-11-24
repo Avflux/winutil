@@ -2627,6 +2627,136 @@
         "githubArgs": "/S",
         "foss": true
     },
+    "quicklook": {
+        "category": "Utilities",
+        "content": "QuickLook",
+        "description": "QuickLook is an open-source file previewer that shows documents, images, archives, and media in a pop-up window when you press the space bar.",
+        "link": "https://github.com/QL-Win/QuickLook",
+        "github": "QL-Win/QuickLook",
+        "githubAsset": "^QuickLook-.*\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "dngrep": {
+        "category": "Utilities",
+        "content": "dnGrep",
+        "description": "dnGrep is an open-source search tool for Windows that greps file contents using plain text, regex, XPath, and phonetic queries, with results shown in a preview pane.",
+        "link": "https://github.com/dnGrep/dnGrep",
+        "github": "dnGrep/dnGrep",
+        "githubAsset": "\\.x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "altsnap": {
+        "category": "Utilities",
+        "content": "AltSnap",
+        "description": "AltSnap is an open-source window manager that lets you move, resize, and snap windows while holding the Alt key, with only a handful of resources.",
+        "link": "https://github.com/RamonUnch/AltSnap",
+        "github": "RamonUnch/AltSnap",
+        "githubAsset": "^AltSnap.*bin_x64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "AltSnap.exe",
+        "foss": true
+    },
+    "krokiet": {
+        "category": "Utilities",
+        "content": "Krokiet",
+        "description": "Krokiet is an open-source cleaner and duplicate finder from the Czkawka project, rebuilt with a modern Rust GUI for finding duplicate, large, empty, and similar files.",
+        "link": "https://github.com/qarmin/czkawka",
+        "github": "qarmin/czkawka",
+        "githubAsset": "^windows_krokiet_on_windows_all_backends\\.zip$",
+        "githubType": "zip",
+        "githubBin": "krokiet.exe",
+        "foss": true
+    },
+    "pixieditor": {
+        "category": "Multimedia Tools",
+        "content": "PixiEditor",
+        "description": "PixiEditor is an open-source pixel art editor with animation, layers, and a customizable toolset for sprites and game graphics.",
+        "link": "https://github.com/PixiEditor/PixiEditor",
+        "github": "PixiEditor/PixiEditor",
+        "githubAsset": "^PixiEditor\\.\\d.*x64-win\\.zip$",
+        "githubType": "zip",
+        "githubBin": "PixiEditor\\PixiEditor.exe",
+        "foss": true
+    },
+    "zettlr": {
+        "category": "Document",
+        "content": "Zettlr",
+        "description": "Zettlr is an open-source Markdown editor for writers and researchers, with citations, a full-text search, and export to PDF, Word, and LaTeX.",
+        "link": "https://github.com/Zettlr/Zettlr",
+        "github": "Zettlr/Zettlr",
+        "githubAsset": "-x64\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
+    "clink": {
+        "category": "Development",
+        "content": "Clink",
+        "description": "Clink is an open-source utility that adds Bash-style completion, history, and line editing to the Windows Command Prompt.",
+        "link": "https://github.com/chrisant996/clink",
+        "github": "chrisant996/clink",
+        "githubAsset": "_setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true,
+        "subcategory": "CLI Tools & Prompts"
+    },
+    "nushell": {
+        "category": "Development",
+        "content": "Nushell",
+        "description": "Nushell is an open-source shell that treats data as structured tables, with pipelines for filtering, querying, and exporting files, JSON, and system information.",
+        "link": "https://github.com/nushell/nushell",
+        "github": "nushell/nushell",
+        "githubAsset": "-x86_64-pc-windows-msvc\\.msi$",
+        "githubType": "msi",
+        "foss": true,
+        "subcategory": "CLI Tools & Prompts"
+    },
+    "fancontrol": {
+        "category": "Pro Tools",
+        "content": "FanControl",
+        "description": "FanControl is an open-source fan speed controller for Windows that lets you build custom curves and mix GPU, CPU, and case fan sensors.",
+        "link": "https://github.com/Rem0o/FanControl.Releases",
+        "github": "Rem0o/FanControl.Releases",
+        "githubAsset": "_net_4_8\\.zip$",
+        "githubType": "zip",
+        "githubBin": "FanControl.exe",
+        "foss": true
+    },
+    "rustdesk": {
+        "category": "Utilities",
+        "content": "RustDesk",
+        "description": "RustDesk is an open-source remote desktop client that can connect through its public relay servers or a self-hosted server.",
+        "link": "https://github.com/rustdesk/rustdesk",
+        "github": "rustdesk/rustdesk",
+        "githubAsset": "-x86_64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "melonds": {
+        "category": "Games",
+        "content": "melonDS",
+        "description": "melonDS is an open-source Nintendo DS and DSi emulator focused on accuracy and speed.",
+        "link": "https://github.com/melonDS-emu/melonDS",
+        "github": "melonDS-emu/melonDS",
+        "githubAsset": "-windows-x86_64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "melonDS.exe",
+        "foss": true
+    },
+    "upscayl": {
+        "category": "Multimedia Tools",
+        "content": "Upscayl",
+        "description": "Upscayl is an open-source desktop app that upscales low-resolution images with AI models locally.",
+        "link": "https://github.com/Upscayl/upscayl",
+        "github": "Upscayl/upscayl",
+        "githubAsset": "-win\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
     "veracrypt": {
         "category": "Utilities",
         "content": "VeraCrypt",
