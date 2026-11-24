@@ -1241,12 +1241,11 @@
     "opencode": {
         "category": "Development",
         "choco": "opencode",
-        "content": "opencode",
-        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
+        "content": "OpenCode",
+        "description": "OpenCode is an open-source AI coding agent built for the terminal. It is provider-agnostic and supports local and hosted AI models.",
         "link": "https://opencode.ai/",
         "winget": "SST.opencode",
-        "foss": true,
-        "subcategory": "AI & Agents"
+        "foss": true
     },
     "openrgb": {
         "category": "Utilities",
@@ -1274,6 +1273,16 @@
         "link": "https://www.opera.com/gx",
         "winget": "Opera.OperaGX",
         "foss": false
+    },
+    "opencode": {
+        "category": "Development",
+        "choco": "opencode",
+        "content": "opencode",
+        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
+        "link": "https://opencode.ai/",
+        "winget": "SST.opencode",
+        "foss": true,
+        "subcategory": "AI & Agents"
     },
     "OpenVPN": {
         "category": "Pro Tools",
@@ -2841,6 +2850,25 @@
         "description": "dnSpyEx is the community-maintained fork of dnSpy, an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.",
         "link": "https://github.com/dnSpyEx/dnSpyEx",
         "winget": "dnSpyEx.dnSpy",
+        "foss": true
+    },
+    "min": {
+        "category": "Browsers",
+        "content": "Min",
+        "description": "Min is an open-source web browser focused on speed and privacy, with a minimal interface, quick tab search, and built-in ad and tracker blocking.",
+        "link": "https://github.com/minbrowser/min",
+        "winget": "MinBrowser.Min",
+        "foss": true
+    },
+    "taskbarx": {
+        "category": "Utilities",
+        "content": "TaskbarX",
+        "description": "TaskbarX is an open-source utility that centers taskbar icons and adjusts taskbar transparency on Windows 10.",
+        "link": "https://github.com/ChrisAnd1998/TaskbarX",
+        "github": "ChrisAnd1998/TaskbarX",
+        "githubAsset": "^TaskbarX_\\d+(\\.\\d+)*_x64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "TaskbarX.exe",
         "foss": true
     },
     "veracrypt": {

@@ -102,6 +102,8 @@
         "EverythingToolbar integrates the Everything search engine into the Windows taskbar, so files can be found from the search box.": "O EverythingToolbar integra o mecanismo de busca Everything à barra de tarefas do Windows, permitindo encontrar arquivos pela caixa de pesquisa.",
         "x64dbg is an open-source debugger for Windows binaries, with a Qt interface, scripting, and plugin support for reverse engineering.": "O x64dbg é um depurador open-source de binários do Windows, com interface Qt, scripts e suporte a plugins para engenharia reversa.",
         "dnSpyEx is the community-maintained fork of dnSpy, an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.": "O dnSpyEx é o fork mantido pela comunidade do dnSpy, um depurador e editor de assemblies .NET open-source para descompilar, editar e depurar aplicações .NET.",
+        "Min is an open-source web browser focused on speed and privacy, with a minimal interface, quick tab search, and built-in ad and tracker blocking.": "O Min é um navegador open-source focado em velocidade e privacidade, com interface minimalista, busca rápida entre abas e bloqueio integrado de anúncios e rastreadores.",
+        "TaskbarX is an open-source utility that centers taskbar icons and adjusts taskbar transparency on Windows 10.": "O TaskbarX é um utilitário open-source que centraliza os ícones da barra de tarefas e ajusta a transparência dela no Windows 10.",
         "Package Manager": "Gerenciador de Pacotes",
         "Clear Selection": "Limpar Seleção",
         "Clear the selection of applications": "Limpar a seleção de aplicativos",
