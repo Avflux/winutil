@@ -133,6 +133,13 @@ function Initialize-InstallCategoryAppList {
                     $subContainer.HorizontalAlignment = [Windows.HorizontalAlignment]::Stretch
                     $subContainer.Tag = "SubCategoryContainer"
 
+                    # Bind Width to the parent WrapPanel's ActualWidth so each subcategory takes a
+                    # full row instead of sharing one with its neighbours.
+                    $subBinding = New-Object Windows.Data.Binding
+                    $subBinding.Path = New-Object Windows.PropertyPath("ActualWidth")
+                    $subBinding.RelativeSource = New-Object Windows.Data.RelativeSource([Windows.Data.RelativeSourceMode]::FindAncestor, [Windows.Controls.WrapPanel], 1)
+                    [void][Windows.Data.BindingOperations]::SetBinding($subContainer, [Windows.FrameworkElement]::WidthProperty, $subBinding)
+
                     $subHeader = New-Object Windows.Controls.Label
                     $translatedSubcat = Get-WinUtilTranslation -Text $subcat
                     $subHeader.Content = "- $translatedSubcat"
