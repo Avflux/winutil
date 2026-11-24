@@ -2808,6 +2808,51 @@
         "githubBin": "TaskbarX.exe",
         "foss": true
     },
+    "cmder": {
+        "category": "Development",
+        "content": "Cmder",
+        "description": "Cmder is a portable console emulator for Windows built on ConEmu, with a Quake-style drop-down console, Clink completions, and tabbed shells.",
+        "link": "https://github.com/cmderdev/cmder",
+        "github": "cmderdev/cmder",
+        "githubAsset": "^cmder_mini[.]zip$",
+        "githubType": "zip",
+        "githubBin": "Cmder.exe",
+        "subcategory": "CLI Tools & Prompts",
+        "foss": true
+    },
+    "privatezilla": {
+        "category": "Utilities",
+        "content": "Privatezilla",
+        "description": "Privatezilla is an open-source privacy tool that checks and applies Windows 10 and 11 privacy settings, blocking telemetry and unwanted data collection.",
+        "link": "https://github.com/builtbybel/Privatezilla",
+        "github": "builtbybel/Privatezilla",
+        "githubAsset": "^privatezilla[.]zip$",
+        "githubType": "zip",
+        "githubBin": "Privatezilla.exe",
+        "foss": true
+    },
+    "rmg": {
+        "category": "Games",
+        "content": "RMG",
+        "description": "RMG is an open-source Nintendo 64 emulator with a Qt interface, controller support, and plugins for audio, video, and input.",
+        "link": "https://github.com/Rosalie241/RMG",
+        "github": "Rosalie241/RMG",
+        "githubAsset": "^RMG-Portable-Windows64-.*[.]zip$",
+        "githubType": "zip",
+        "githubBin": "RMG.exe",
+        "foss": true
+    },
+    "winxcorners": {
+        "category": "Utilities",
+        "content": "WinXCorners",
+        "description": "WinXCorners is an open-source utility that triggers actions like showing the desktop, opening the Start menu, or switching windows when the cursor rests in a screen corner.",
+        "link": "https://github.com/vhanla/winxcorners",
+        "github": "vhanla/winxcorners",
+        "githubAsset": "^WinXCorners[0-9.]+[.]zip$",
+        "githubType": "zip",
+        "githubBin": "WinXCorners.exe",
+        "foss": true
+    },
     "veracrypt": {
         "category": "Utilities",
         "content": "VeraCrypt",
