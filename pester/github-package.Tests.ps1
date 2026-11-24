@@ -255,6 +255,8 @@ Describe "Install-WinUtilProgramGitHub" {
     BeforeEach {
         $script:savedLocalAppData = $env:LOCALAPPDATA
         $env:LOCALAPPDATA = $TestDrive
+        # A record left by an earlier case would make this one skip as already installed
+        Remove-Item -LiteralPath (Get-WinUtilGitHubStatePath) -Force -ErrorAction SilentlyContinue
     }
 
     AfterEach {
@@ -459,6 +461,39 @@ Describe "Install-WinUtilProgramGitHub" {
         $state["owner/repo"].Type | Should -Be "msi"
         $state["owner/repo"].Version | Should -Be "v1.0.0"
         $state["owner/repo"].UninstallCommand | Should -Be "MsiExec.exe /X{GUID}"
+    }
+
+    It "skips a package already installed at the release version" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" -Version "v1.0.0" }
+        Mock Get-WinUtilGitHubPackageState {
+            @{ "owner/repo" = [pscustomobject]@{ Version = "v1.0.0"; UninstallKey = "Registry::HKLM\SOFTWARE\Test\Uninstall\{GUID}" } }
+        }
+        Mock Test-WinUtilGitHubPackageInstalled { $true }
+        Mock Invoke-WebRequest { }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Skipped"
+        $result.ExitCode | Should -Be 0
+        $result.Detail | Should -BeLike "*already installed*"
+        Should -Invoke Invoke-WebRequest -Times 0 -Exactly
+        Should -Invoke Start-Process -Times 0 -Exactly
+    }
+
+    It "reinstalls when the recorded version is older than the release" {
+        Mock Resolve-WinUtilGitHubRelease { New-GitHubInstallRelease -AssetName "tool-x64.msi" -Version "v2.0.0" }
+        Mock Get-WinUtilGitHubPackageState {
+            @{ "owner/repo" = [pscustomobject]@{ Version = "v1.0.0"; UninstallKey = "Registry::HKLM\SOFTWARE\Test\Uninstall\{GUID}" } }
+        }
+        Mock Test-WinUtilGitHubPackageInstalled { $true }
+        Mock Invoke-WebRequest { Set-Content -LiteralPath $OutFile -Value "installer" -NoNewline }
+        Mock Start-Process { [pscustomobject]@{ ExitCode = 0 } }
+
+        $result = Install-WinUtilProgramGitHub -Action Install -Packages @(New-GitHubInstallPackage)
+
+        $result.Outcome | Should -Be "Succeeded"
+        Should -Invoke Start-Process -Times 1 -Exactly
     }
 }
 

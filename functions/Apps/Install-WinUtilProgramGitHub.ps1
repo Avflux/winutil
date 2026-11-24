@@ -41,6 +41,8 @@ function Install-WinUtilProgramGitHub {
         1641 = "installed, the installer started a restart"
     }
 
+    $state = Get-WinUtilGitHubPackageState
+
     foreach ($package in $Packages) {
         $repository = [string]$package.github
         if ([string]::IsNullOrWhiteSpace($repository)) {
@@ -56,116 +58,127 @@ function Install-WinUtilProgramGitHub {
 
         try {
             $release = Resolve-WinUtilGitHubRelease -Repository $repository -AssetPattern $package.githubAsset
-            $assetExtension = [System.IO.Path]::GetExtension($release.AssetName).ToLowerInvariant()
-
-            $type = [string]$package.githubType
-            if ([string]::IsNullOrWhiteSpace($type)) {
-                $type = $assetExtension.TrimStart(".")
-            }
-            $type = $type.ToLowerInvariant()
-            if ($type -notin @("msi", "exe", "zip")) {
-                throw "Unsupported GitHub asset type '$type' for $($release.AssetName)"
-            }
-
-            $downloadPath = Join-Path ([System.IO.Path]::GetTempPath()) ("WinUtilGitHub-" + [guid]::NewGuid().ToString("N") + $assetExtension)
-            Write-WinUtilLog -Component "Package" -Message "$Action GitHub package: $repository ($($release.Version), $($release.AssetName))"
-
-            Invoke-WebRequest -Uri $release.DownloadUrl -OutFile $downloadPath -UseBasicParsing -TimeoutSec 300
-
-            if ($release.Digest) {
-                $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash
-                if (-not $hash.Equals([string]$release.Digest, [System.StringComparison]::OrdinalIgnoreCase)) {
-                    throw "SHA256 verification failed for $repository $($release.Version): the download does not match the published digest"
-                }
+            $record = $state[$repository]
+            if ($record -and
+                ([string]$record.Version) -eq $release.Version -and
+                (Test-WinUtilGitHubPackageInstalled -Record $record)) {
+                # Running the installer over a working install is what makes an already
+                # installed msi or exe fail, so a present install at this version is done
+                $exitCode = 0
+                $outcome = "Skipped"
+                $detail = "already installed ($($release.Version))"
             } else {
-                Write-WinUtilLog -Level "WARN" -Component "Package" -Message "$repository $($release.Version) publishes no SHA256 digest; installing the download unverified."
-            }
+                $assetExtension = [System.IO.Path]::GetExtension($release.AssetName).ToLowerInvariant()
 
-            # An msi registers its product code and an exe its own uninstall command; neither is
-            # knowable before the installer runs, so the uninstall keys are diffed around it
-            if ($type -in @("msi", "exe")) {
-                $uninstallSnapshot = Get-WinUtilGitHubUninstallSnapshot
-            }
-
-            switch ($type) {
-                "msi" {
-                    $arguments = if ([string]::IsNullOrWhiteSpace($package.githubArgs)) {
-                        "/i `"$downloadPath`" /qn /norestart"
-                    } else {
-                        "/i `"$downloadPath`" $($package.githubArgs)"
-                    }
-                    $process = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
-                    $exitCode = $process.ExitCode
+                $type = [string]$package.githubType
+                if ([string]::IsNullOrWhiteSpace($type)) {
+                    $type = $assetExtension.TrimStart(".")
                 }
-                "exe" {
-                    $startArguments = @{
-                        FilePath = $downloadPath
-                        Wait     = $true
-                        PassThru = $true
-                    }
-                    if (-not [string]::IsNullOrWhiteSpace($package.githubArgs)) {
-                        $startArguments["ArgumentList"] = [string]$package.githubArgs
-                    }
-                    $process = Start-Process @startArguments
-                    $exitCode = $process.ExitCode
+                $type = $type.ToLowerInvariant()
+                if ($type -notin @("msi", "exe", "zip")) {
+                    throw "Unsupported GitHub asset type '$type' for $($release.AssetName)"
                 }
-                "zip" {
-                    $installDirectory = Get-WinUtilGitHubInstallDirectory -Repository $repository
-                    Expand-WinUtilGitHubArchive -Path $downloadPath -Destination $installDirectory
 
-                    if (-not [string]::IsNullOrWhiteSpace($package.githubBin)) {
-                        $binary = Join-Path $installDirectory ([string]$package.githubBin)
-                        if (-not (Test-Path -LiteralPath $binary)) {
-                            throw "The archive does not contain the configured binary '$($package.githubBin)'"
-                        }
+                $downloadPath = Join-Path ([System.IO.Path]::GetTempPath()) ("WinUtilGitHub-" + [guid]::NewGuid().ToString("N") + $assetExtension)
+                Write-WinUtilLog -Component "Package" -Message "$Action GitHub package: $repository ($($release.Version), $($release.AssetName))"
+
+                Invoke-WebRequest -Uri $release.DownloadUrl -OutFile $downloadPath -UseBasicParsing -TimeoutSec 300
+
+                if ($release.Digest) {
+                    $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash
+                    if (-not $hash.Equals([string]$release.Digest, [System.StringComparison]::OrdinalIgnoreCase)) {
+                        throw "SHA256 verification failed for $repository $($release.Version): the download does not match the published digest"
                     }
-                    $exitCode = 0
+                } else {
+                    Write-WinUtilLog -Level "WARN" -Component "Package" -Message "$repository $($release.Version) publishes no SHA256 digest; installing the download unverified."
                 }
-            }
 
-            if ($exitCode -eq 0) {
-                $outcome = "Succeeded"
-                $detail = if ($type -eq "zip") { "extracted to $installDirectory" } else { "exit code 0" }
-            } elseif ($rebootExitCodes.ContainsKey($exitCode)) {
-                $outcome = "Succeeded"
-                $detail = $rebootExitCodes[$exitCode]
-            } else {
-                $detail = "installer exited with code $exitCode"
-            }
-
-            if ($outcome -eq "Succeeded") {
-                $uninstallKey = $null
-                $uninstallCommand = $null
-                $recordDirectory = $null
-                if ($type -eq "zip") {
-                    $recordDirectory = $installDirectory
+                # An msi registers its product code and an exe its own uninstall command; neither is
+                # knowable before the installer runs, so the uninstall keys are diffed around it
+                if ($type -in @("msi", "exe")) {
+                    $uninstallSnapshot = Get-WinUtilGitHubUninstallSnapshot
                 }
-                if ($uninstallSnapshot) {
-                    $uninstallEntry = Get-WinUtilGitHubNewUninstallEntry -Before $uninstallSnapshot
-                    if ($uninstallEntry) {
-                        $uninstallKey = $uninstallEntry.UninstallKey
-                        $uninstallCommand = if ([string]::IsNullOrWhiteSpace($uninstallEntry.QuietUninstallString)) {
-                            $uninstallEntry.UninstallString
+
+                switch ($type) {
+                    "msi" {
+                        $arguments = if ([string]::IsNullOrWhiteSpace($package.githubArgs)) {
+                            "/i `"$downloadPath`" /qn /norestart"
                         } else {
-                            $uninstallEntry.QuietUninstallString
+                            "/i `"$downloadPath`" $($package.githubArgs)"
                         }
+                        $process = Start-Process msiexec.exe -ArgumentList $arguments -Wait -PassThru
+                        $exitCode = $process.ExitCode
+                    }
+                    "exe" {
+                        $startArguments = @{
+                            FilePath = $downloadPath
+                            Wait     = $true
+                            PassThru = $true
+                        }
+                        if (-not [string]::IsNullOrWhiteSpace($package.githubArgs)) {
+                            $startArguments["ArgumentList"] = [string]$package.githubArgs
+                        }
+                        $process = Start-Process @startArguments
+                        $exitCode = $process.ExitCode
+                    }
+                    "zip" {
+                        $installDirectory = Get-WinUtilGitHubInstallDirectory -Repository $repository
+                        Expand-WinUtilGitHubArchive -Path $downloadPath -Destination $installDirectory
+
+                        if (-not [string]::IsNullOrWhiteSpace($package.githubBin)) {
+                            $binary = Join-Path $installDirectory ([string]$package.githubBin)
+                            if (-not (Test-Path -LiteralPath $binary)) {
+                                throw "The archive does not contain the configured binary '$($package.githubBin)'"
+                            }
+                        }
+                        $exitCode = 0
                     }
                 }
 
-                try {
-                    Set-WinUtilGitHubPackageRecord -Repository $repository -Record ([pscustomobject]@{
-                        Repository       = $repository
-                        Version          = $release.Version
-                        AssetName        = $release.AssetName
-                        Digest           = $release.Digest
-                        Type             = $type
-                        InstallDirectory = $recordDirectory
-                        UninstallKey     = $uninstallKey
-                        UninstallCommand = $uninstallCommand
-                        InstalledAt      = (Get-Date).ToString("o")
-                    })
-                } catch {
-                    Write-WinUtilLog -Level "WARN" -Component "Package" -Message "Installed $repository but could not record it: $($_.Exception.Message)"
+                if ($exitCode -eq 0) {
+                    $outcome = "Succeeded"
+                    $detail = if ($type -eq "zip") { "extracted to $installDirectory" } else { "exit code 0" }
+                } elseif ($rebootExitCodes.ContainsKey($exitCode)) {
+                    $outcome = "Succeeded"
+                    $detail = $rebootExitCodes[$exitCode]
+                } else {
+                    $detail = "installer exited with code $exitCode"
+                }
+
+                if ($outcome -eq "Succeeded") {
+                    $uninstallKey = $null
+                    $uninstallCommand = $null
+                    $recordDirectory = $null
+                    if ($type -eq "zip") {
+                        $recordDirectory = $installDirectory
+                    }
+                    if ($uninstallSnapshot) {
+                        $uninstallEntry = Get-WinUtilGitHubNewUninstallEntry -Before $uninstallSnapshot
+                        if ($uninstallEntry) {
+                            $uninstallKey = $uninstallEntry.UninstallKey
+                            $uninstallCommand = if ([string]::IsNullOrWhiteSpace($uninstallEntry.QuietUninstallString)) {
+                                $uninstallEntry.UninstallString
+                            } else {
+                                $uninstallEntry.QuietUninstallString
+                            }
+                        }
+                    }
+
+                    try {
+                        Set-WinUtilGitHubPackageRecord -Repository $repository -Record ([pscustomobject]@{
+                            Repository       = $repository
+                            Version          = $release.Version
+                            AssetName        = $release.AssetName
+                            Digest           = $release.Digest
+                            Type             = $type
+                            InstallDirectory = $recordDirectory
+                            UninstallKey     = $uninstallKey
+                            UninstallCommand = $uninstallCommand
+                            InstalledAt      = (Get-Date).ToString("o")
+                        })
+                    } catch {
+                        Write-WinUtilLog -Level "WARN" -Component "Package" -Message "Installed $repository but could not record it: $($_.Exception.Message)"
+                    }
                 }
             }
         } catch {
