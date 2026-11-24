@@ -2845,6 +2845,82 @@
         "githubBin": "duckstation-qt-x64-ReleaseLTCG.exe",
         "foss": true
     },
+    "windhawk": {
+        "category": "Utilities",
+        "content": "Windhawk",
+        "description": "Windhawk is an open-source tool for installing and managing mods that customize Windows and third-party programs without patching their files on disk.",
+        "link": "https://github.com/ramensoftware/windhawk",
+        "github": "ramensoftware/windhawk",
+        "githubAsset": "^windhawk_setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
+    "rainmeter": {
+        "category": "Utilities",
+        "content": "Rainmeter",
+        "description": "Rainmeter is an open-source desktop customization tool that places configurable skins for system monitors, launchers, and widgets on the Windows desktop.",
+        "link": "https://github.com/rainmeter/rainmeter",
+        "github": "rainmeter/rainmeter",
+        "githubAsset": "^Rainmeter-.*\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/S",
+        "foss": true
+    },
+    "alacritty": {
+        "category": "Development",
+        "content": "Alacritty",
+        "description": "Alacritty is a GPU-accelerated terminal emulator focused on speed and simplicity, configured through a single YAML file.",
+        "link": "https://github.com/alacritty/alacritty",
+        "github": "alacritty/alacritty",
+        "githubAsset": "^Alacritty-.*-installer\\.msi$",
+        "githubType": "msi",
+        "subcategory": "CLI Tools & Prompts",
+        "foss": true
+    },
+    "doublecmd": {
+        "category": "Utilities",
+        "content": "Double Commander",
+        "description": "Double Commander is an open-source two-panel file manager with tabs, built-in archive support, and a Total Commander-compatible interface.",
+        "link": "https://github.com/doublecmd/doublecmd",
+        "github": "doublecmd/doublecmd",
+        "githubAsset": "^doublecmd-.*\\.x86_64-win64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "everythingtoolbar": {
+        "category": "Utilities",
+        "content": "EverythingToolbar",
+        "description": "EverythingToolbar integrates the Everything search engine into the Windows taskbar, so files can be found from the search box.",
+        "link": "https://github.com/srwi/EverythingToolbar",
+        "github": "srwi/EverythingToolbar",
+        "githubAsset": "^EverythingToolbar-.*-x64\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "foss": true
+    },
+    "x64dbg": {
+        "category": "Pro Tools",
+        "content": "x64dbg",
+        "description": "x64dbg is an open-source debugger for Windows binaries, with a Qt interface, scripting, and plugin support for reverse engineering.",
+        "link": "https://github.com/x64dbg/x64dbg",
+        "github": "x64dbg/x64dbg",
+        "githubAsset": "^snapshot_.*\\.zip$",
+        "githubType": "zip",
+        "githubBin": "release\\x64\\x64dbg.exe",
+        "foss": true
+    },
+    "dnspy": {
+        "category": "Pro Tools",
+        "content": "dnSpy",
+        "description": "dnSpy is an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.",
+        "link": "https://github.com/dnSpy/dnSpy",
+        "github": "dnSpy/dnSpy",
+        "githubAsset": "^dnSpy-net-win64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "dnSpy.exe",
+        "foss": true
+    },
     "veracrypt": {
         "category": "Utilities",
         "content": "VeraCrypt",
