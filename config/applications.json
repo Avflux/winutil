@@ -2757,6 +2757,94 @@
         "githubArgs": "/S",
         "foss": true
     },
+    "winmerge": {
+        "category": "Utilities",
+        "content": "WinMerge",
+        "description": "WinMerge is an open-source file and folder comparison tool that highlights differences side by side, with three-way merge and folder synchronization.",
+        "link": "https://github.com/WinMerge/winmerge",
+        "github": "WinMerge/winmerge",
+        "githubAsset": "^WinMerge-.*-x64-Setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "foss": true
+    },
+    "notepad3": {
+        "category": "Development",
+        "content": "Notepad3",
+        "description": "Notepad3 is a fast, lightweight text editor based on Scintilla, with syntax highlighting, code folding, and support for many languages.",
+        "link": "https://github.com/rizonesoft/Notepad3",
+        "github": "rizonesoft/Notepad3",
+        "githubAsset": "^Notepad3_.*_x64_Setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "subcategory": "Editors & IDEs",
+        "foss": true
+    },
+    "qview": {
+        "category": "Multimedia Tools",
+        "content": "qView",
+        "description": "qView is an open-source image viewer built for speed and minimalism, with no background processes and support for animated and high-resolution images.",
+        "link": "https://github.com/jurplel/qView",
+        "github": "jurplel/qView",
+        "githubAsset": "^qView-.*-win64\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "foss": true
+    },
+    "copyq": {
+        "category": "Utilities",
+        "content": "CopyQ",
+        "description": "CopyQ is an open-source clipboard manager with searchable history, tabbed lists, and scripting for editing and automating clipboard contents.",
+        "link": "https://github.com/hluk/CopyQ",
+        "github": "hluk/CopyQ",
+        "githubAsset": "^copyq-.*-setup\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "foss": true
+    },
+    "cryptomator": {
+        "category": "Utilities",
+        "content": "Cryptomator",
+        "description": "Cryptomator is an open-source client-side encryption tool that creates transparently encrypted vaults inside cloud storage folders.",
+        "link": "https://github.com/cryptomator/cryptomator",
+        "github": "cryptomator/cryptomator",
+        "githubAsset": "^Cryptomator-.*-x64\\.msi$",
+        "githubType": "msi",
+        "foss": true
+    },
+    "pcsx2": {
+        "category": "Games",
+        "content": "PCSX2",
+        "description": "PCSX2 is an open-source PlayStation 2 emulator for Windows and Linux, with a broad compatibility list and upscaled rendering.",
+        "link": "https://github.com/PCSX2/pcsx2",
+        "github": "PCSX2/pcsx2",
+        "githubAsset": "^pcsx2-.*windows-x64-installer\\.exe$",
+        "githubType": "exe",
+        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "foss": true
+    },
+    "ppsspp": {
+        "category": "Games",
+        "content": "PPSSPP",
+        "description": "PPSSPP is an open-source PSP emulator that runs games in high definition on Windows, with save states and texture upscaling.",
+        "link": "https://github.com/hrydgard/ppsspp",
+        "github": "hrydgard/ppsspp",
+        "githubAsset": "^PPSSPP-.*-Windows-x64\\.zip$",
+        "githubType": "zip",
+        "githubBin": "PPSSPPWindows64.exe",
+        "foss": true
+    },
+    "duckstation": {
+        "category": "Games",
+        "content": "DuckStation",
+        "description": "DuckStation is an open-source PlayStation 1 emulator focused on accuracy and performance, with upscaling, widescreen hacks, and save states.",
+        "link": "https://github.com/stenzek/duckstation",
+        "github": "stenzek/duckstation",
+        "githubAsset": "^duckstation-windows-x64-release\\.zip$",
+        "githubType": "zip",
+        "githubBin": "duckstation-qt-x64-ReleaseLTCG.exe",
+        "foss": true
+    },
     "veracrypt": {
         "category": "Utilities",
         "content": "VeraCrypt",
