@@ -101,7 +101,7 @@
         "Double Commander is an open-source two-panel file manager with tabs, built-in archive support, and a Total Commander-compatible interface.": "O Double Commander é um gerenciador de arquivos open-source de dois painéis, com abas, suporte integrado a arquivos compactados e interface compatível com o Total Commander.",
         "EverythingToolbar integrates the Everything search engine into the Windows taskbar, so files can be found from the search box.": "O EverythingToolbar integra o mecanismo de busca Everything à barra de tarefas do Windows, permitindo encontrar arquivos pela caixa de pesquisa.",
         "x64dbg is an open-source debugger for Windows binaries, with a Qt interface, scripting, and plugin support for reverse engineering.": "O x64dbg é um depurador open-source de binários do Windows, com interface Qt, scripts e suporte a plugins para engenharia reversa.",
-        "dnSpy is an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.": "O dnSpy é um depurador e editor de assemblies .NET open-source para descompilar, editar e depurar aplicações .NET.",
+        "dnSpyEx is the community-maintained fork of dnSpy, an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.": "O dnSpyEx é o fork mantido pela comunidade do dnSpy, um depurador e editor de assemblies .NET open-source para descompilar, editar e depurar aplicações .NET.",
         "Package Manager": "Gerenciador de Pacotes",
         "Clear Selection": "Limpar Seleção",
         "Clear the selection of applications": "Limpar a seleção de aplicativos",

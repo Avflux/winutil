@@ -1241,11 +1241,12 @@
     "opencode": {
         "category": "Development",
         "choco": "opencode",
-        "content": "OpenCode",
-        "description": "OpenCode is an open-source AI coding agent built for the terminal. It is provider-agnostic and supports local and hosted AI models.",
+        "content": "opencode",
+        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
         "link": "https://opencode.ai/",
         "winget": "SST.opencode",
-        "foss": true
+        "foss": true,
+        "subcategory": "AI & Agents"
     },
     "openrgb": {
         "category": "Utilities",
@@ -1273,16 +1274,6 @@
         "link": "https://www.opera.com/gx",
         "winget": "Opera.OperaGX",
         "foss": false
-    },
-    "opencode": {
-        "category": "Development",
-        "choco": "opencode",
-        "content": "opencode",
-        "description": "opencode is an AI coding agent built for the terminal, with a native TUI, automatic LSP loading, parallel agents, and support for 75+ LLM providers including local models.",
-        "link": "https://opencode.ai/",
-        "winget": "SST.opencode",
-        "foss": true,
-        "subcategory": "AI & Agents"
     },
     "OpenVPN": {
         "category": "Pro Tools",
@@ -2632,9 +2623,7 @@
         "content": "QuickLook",
         "description": "QuickLook is an open-source file previewer that shows documents, images, archives, and media in a pop-up window when you press the space bar.",
         "link": "https://github.com/QL-Win/QuickLook",
-        "github": "QL-Win/QuickLook",
-        "githubAsset": "^QuickLook-.*\\.msi$",
-        "githubType": "msi",
+        "winget": "QL-Win.QuickLook",
         "foss": true
     },
     "dngrep": {
@@ -2642,9 +2631,7 @@
         "content": "dnGrep",
         "description": "dnGrep is an open-source search tool for Windows that greps file contents using plain text, regex, XPath, and phonetic queries, with results shown in a preview pane.",
         "link": "https://github.com/dnGrep/dnGrep",
-        "github": "dnGrep/dnGrep",
-        "githubAsset": "\\.x64\\.msi$",
-        "githubType": "msi",
+        "winget": "dnGrep.dnGrep",
         "foss": true
     },
     "altsnap": {
@@ -2652,10 +2639,7 @@
         "content": "AltSnap",
         "description": "AltSnap is an open-source window manager that lets you move, resize, and snap windows while holding the Alt key, with only a handful of resources.",
         "link": "https://github.com/RamonUnch/AltSnap",
-        "github": "RamonUnch/AltSnap",
-        "githubAsset": "^AltSnap.*bin_x64\\.zip$",
-        "githubType": "zip",
-        "githubBin": "AltSnap.exe",
+        "winget": "AltSnap.AltSnap",
         "foss": true
     },
     "krokiet": {
@@ -2663,10 +2647,7 @@
         "content": "Krokiet",
         "description": "Krokiet is an open-source cleaner and duplicate finder from the Czkawka project, rebuilt with a modern Rust GUI for finding duplicate, large, empty, and similar files.",
         "link": "https://github.com/qarmin/czkawka",
-        "github": "qarmin/czkawka",
-        "githubAsset": "^windows_krokiet_on_windows_all_backends\\.zip$",
-        "githubType": "zip",
-        "githubBin": "krokiet.exe",
+        "winget": "qarmin.krokiet",
         "foss": true
     },
     "pixieditor": {
@@ -2685,10 +2666,7 @@
         "content": "Zettlr",
         "description": "Zettlr is an open-source Markdown editor for writers and researchers, with citations, a full-text search, and export to PDF, Word, and LaTeX.",
         "link": "https://github.com/Zettlr/Zettlr",
-        "github": "Zettlr/Zettlr",
-        "githubAsset": "-x64\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "Zettlr.Zettlr",
         "foss": true
     },
     "clink": {
@@ -2696,10 +2674,7 @@
         "content": "Clink",
         "description": "Clink is an open-source utility that adds Bash-style completion, history, and line editing to the Windows Command Prompt.",
         "link": "https://github.com/chrisant996/clink",
-        "github": "chrisant996/clink",
-        "githubAsset": "_setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "chrisant996.Clink",
         "foss": true,
         "subcategory": "CLI Tools & Prompts"
     },
@@ -2708,9 +2683,7 @@
         "content": "Nushell",
         "description": "Nushell is an open-source shell that treats data as structured tables, with pipelines for filtering, querying, and exporting files, JSON, and system information.",
         "link": "https://github.com/nushell/nushell",
-        "github": "nushell/nushell",
-        "githubAsset": "-x86_64-pc-windows-msvc\\.msi$",
-        "githubType": "msi",
+        "winget": "Nushell.Nushell",
         "foss": true,
         "subcategory": "CLI Tools & Prompts"
     },
@@ -2719,10 +2692,7 @@
         "content": "FanControl",
         "description": "FanControl is an open-source fan speed controller for Windows that lets you build custom curves and mix GPU, CPU, and case fan sensors.",
         "link": "https://github.com/Rem0o/FanControl.Releases",
-        "github": "Rem0o/FanControl.Releases",
-        "githubAsset": "_net_4_8\\.zip$",
-        "githubType": "zip",
-        "githubBin": "FanControl.exe",
+        "winget": "Rem0o.FanControl",
         "foss": true
     },
     "rustdesk": {
@@ -2740,10 +2710,7 @@
         "content": "melonDS",
         "description": "melonDS is an open-source Nintendo DS and DSi emulator focused on accuracy and speed.",
         "link": "https://github.com/melonDS-emu/melonDS",
-        "github": "melonDS-emu/melonDS",
-        "githubAsset": "-windows-x86_64\\.zip$",
-        "githubType": "zip",
-        "githubBin": "melonDS.exe",
+        "winget": "melonDS.melonDS",
         "foss": true
     },
     "upscayl": {
@@ -2751,10 +2718,7 @@
         "content": "Upscayl",
         "description": "Upscayl is an open-source desktop app that upscales low-resolution images with AI models locally.",
         "link": "https://github.com/Upscayl/upscayl",
-        "github": "Upscayl/upscayl",
-        "githubAsset": "-win\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "Upscayl.Upscayl",
         "foss": true
     },
     "winmerge": {
@@ -2762,10 +2726,7 @@
         "content": "WinMerge",
         "description": "WinMerge is an open-source file and folder comparison tool that highlights differences side by side, with three-way merge and folder synchronization.",
         "link": "https://github.com/WinMerge/winmerge",
-        "github": "WinMerge/winmerge",
-        "githubAsset": "^WinMerge-.*-x64-Setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "WinMerge.WinMerge",
         "foss": true
     },
     "notepad3": {
@@ -2773,10 +2734,7 @@
         "content": "Notepad3",
         "description": "Notepad3 is a fast, lightweight text editor based on Scintilla, with syntax highlighting, code folding, and support for many languages.",
         "link": "https://github.com/rizonesoft/Notepad3",
-        "github": "rizonesoft/Notepad3",
-        "githubAsset": "^Notepad3_.*_x64_Setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "Rizonesoft.Notepad3",
         "subcategory": "Editors & IDEs",
         "foss": true
     },
@@ -2785,10 +2743,7 @@
         "content": "qView",
         "description": "qView is an open-source image viewer built for speed and minimalism, with no background processes and support for animated and high-resolution images.",
         "link": "https://github.com/jurplel/qView",
-        "github": "jurplel/qView",
-        "githubAsset": "^qView-.*-win64\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "jurplel.qView",
         "foss": true
     },
     "copyq": {
@@ -2796,10 +2751,7 @@
         "content": "CopyQ",
         "description": "CopyQ is an open-source clipboard manager with searchable history, tabbed lists, and scripting for editing and automating clipboard contents.",
         "link": "https://github.com/hluk/CopyQ",
-        "github": "hluk/CopyQ",
-        "githubAsset": "^copyq-.*-setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "hluk.CopyQ",
         "foss": true
     },
     "cryptomator": {
@@ -2807,9 +2759,7 @@
         "content": "Cryptomator",
         "description": "Cryptomator is an open-source client-side encryption tool that creates transparently encrypted vaults inside cloud storage folders.",
         "link": "https://github.com/cryptomator/cryptomator",
-        "github": "cryptomator/cryptomator",
-        "githubAsset": "^Cryptomator-.*-x64\\.msi$",
-        "githubType": "msi",
+        "winget": "Cryptomator.Cryptomator",
         "foss": true
     },
     "pcsx2": {
@@ -2817,10 +2767,7 @@
         "content": "PCSX2",
         "description": "PCSX2 is an open-source PlayStation 2 emulator for Windows and Linux, with a broad compatibility list and upscaled rendering.",
         "link": "https://github.com/PCSX2/pcsx2",
-        "github": "PCSX2/pcsx2",
-        "githubAsset": "^pcsx2-.*windows-x64-installer\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "PCSX2Team.PCSX2",
         "foss": true
     },
     "ppsspp": {
@@ -2828,10 +2775,7 @@
         "content": "PPSSPP",
         "description": "PPSSPP is an open-source PSP emulator that runs games in high definition on Windows, with save states and texture upscaling.",
         "link": "https://github.com/hrydgard/ppsspp",
-        "github": "hrydgard/ppsspp",
-        "githubAsset": "^PPSSPP-.*-Windows-x64\\.zip$",
-        "githubType": "zip",
-        "githubBin": "PPSSPPWindows64.exe",
+        "winget": "PPSSPPTeam.PPSSPP",
         "foss": true
     },
     "duckstation": {
@@ -2839,10 +2783,7 @@
         "content": "DuckStation",
         "description": "DuckStation is an open-source PlayStation 1 emulator focused on accuracy and performance, with upscaling, widescreen hacks, and save states.",
         "link": "https://github.com/stenzek/duckstation",
-        "github": "stenzek/duckstation",
-        "githubAsset": "^duckstation-windows-x64-release\\.zip$",
-        "githubType": "zip",
-        "githubBin": "duckstation-qt-x64-ReleaseLTCG.exe",
+        "winget": "Stenzek.DuckStation",
         "foss": true
     },
     "windhawk": {
@@ -2850,10 +2791,7 @@
         "content": "Windhawk",
         "description": "Windhawk is an open-source tool for installing and managing mods that customize Windows and third-party programs without patching their files on disk.",
         "link": "https://github.com/ramensoftware/windhawk",
-        "github": "ramensoftware/windhawk",
-        "githubAsset": "^windhawk_setup\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "RamenSoftware.Windhawk",
         "foss": true
     },
     "rainmeter": {
@@ -2861,10 +2799,7 @@
         "content": "Rainmeter",
         "description": "Rainmeter is an open-source desktop customization tool that places configurable skins for system monitors, launchers, and widgets on the Windows desktop.",
         "link": "https://github.com/rainmeter/rainmeter",
-        "github": "rainmeter/rainmeter",
-        "githubAsset": "^Rainmeter-.*\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/S",
+        "winget": "Rainmeter.Rainmeter",
         "foss": true
     },
     "alacritty": {
@@ -2872,9 +2807,7 @@
         "content": "Alacritty",
         "description": "Alacritty is a GPU-accelerated terminal emulator focused on speed and simplicity, configured through a single YAML file.",
         "link": "https://github.com/alacritty/alacritty",
-        "github": "alacritty/alacritty",
-        "githubAsset": "^Alacritty-.*-installer\\.msi$",
-        "githubType": "msi",
+        "winget": "Alacritty.Alacritty",
         "subcategory": "CLI Tools & Prompts",
         "foss": true
     },
@@ -2883,9 +2816,7 @@
         "content": "Double Commander",
         "description": "Double Commander is an open-source two-panel file manager with tabs, built-in archive support, and a Total Commander-compatible interface.",
         "link": "https://github.com/doublecmd/doublecmd",
-        "github": "doublecmd/doublecmd",
-        "githubAsset": "^doublecmd-.*\\.x86_64-win64\\.msi$",
-        "githubType": "msi",
+        "winget": "alexx2000.DoubleCommander",
         "foss": true
     },
     "everythingtoolbar": {
@@ -2893,10 +2824,7 @@
         "content": "EverythingToolbar",
         "description": "EverythingToolbar integrates the Everything search engine into the Windows taskbar, so files can be found from the search box.",
         "link": "https://github.com/srwi/EverythingToolbar",
-        "github": "srwi/EverythingToolbar",
-        "githubAsset": "^EverythingToolbar-.*-x64\\.exe$",
-        "githubType": "exe",
-        "githubArgs": "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART",
+        "winget": "srwi.EverythingToolbar.Deskband",
         "foss": true
     },
     "x64dbg": {
@@ -2904,21 +2832,15 @@
         "content": "x64dbg",
         "description": "x64dbg is an open-source debugger for Windows binaries, with a Qt interface, scripting, and plugin support for reverse engineering.",
         "link": "https://github.com/x64dbg/x64dbg",
-        "github": "x64dbg/x64dbg",
-        "githubAsset": "^snapshot_.*\\.zip$",
-        "githubType": "zip",
-        "githubBin": "release\\x64\\x64dbg.exe",
+        "winget": "x64dbg.x64dbg",
         "foss": true
     },
     "dnspy": {
         "category": "Pro Tools",
-        "content": "dnSpy",
-        "description": "dnSpy is an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.",
-        "link": "https://github.com/dnSpy/dnSpy",
-        "github": "dnSpy/dnSpy",
-        "githubAsset": "^dnSpy-net-win64\\.zip$",
-        "githubType": "zip",
-        "githubBin": "dnSpy.exe",
+        "content": "dnSpyEx",
+        "description": "dnSpyEx is the community-maintained fork of dnSpy, an open-source .NET debugger and assembly editor for decompiling, editing, and debugging .NET applications.",
+        "link": "https://github.com/dnSpyEx/dnSpyEx",
+        "winget": "dnSpyEx.dnSpy",
         "foss": true
     },
     "veracrypt": {
